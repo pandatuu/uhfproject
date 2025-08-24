@@ -1,0 +1,29 @@
+// 项目构建脚本
+buildscript {
+    // 定义仓库
+    repositories {
+        google()
+        jcenter() // 2020年时广泛使用
+    }
+
+    // 定义依赖
+    dependencies {
+        // Android Gradle 插件版本
+        classpath 'com.android.tools.build:gradle:4.1.0'
+        // Kotlin 插件版本 (如果使用)
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.20"
+    }
+}
+
+// 所有子项目的配置
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+// 清理任务
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
