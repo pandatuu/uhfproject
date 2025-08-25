@@ -5,21 +5,24 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.uhfproject.app.MyApplication.Companion.appContext
-import com.example.uhfproject.room.AppDatabase
+import com.example.uhfproject.utils.LogUtil
 import com.example.uhfproject.utils.RetrofitClient
+import com.example.uhfproject.utils.SingleLiveEvent
 import com.seuic.uhf.EPC
 import com.seuic.uhf.UHFService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
     private val rep = MainRep()
 
 
-    private val _epcList: MutableLiveData<List<EPC>> = MutableLiveData()
-    val epcList: LiveData<List<EPC>> = _epcList
+    private val _epcList: MutableLiveData<List<String>> = MutableLiveData()
+    val epcList: LiveData<List<String>> = _epcList
     /**
      * 单次扫描
      */
@@ -29,15 +32,13 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             val id = epc.getId()
             if (id != null && "" != id) {
                 val currentList = _epcList.value?.toMutableList() ?: mutableListOf()
-                if(currentList.all { it.getId() != id }){
-                    currentList.add(epc)
+                if(currentList.all { it != id }){
+                    currentList.add(epc.getId())
                     _epcList.postValue(currentList)
                 }
             }
         }
     }
-
-    private var mInventoryStart = false
 
     /**
      * 盘点监听
@@ -46,35 +47,30 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     fun startStock(){
         if(UHFService.getInstance().inventoryStart()){
-            mInventoryStart = true
             //开始盘点
-            if(stockListener == null){
-                stockListener =  viewModelScope.launch {
-                    while(mInventoryStart){
-                        val tagIds = UHFService.getInstance().tagIDs
-                        _epcList.postValue(tagIds)
-                        delay(100)
-                    }
+            stockListener = viewModelScope.launch(Dispatchers.IO) {
+                while(true){
+                    val tagIds = UHFService.getInstance().tagIDs
+                    val list = tagIds.map { it.getId() }
+                    LogUtil.d("scan-list:$list")
+                    _epcList.postValue(list)
+                    delay(100)
                 }
             }
-            stockListener!!.start()
         } else {
             //盘点失败
+            LogUtil.d("scan-盘点失败")
         }
     }
 
     fun stopStock(){
         if(UHFService.getInstance().inventoryStop()){
             //停止盘点
-            stockListener?.let {
-                if(it.isActive){
-                    mInventoryStart = false
-                    it.cancel()
-                    stockListener = null
-                }
-            }
+            stockListener?.cancel()
+            stockListener = null
         } else {
             //停止失败
+            LogUtil.d("scan-盘点停止失败")
         }
     }
 
@@ -82,7 +78,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
 class MainRep(){
     private val mainService = RetrofitClient.createService<MainService>()
-    private val database = AppDatabase.getInstance(appContext)
+//    private val database = AppDatabase.getInstance(appContext)
 
 
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import java.lang.reflect.ParameterizedType
@@ -12,7 +13,7 @@ import java.lang.reflect.ParameterizedType
 abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
     protected lateinit var binding: VB
-    protected lateinit var mainViewModel: MainViewModel
+    protected val mainViewModel: MainViewModel by activityViewModels()
 
     abstract fun initView()
 
@@ -32,15 +33,9 @@ abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
         initView()
         initData()
         observeData()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun initViewModel() {
-        mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
     }
 
     @Suppress("UNCHECKED_CAST")

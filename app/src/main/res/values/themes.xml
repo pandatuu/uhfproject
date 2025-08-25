@@ -13,4 +13,14 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+    <!-- 沉浸式无ActionBar主题 -->
+    <style name="AppTheme.NoActionBar.Fullscreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- 使内容延伸到状态栏下方 -->
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!-- 设置状态栏背景透明（Android 5.0+ 生效） -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
 </resources>
