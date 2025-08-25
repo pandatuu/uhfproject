@@ -4,6 +4,7 @@ buildscript {
     repositories {
         google()
         jcenter() // 2020年时广泛使用
+        maven { url 'https://jitpack.io' }
     }
 
     // 定义依赖
@@ -11,7 +12,7 @@ buildscript {
         // Android Gradle 插件版本
         classpath 'com.android.tools.build:gradle:4.1.0'
         // Kotlin 插件版本 (如果使用)
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.20"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.0"
     }
 }
 
@@ -20,6 +21,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://jitpack.io' }
     }
 }
 

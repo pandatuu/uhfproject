@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">uhfproject</string>
+    <string name="back">BACK</string>
+
+    <!-- InBound Page -->
+    <string name="inbound_title">INBOUND</string>
+    <string name="inbound_click_back_title">是否退出</string>
+    <string name="inbound_click_back_hint">注意:退出本页面，会清空本次扫描快递单</string>
+    <string name="inbound_click_power_hint">修改入库功率(必须为数字)</string>
+
+    <!-- OutBound Page -->
+    <string name="outbound_title">OUTBOUND</string>
+    <string name="outbound_click_back_title">是否退出</string>
+    <string name="outbound_click_back_hint">注意:退出本页面，会清空本次扫描快递单</string>
+    <string name="outbound_click_power_hint">修改入库功率(必须为数字)</string>
 </resources>

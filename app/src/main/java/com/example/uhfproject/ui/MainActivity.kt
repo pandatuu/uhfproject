@@ -47,26 +47,26 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var keyStatus: Boolean = false
+    private var keyStatus = false
 
-    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        return if (keyCode == 142 && event?.action == KeyEvent.ACTION_UP) {
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
+        if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
             if(!keyStatus){
-                LogUtil.d("UHF扫描开启")
+                keyStatus = true
                 mViewModel.startStock()
             }else{
-                LogUtil.d("UHF扫描关闭")
+                keyStatus = false
                 mViewModel.stopStock()
             }
-            keyStatus = !keyStatus
-            true
-        }else{
-            false
+            return true
         }
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun onPause() {
         super.onPause()
         uhfService?.close()
+        uhfService = null
     }
 }

@@ -8,7 +8,36 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.uhfproject.ui.MainFragment"
-        android:label="MainFragment" />
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_inBoundFragment"
+            app:destination="@id/inBoundFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_outBoundFragment"
+            app:destination="@id/outBoundFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_inventoryFragment"
+            app:destination="@id/inventoryFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_findItemFragment"
+            app:destination="@id/findItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/findItemFragment"
+        android:name="com.example.uhfproject.ui.fragment.FindItemFragment"
+        android:label="FindItemFragment" />
+    <fragment
+        android:id="@+id/inBoundFragment"
+        android:name="com.example.uhfproject.ui.fragment.InBoundFragment"
+        android:label="InBoundFragment" />
+    <fragment
+        android:id="@+id/outBoundFragment"
+        android:name="com.example.uhfproject.ui.fragment.OutBoundFragment"
+        android:label="OutBoundFragment" />
+    <fragment
+        android:id="@+id/inventoryFragment"
+        android:name="com.example.uhfproject.ui.fragment.InventoryFragment"
+        android:label="InventoryFragment" />
 
 
 </navigation>

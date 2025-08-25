@@ -44,17 +44,25 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
      * 盘点监听
      */
     private var stockListener: Job? = null
-
+    private var mInventoryStart = true
     fun startStock(){
         if(UHFService.getInstance().inventoryStart()){
+            LogUtil.d("UHF盘点开启")
+            mInventoryStart = true
             //开始盘点
-            stockListener = viewModelScope.launch(Dispatchers.IO) {
-                while(true){
-                    val tagIds = UHFService.getInstance().tagIDs
-                    val list = tagIds.map { it.getId() }
-                    LogUtil.d("scan-list:$list")
-                    _epcList.postValue(list)
-                    delay(100)
+            if(stockListener == null){
+                stockListener = viewModelScope.launch {
+                    while(mInventoryStart){
+                        delay(100)
+                        val time1 = System.currentTimeMillis()
+                        val tagIds = UHFService.getInstance().tagIDs.toSet()
+                        LogUtil.d("tagIds耗时-${System.currentTimeMillis()-time1}")
+                        _epcList.postValue(tagIds.map { it.getId() })
+                    }
+                }
+            }else{
+                if(!stockListener!!.isActive){
+                    stockListener!!.start()
                 }
             }
         } else {
@@ -65,6 +73,8 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     fun stopStock(){
         if(UHFService.getInstance().inventoryStop()){
+            mInventoryStart = false
+            LogUtil.d("UHF盘点关闭")
             //停止盘点
             stockListener?.cancel()
             stockListener = null
