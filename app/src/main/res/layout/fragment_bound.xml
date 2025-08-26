@@ -37,6 +37,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/tv_rfid_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#0055A3"
+            app:layout_constraintStart_toEndOf="@+id/tv_title"
+            app:layout_constraintEnd_toStartOf="@+id/img_power"
+            app:layout_constraintTop_toTopOf="@+id/tv_title"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title" />
+
         <ImageView
             android:id="@+id/img_power"
             android:layout_width="16dp"
@@ -65,7 +76,7 @@
             android:gravity="center"
             android:text="SN"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="12sp"
             app:layout_constraintWidth_percent="0.1"
             app:layout_constraintEnd_toStartOf="@+id/tv_traking_id_head"
             app:layout_constraintStart_toStartOf="parent"
@@ -78,8 +89,8 @@
             android:gravity="center"
             android:text="Tracking ID"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintWidth_percent="0.4"
+            android:textSize="12sp"
+            app:layout_constraintWidth_percent="0.35"
             app:layout_constraintEnd_toStartOf="@+id/tv_post_code_head"
             app:layout_constraintStart_toEndOf="@+id/tv_sn_head"
             app:layout_constraintTop_toTopOf="parent" />
@@ -91,8 +102,8 @@
             android:gravity="center"
             android:text="Post Code"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintWidth_percent="0.25"
+            android:textSize="12sp"
+            app:layout_constraintWidth_percent="0.2"
             app:layout_constraintEnd_toStartOf="@+id/tv_bit_code_head"
             app:layout_constraintStart_toEndOf="@+id/tv_traking_id_head"
             app:layout_constraintTop_toTopOf="parent" />
@@ -104,10 +115,23 @@
             android:gravity="center"
             android:text="Bit Code"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintWidth_percent="0.25"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="12sp"
+            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintEnd_toStartOf="@+id/tv_other_head"
             app:layout_constraintStart_toEndOf="@+id/tv_post_code_head"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_other_head"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Other"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tv_bit_code_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View

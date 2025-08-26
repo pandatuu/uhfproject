@@ -24,17 +24,11 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
+        mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
     }
 
     override fun initData() {
         UHFService.getInstance().power = inBoundPower
-
-        mAdapter.setList(listOf(
-            AdapterItem("1","AD123312412","123-123","12331"),
-            AdapterItem("2","SF234234","123-123","12331"),
-            AdapterItem("3","F35436436346","123-123","12331"),
-            AdapterItem("4","GF2342432543768012","123-123","12331"),
-        ))
 
         mBinding.tvBack.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.inbound_click_back_title),getString(R.string.inbound_click_back_hint)){
@@ -51,11 +45,23 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
                 UHFService.getInstance().power = inBoundPower
             }
         }
+        mBinding.btnClear.setOnClickListener {
+            simpleAlert(requireContext(), getString(R.string.clear_click)){
+                mAdapter.setList(emptyList())
+                mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
+            }
+        }
+        mBinding.btnUpload.setOnClickListener {
+            simpleAlert(requireContext(), getString(R.string.submit_click)){
+                mainViewModel.submitInBound()
+            }
+        }
     }
 
     override fun observeData() {
-        mainViewModel.epcList.observe(viewLifecycleOwner){
-            LogUtil.d("InBoundFragment-epcList:$it")
+        mainViewModel.boundExcel.observe(viewLifecycleOwner){
+            mAdapter.setList(it)
+            mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
         }
     }
 }

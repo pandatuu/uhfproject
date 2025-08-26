@@ -8,7 +8,6 @@ import com.example.uhfproject.ui.BaseFragment
 import com.example.uhfproject.utils.Const.outBoundPower
 import com.example.uhfproject.utils.Const.simpleAlert
 import com.example.uhfproject.utils.Const.simpleEditAlert
-import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
 
 class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
@@ -23,19 +22,11 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
+        mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
     }
 
     override fun initData() {
         UHFService.getInstance().power = outBoundPower
-
-        mAdapter.setList(
-            listOf(
-                AdapterItem("1", "AD123312412", "123-123", "12331"),
-                AdapterItem("2", "SF234234", "123-123", "12331"),
-                AdapterItem("3", "F35436436346", "123-123", "12331"),
-                AdapterItem("4", "GF2342432543768012", "123-123", "12331"),
-            )
-        )
 
         mBinding.tvBack.setOnClickListener {
             simpleAlert(
@@ -56,11 +47,23 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
                 UHFService.getInstance().power = outBoundPower
             }
         }
+        mBinding.btnClear.setOnClickListener {
+            simpleAlert(requireContext(), getString(R.string.clear_click)){
+                mAdapter.setList(emptyList())
+                mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
+            }
+        }
+        mBinding.btnUpload.setOnClickListener {
+            simpleAlert(requireContext(), getString(R.string.submit_click)){
+                mainViewModel.submitOutBound()
+            }
+        }
     }
 
     override fun observeData() {
-        mainViewModel.epcList.observe(viewLifecycleOwner) {
-            LogUtil.d("InBoundFragment-epcList:$it")
+        mainViewModel.boundExcel.observe(viewLifecycleOwner){
+            mAdapter.setList(it)
+            mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
         }
     }
 }

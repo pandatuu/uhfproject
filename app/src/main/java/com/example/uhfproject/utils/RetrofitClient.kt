@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://172.24.1.15:8080" // 替换为你的API基础URL
+    private const val BASE_URL = "http://101.43.218.72:8080" // 替换为你的API基础URL
     private const val TIMEOUT = 30L // 超时时间30秒
 
     private val okHttpClient by lazy {

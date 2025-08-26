@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import com.example.uhfproject.R
 import org.w3c.dom.Text
 
 object Const {
@@ -31,11 +32,11 @@ object Const {
     fun simpleAlert(context: Context, title: String, confirm: ()->Unit ){
         AlertDialog.Builder(context)
             .setTitle(title)
-            .setPositiveButton("确定"){ dialog,_ ->
+            .setPositiveButton(context.getString(R.string.alert_confirm)){ dialog, _ ->
                 confirm.invoke()
                 dialog.dismiss()
             }
-            .setNegativeButton("取消"){ dialog,_ ->
+            .setNegativeButton(context.getString(R.string.alert_cancel)){ dialog,_ ->
                 dialog.dismiss()
             }
             .show()
@@ -44,11 +45,11 @@ object Const {
         AlertDialog.Builder(context)
             .setTitle(title)
             .setMessage(content)
-            .setPositiveButton("确定"){ dialog,_ ->
+            .setPositiveButton(context.getString(R.string.alert_confirm)){ dialog,_ ->
                 confirm.invoke()
                 dialog.dismiss()
             }
-            .setNegativeButton("取消"){ dialog,_ ->
+            .setNegativeButton(context.getString(R.string.alert_cancel)){ dialog,_ ->
                 dialog.dismiss()
             }
             .show()
@@ -60,7 +61,7 @@ object Const {
         AlertDialog.Builder(context)
             .setTitle(title)
             .setView(edit)
-            .setPositiveButton("确定"){ dialog,_ ->
+            .setPositiveButton(context.getString(R.string.alert_confirm)){ dialog,_ ->
                 val num = edit.text.toString()
                 if(num.toIntOrNull() == null){
                     return@setPositiveButton
@@ -68,7 +69,7 @@ object Const {
                 confirm.invoke(num.toInt())
                 dialog.dismiss()
             }
-            .setNegativeButton("取消"){ dialog,_ ->
+            .setNegativeButton(context.getString(R.string.alert_cancel)){ dialog,_ ->
                 dialog.dismiss()
             }
             .show()

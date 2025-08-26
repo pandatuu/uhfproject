@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">uhfproject</string>
     <string name="back">BACK</string>
+    <string name="clear_click">是否清空本页面的数据</string>
+    <string name="submit_click">是否提交数据</string>
+    <string name="alert_confirm">确定</string>
+    <string name="alert_cancel">取消</string>
 
     <!-- InBound Page -->
     <string name="inbound_title">INBOUND</string>
@@ -13,4 +17,10 @@
     <string name="outbound_click_back_title">是否退出</string>
     <string name="outbound_click_back_hint">注意:退出本页面，会清空本次扫描快递单</string>
     <string name="outbound_click_power_hint">修改入库功率(必须为数字)</string>
+
+    <!-- Inventory Page -->
+    <string name="inventory_title">INVENTORY</string>
+    <string name="inventory_click_back_title">是否退出</string>
+    <string name="inventory_click_back_hint">注意:退出本页面，会清空本次扫描快递单</string>
+    <string name="inventory_click_power_hint">修改入库功率(必须为数字)</string>
 </resources>

@@ -5,16 +5,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.uhfproject.model.ExcelDownloadVO
 import com.example.uhfproject.utils.LogUtil
 import com.example.uhfproject.utils.RetrofitClient
-import com.example.uhfproject.utils.SingleLiveEvent
 import com.seuic.uhf.EPC
 import com.seuic.uhf.UHFService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
@@ -54,10 +52,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 stockListener = viewModelScope.launch {
                     while(mInventoryStart){
                         delay(100)
-                        val time1 = System.currentTimeMillis()
                         val tagIds = UHFService.getInstance().tagIDs.toSet()
-                        LogUtil.d("tagIds耗时-${System.currentTimeMillis()-time1}")
-                        _epcList.postValue(tagIds.map { it.getId() })
+                        LogUtil.d("tagIds-${tagIds.map { it.getId() }}")
+//                        _epcList.postValue(tagIds.map { it.getId() })
+                        getExcelDownloadByEmp(tagIds.map { it.getId() })
                     }
                 }
             }else{
@@ -83,6 +81,61 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
             LogUtil.d("scan-盘点停止失败")
         }
     }
+
+    //-----------------------InBound--------------------------------
+
+    private val _boundExcel: MutableLiveData<List<ExcelDownloadVO>> = MutableLiveData()
+    val boundExcel: LiveData<List<ExcelDownloadVO>> = _boundExcel
+//    private val _inboundExcel: MutableLiveData<List<ExcelDownloadVO>> = MutableLiveData()
+//    val inboundExcel: LiveData<List<ExcelDownloadVO>> = _inboundExcel
+
+    private fun getExcelDownloadByEmp(map: List<String>) {
+
+    }
+
+    fun submitInBound(){
+
+    }
+
+
+    //-----------------------OutBound--------------------------------
+//
+//    private val _outboundExcel: MutableLiveData<List<ExcelDownloadVO>> = MutableLiveData()
+//    val outboundExcel: LiveData<List<ExcelDownloadVO>> = _outboundExcel
+//
+
+    fun submitOutBound(){
+
+    }
+
+
+    //-----------------------Inventory--------------------------------
+
+    /**
+     * 状态：  0-空   1-图标下   2-图标上
+     */
+    var snSort: Int = 0
+    var trackingIdSort: Int = 0
+    var postCodeSort: Int = 0
+    var bitCodeSort: Int = 0
+    var otherSort: Int = 0
+
+    private val _inventoryList: MutableLiveData<List<ExcelDownloadVO>> = MutableLiveData()
+    val inventoryList: LiveData<List<ExcelDownloadVO>> = _inventoryList
+
+    var getListBySortTimer = 0
+    fun getListBySort(){
+        viewModelScope.launch(Dispatchers.IO){
+            val nowTimer = System.currentTimeMillis()
+            if(nowTimer - getListBySortTimer < 500){
+                //点击过快，避免请求接口太多
+                //手动添加一个延时效果
+                delay(1000)
+            }
+            //继续查询排序结果
+        }
+    }
+
 
 }
 
