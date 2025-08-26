@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.uhfproject.R
+import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.ActivityMainBinding
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         mViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
-        uhfService = UHFService.getInstance()
+        uhfService = UHFService.getInstance(appContext)
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
@@ -36,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         // open UHF
         if(uhfService == null){
-            uhfService = UHFService.getInstance()
+            uhfService = UHFService.getInstance(appContext)
         }
         val ret: Boolean = uhfService!!.open()
         if (!ret) {
@@ -67,6 +68,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         uhfService?.close()
+        LogUtil.d("UHF扫描关闭")
         uhfService = null
     }
 }

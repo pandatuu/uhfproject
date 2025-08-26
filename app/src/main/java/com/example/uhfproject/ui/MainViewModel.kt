@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.model.ExcelDownloadVO
 import com.example.uhfproject.utils.LogUtil
 import com.example.uhfproject.utils.RetrofitClient
@@ -26,7 +27,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
      */
     fun onceScan(){
         val epc = EPC()
-        if(UHFService.getInstance().inventoryOnce(epc, 100)){
+        if(UHFService.getInstance(appContext).inventoryOnce(epc, 100)){
             val id = epc.getId()
             if (id != null && "" != id) {
                 val currentList = _epcList.value?.toMutableList() ?: mutableListOf()
@@ -44,7 +45,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     private var stockListener: Job? = null
     private var mInventoryStart = true
     fun startStock(){
-        if(UHFService.getInstance().inventoryStart()){
+        if(UHFService.getInstance(appContext).inventoryStart()){
             LogUtil.d("UHF盘点开启")
             mInventoryStart = true
             //开始盘点
@@ -52,7 +53,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
                 stockListener = viewModelScope.launch {
                     while(mInventoryStart){
                         delay(100)
-                        val tagIds = UHFService.getInstance().tagIDs.toSet()
+                        val tagIds = UHFService.getInstance(appContext).tagIDs.toSet()
                         LogUtil.d("tagIds-${tagIds.map { it.getId() }}")
 //                        _epcList.postValue(tagIds.map { it.getId() })
                         getExcelDownloadByEmp(tagIds.map { it.getId() })
@@ -70,7 +71,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     }
 
     fun stopStock(){
-        if(UHFService.getInstance().inventoryStop()){
+        if(UHFService.getInstance(appContext).inventoryStop()){
             mInventoryStart = false
             LogUtil.d("UHF盘点关闭")
             //停止盘点

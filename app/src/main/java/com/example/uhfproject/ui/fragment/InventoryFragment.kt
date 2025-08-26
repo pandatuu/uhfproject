@@ -4,6 +4,7 @@ import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
+import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.FragmentInventoryBinding
 import com.example.uhfproject.ui.BaseFragment
 import com.example.uhfproject.utils.Const
@@ -25,7 +26,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
     }
 
     override fun initData() {
-        UHFService.getInstance().power = inventoryPower
+        UHFService.getInstance(appContext).power = inventoryPower
 
         mainViewModel.snSort = 0
         mainViewModel.trackingIdSort = 0
@@ -50,7 +51,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
                 inventoryPower.toString()
             ) {
                 inventoryPower = it
-                UHFService.getInstance().power = Const.outBoundPower
+                UHFService.getInstance(appContext).power = Const.outBoundPower
             }
         }
         mBinding.snHeadLayout.setOnClickListener {

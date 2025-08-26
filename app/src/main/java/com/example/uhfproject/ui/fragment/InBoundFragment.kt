@@ -3,6 +3,7 @@ package com.example.uhfproject.ui.fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
+import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.FragmentBoundBinding
 import com.example.uhfproject.ui.BaseFragment
 import com.example.uhfproject.utils.Const
@@ -28,7 +29,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
     }
 
     override fun initData() {
-        UHFService.getInstance().power = inBoundPower
+        UHFService.getInstance(appContext).power = inBoundPower
 
         mBinding.tvBack.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.inbound_click_back_title),getString(R.string.inbound_click_back_hint)){
@@ -42,7 +43,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
                 inBoundPower.toString()
             ){
                 inBoundPower = it
-                UHFService.getInstance().power = inBoundPower
+                UHFService.getInstance(appContext).power = inBoundPower
             }
         }
         mBinding.btnClear.setOnClickListener {
