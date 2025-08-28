@@ -1,0 +1,60 @@
+package com.example.uhfproject.utils.retrofit
+
+import com.example.uhfproject.model.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Query
+
+
+/**
+ * 入库页
+ * 1.查询
+ * 2.排序
+ * 3.提交
+ * 出库页
+ * 1.查询
+ * 2.排序
+ * 3.提交
+ * Inventory
+ * 1.查询
+ * 2.排序
+ */
+interface MainService {
+
+    /**
+     * 查询快递单号列表
+     */
+    @GET("post/getTrackingIdList")
+    suspend fun getTrackingIdListNet(@Query("status") status: Int,
+                                     @Query("pageNum") pageNum: Int,
+                                     @Query("pageSize") pageSize: Int) : HttpResultPager<List<ExcelDownloadVO>>
+
+    /**
+     * 入库
+     */
+    @POST("post/inbound")
+    suspend fun inboundNet(@Body body: List<String>) : HttpResult<InfoPromptsVO>
+
+    /**
+     * 查询快递单号列表
+     */
+    @GET("post/getTrackingIdByEPC")
+    suspend fun getTrackingIdByEPCNet(@Query("epcList") epcList: List<String>) : HttpResult<List<ExcelDownloadVO>>
+
+    /**
+     * 出库
+     */
+    @POST("post/outbound")
+    suspend fun outboundNet(@Body body: List<String>) : HttpResult<InfoPromptsVO>
+
+
+    /**
+     * 查询快递单号列表
+     */
+    @GET("post/getTrackingIdList")
+    suspend fun getItemByTrackingIdNet(@Query("trackingId") trackingId: String,
+                                    @Query("status") status: Int,
+                                     @Query("pageNum") pageNum: Int,
+                                     @Query("pageSize") pageSize: Int) : HttpResultPager<List<ExcelDownloadVO>>
+}

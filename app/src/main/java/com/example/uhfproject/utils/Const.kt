@@ -5,26 +5,25 @@ import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.example.uhfproject.R
-import org.w3c.dom.Text
 
 object Const {
 
-    private const val INBOUND_POWER = 20
+    private const val INBOUND_POWER = 30
     var inBoundPower: Int
         get() = SPUtils.getInt("INBOUND_POWER", INBOUND_POWER)
         set(value) = SPUtils.putInt("INBOUND_POWER", value)
 
-    private const val OUTBOUND_POWER = 20
+    private const val OUTBOUND_POWER = 30
     var outBoundPower: Int
         get() = SPUtils.getInt("OUTBOUND_POWER", OUTBOUND_POWER)
         set(value) = SPUtils.putInt("OUTBOUND_POWER", value)
 
-    private const val INVENTORY_POWER = 20
+    private const val INVENTORY_POWER = 30
     var inventoryPower: Int
         get() = SPUtils.getInt("INVENTORY_POWER", INVENTORY_POWER)
         set(value) = SPUtils.putInt("INVENTORY_POWER", value)
 
-    private const val FIND_ITEM_POWER = 20
+    private const val FIND_ITEM_POWER = 30
     var findItemPower: Int
         get() = SPUtils.getInt("FIND_ITEM_POWER", FIND_ITEM_POWER)
         set(value) = SPUtils.putInt("FIND_ITEM_POWER", value)

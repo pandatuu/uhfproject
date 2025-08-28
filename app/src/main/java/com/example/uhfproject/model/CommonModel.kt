@@ -1,8 +1,15 @@
 package com.example.uhfproject.model
 
-data class HttpPager<T>(
+data class HttpResultPager<T>(
     var total: Int,
     var msg: String,
     var code: Int,
-    var rows: List<T>,
+    var rows: T? = null,
 )
+
+data class HttpResult<T>(
+    var code: Int = 0,
+    var msg: String? = "",
+    var data: T? = null
+)
+

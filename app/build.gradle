@@ -71,4 +71,11 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.10.1'
 
     implementation "io.github.cymchad:BaseRecyclerViewAdapterHelper:3.0.8"
+
+    implementation 'com.github.GrenderG:Toasty:1.4.2'
+
+    implementation  'io.github.scwang90:refresh-layout-kernel:2.1.0'
+    implementation  'io.github.scwang90:refresh-footer-classics:2.1.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
 }

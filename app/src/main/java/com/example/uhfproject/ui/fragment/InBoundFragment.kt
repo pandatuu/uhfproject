@@ -1,5 +1,6 @@
 package com.example.uhfproject.ui.fragment
 
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
@@ -12,6 +13,8 @@ import com.example.uhfproject.utils.Const.simpleAlert
 import com.example.uhfproject.utils.Const.simpleEditAlert
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
 
@@ -20,12 +23,14 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
     }
 
     override fun initView() {
+        mainViewModel.startQuest = true
         mBinding.tvTitle.text = getString(R.string.inbound_title)
         mBinding.rv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
-        mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
+        mAdapter.setList(emptyList())
+        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
     }
 
     override fun initData() {
@@ -49,12 +54,19 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
         mBinding.btnClear.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.clear_click)){
                 mAdapter.setList(emptyList())
-                mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
+                mBinding.tvRfidCount.text = mAdapter.data.size.toString()
             }
         }
         mBinding.btnUpload.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.submit_click)){
-                mainViewModel.submitInBound()
+                mainViewModel.stopStock()
+                mainViewModel.startLoading()
+                mainViewModel.submitInBound(mAdapter.data.map { it.epc?:"" }){
+                    lifecycleScope.launch(Dispatchers.Main){
+                        mainViewModel.stopLoading()
+                        findNavController().popBackStack()
+                    }
+                }
             }
         }
     }
@@ -62,7 +74,13 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
     override fun observeData() {
         mainViewModel.boundExcel.observe(viewLifecycleOwner){
             mAdapter.setList(it)
-            mBinding.tvRfidCount.text = "(${mAdapter.data.size})"
+            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
         }
+    }
+
+    override fun onStop() {
+        mainViewModel.clearBoundList()
+        mainViewModel.stopStock()
+        super.onStop()
     }
 }

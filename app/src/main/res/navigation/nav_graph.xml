@@ -23,10 +23,6 @@
             app:destination="@id/findItemFragment" />
     </fragment>
     <fragment
-        android:id="@+id/findItemFragment"
-        android:name="com.example.uhfproject.ui.fragment.FindItemFragment"
-        android:label="FindItemFragment" />
-    <fragment
         android:id="@+id/inBoundFragment"
         android:name="com.example.uhfproject.ui.fragment.InBoundFragment"
         android:label="InBoundFragment" />
@@ -37,7 +33,15 @@
     <fragment
         android:id="@+id/inventoryFragment"
         android:name="com.example.uhfproject.ui.fragment.InventoryFragment"
-        android:label="InventoryFragment" />
+        android:label="InventoryFragment" >
+        <action
+            android:id="@+id/action_inventoryFragment_to_findItemFragment"
+            app:destination="@id/findItemFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/findItemFragment"
+        android:name="com.example.uhfproject.ui.fragment.FindItemFragment"
+        android:label="FindItemFragment" />
 
 
 </navigation>

@@ -1,4 +1,4 @@
-package com.example.uhfproject.utils
+package com.example.uhfproject.utils.retrofit
 
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

@@ -21,6 +21,8 @@ data class ExcelDownloadVO(
 
     val epc: String? = null,
 
+    val db: String? = null,
+
     /**
      * 0=pending for printing,1=bound already,2=inbound,3=outbound
      */

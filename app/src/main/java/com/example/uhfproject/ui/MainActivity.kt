@@ -1,17 +1,25 @@
 package com.example.uhfproject.ui
 
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.KeyEvent
 import android.view.MotionEvent
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.ActivityMainBinding
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
+import es.dmoral.toasty.Toasty
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,6 +35,14 @@ class MainActivity : AppCompatActivity() {
         mViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         uhfService = UHFService.getInstance(appContext)
+
+        mViewModel.loading.observe(this) {
+            if (it) {
+                mBinding.mainLoading.visibility = View.VISIBLE
+            } else {
+                mBinding.mainLoading.visibility = View.GONE
+            }
+        }
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
@@ -49,6 +65,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var keyStatus = false
+    private var countdownTimer: CountDownTimer? = null
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
@@ -58,6 +75,8 @@ class MainActivity : AppCompatActivity() {
                 mViewModel.startStock()
             }else{
                 keyStatus = false
+                countdownTimer?.cancel()
+                countdownTimer = null
                 mViewModel.stopStock()
             }
             return true
@@ -70,5 +89,7 @@ class MainActivity : AppCompatActivity() {
         uhfService?.close()
         LogUtil.d("UHF扫描关闭")
         uhfService = null
+        countdownTimer?.cancel()
+        countdownTimer = null
     }
 }

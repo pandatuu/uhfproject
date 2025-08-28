@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:paddingHorizontal="10dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="10dp"
             android:text="@string/back"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -37,15 +38,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/img_power"
-            android:layout_width="13dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/ic_power"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <TextView
+            android:id="@+id/tv_rfid_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#0055A3"
+            app:layout_constraintStart_toEndOf="@+id/tv_title"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tv_title"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_title" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,7 +58,6 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginVertical="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_clear"
         app:layout_constraintTop_toBottomOf="@+id/title_layout">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -213,7 +215,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Other"
+                android:text="DB"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/img_other"
@@ -240,36 +242,25 @@
             android:background="#3c3c3c"
             app:layout_constraintTop_toBottomOf="@+id/sn_head_layout" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv"
+        <com.scwang.smart.refresh.layout.SmartRefreshLayout
+            android:id="@+id/smart_refresh"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="6dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sn_head_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/sn_head_layout" >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.scwang.smart.refresh.footer.ClassicsFooter
+                android:id="@+id/smart_refresh_footer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <Button
-        android:id="@+id/btn_clear"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="15dp"
-        android:background="@drawable/bg_grey_5"
-        android:text="Clear"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btn_upload"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btn_upload"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_blue_5"
-        android:text="Upload"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_clear"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btn_clear" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,15 +1,23 @@
 package com.example.uhfproject.ui.fragment
 
+import android.os.Bundle
 import android.widget.ImageView
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.FragmentInventoryBinding
+import com.example.uhfproject.model.ExcelDownloadVO
 import com.example.uhfproject.ui.BaseFragment
 import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.Const.inventoryPower
+import com.example.uhfproject.utils.Const.simpleAlert
+import com.example.uhfproject.utils.LogUtil
+import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.seuic.uhf.UHFService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
 
@@ -18,40 +26,41 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
     }
 
     override fun initView() {
-
+        mainViewModel.startQuest = false
         mBinding.rv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
+        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+
+        mBinding.smartRefresh.apply {
+            setRefreshFooter(ClassicsFooter(requireContext()))
+            setOnLoadMoreListener {
+                mainViewModel.getListBySort({
+                    it.finishLoadMore(500)
+                }, {
+                    it.finishLoadMoreWithNoMoreData()
+                })
+            }
+        }
     }
 
     override fun initData() {
-        UHFService.getInstance(appContext).power = inventoryPower
-
         mainViewModel.snSort = 0
         mainViewModel.trackingIdSort = 0
         mainViewModel.postCodeSort = 0
         mainViewModel.bitCodeSort = 0
         mainViewModel.otherSort = 0
 
-
         mBinding.tvBack.setOnClickListener {
-            Const.simpleAlert(
-                requireContext(),
-                getString(R.string.inventory_click_back_title),
-                getString(R.string.inventory_click_back_hint)
-            ) {
-                findNavController().popBackStack()
-            }
+            findNavController().popBackStack()
         }
-        mBinding.imgPower.setOnClickListener {
-            Const.simpleEditAlert(
-                requireContext(),
-                getString(R.string.inventory_click_power_hint),
-                inventoryPower.toString()
-            ) {
-                inventoryPower = it
-                UHFService.getInstance(appContext).power = Const.outBoundPower
+        mAdapter.setOnItemClickListener{adapter, v ,position ->
+            simpleAlert(requireContext(), "Jump to FindItem page?"){
+                val item = adapter.getItem(position) as ExcelDownloadVO
+                val bundle = Bundle()
+                bundle.putParcelable("item", item)
+                findNavController().navigate(R.id.action_inventoryFragment_to_findItemFragment, bundle)
             }
         }
         mBinding.snHeadLayout.setOnClickListener {
@@ -68,7 +77,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
                     mainViewModel.snSort = 0
                 }
             }
-            mainViewModel.getListBySort()
+            mainViewModel.listSort()
         }
         mBinding.trackingIdHeadLayout.setOnClickListener {
             mainViewModel.trackingIdSort++
@@ -84,7 +93,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
                     mainViewModel.trackingIdSort = 0
                 }
             }
-            mainViewModel.getListBySort()
+            mainViewModel.listSort()
         }
         mBinding.postCodeHeadLayout.setOnClickListener {
             mainViewModel.postCodeSort++
@@ -100,7 +109,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
                     mainViewModel.postCodeSort = 0
                 }
             }
-            mainViewModel.getListBySort()
+            mainViewModel.listSort()
         }
         mBinding.bitCodeHeadLayout.setOnClickListener {
             mainViewModel.bitCodeSort++
@@ -116,7 +125,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
                     mainViewModel.bitCodeSort = 0
                 }
             }
-            mainViewModel.getListBySort()
+            mainViewModel.listSort()
         }
         mBinding.otherHeadLayout.setOnClickListener {
             mainViewModel.otherSort++
@@ -132,13 +141,37 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
                     mainViewModel.otherSort = 0
                 }
             }
-            mainViewModel.getListBySort()
+            mainViewModel.listSort()
         }
     }
 
     override fun observeData() {
         mainViewModel.inventoryList.observe(viewLifecycleOwner) {
             mAdapter.setList(it)
+            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
         }
+        mainViewModel.sortList.observe(viewLifecycleOwner) {
+            mAdapter.setList(it)
+            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        mainViewModel.getListBySort({
+            lifecycleScope.launch(Dispatchers.Main){
+                mBinding.smartRefresh.finishLoadMore(500)
+            }
+        }, {
+            lifecycleScope.launch(Dispatchers.Main){
+                mBinding.smartRefresh.finishLoadMoreWithNoMoreData()
+            }
+        })
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainViewModel.clearInventoryList()
     }
 }
