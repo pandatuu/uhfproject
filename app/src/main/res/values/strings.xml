@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">uhfproject</string>
+    <string name="app_name">Post Scan</string>
     <string name="back">BACK</string>
     <string name="clear_click">Clear page data?</string>
     <string name="submit_click">Submit data?</string>
