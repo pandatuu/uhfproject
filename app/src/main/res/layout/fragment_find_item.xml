@@ -7,37 +7,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layout_a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/img"
-            android:layout_width="400dp"
-            android:layout_height="400dp"
-            android:src="@drawable/compass"
-            app:shapeAppearanceOverlay="@style/CircleShape"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <ImageView
-            android:id="@+id/cView"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@android:drawable/star_big_on"
-            app:tint="#FF9800"
-            android:visibility="gone"
-            tools:ignore="MissingConstraints" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title_layout"
         android:layout_width="match_parent"
         android:layout_height="65dp"
@@ -105,6 +74,46 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
+    <FrameLayout
+        android:id="@+id/layout_compass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/img_compass_shade"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@drawable/compass_shade"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_compass"
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:src="@drawable/compass"
+            app:shapeAppearanceOverlay="@style/CircleShape"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/img_point"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="#FBFF00"
+            app:shapeAppearanceOverlay="@style/CircleShape"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
     <TextView
         android:id="@+id/tv_rfid"
         android:layout_width="wrap_content"
@@ -118,9 +127,10 @@
         android:id="@+id/v_progress_background"
         android:layout_width="match_parent"
         android:layout_height="25dp"
+        android:layout_marginHorizontal="20dp"
         android:background="@drawable/bg_blue_border_5"
-        android:layout_marginBottom="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/layout_a"/>
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@+id/layout_compass"/>
     <View
         android:id="@+id/v_progress"
         android:layout_width="0dp"

@@ -1,5 +1,6 @@
 package com.example.uhfproject.ui.fragment
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
@@ -11,6 +12,7 @@ import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.lifecycle.lifecycleScope
@@ -24,10 +26,15 @@ import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.Const.findItemPower
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
+import com.seuic.uhfutils.EpcSearch
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.sin
+import kotlin.random.Random
 
 class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventListener {
 
@@ -38,11 +45,8 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
     private var gyroscopeSensor: Sensor? = null
     private var rotationVectorSensor: Sensor? = null
 
-    private var lastUpdateTime: Long = 0
-    private var deviceRotationAngle = 0f // 设备累计旋转角度
-
+    private var currentRfid = ""
     private var northDegree: Float? = null
-    private var firstCount = 0
     private var currentRssi = 0
 
 
@@ -84,7 +88,8 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
         mBinding.btnUpload.setOnClickListener {
             val tracking = mBinding.edtRfid.editText?.text.toString()
             mainViewModel.getItemByTracking(tracking, success = {
-                mBinding.tvRfid.text = "EPC:${it.epc}"
+                currentRfid = it.epc?:""
+                mBinding.tvRfid.text = "EPC:$currentRfid"
             }, empty = {
                 mBinding.tvRfid.text = "Tracking# Error"
             })
@@ -111,10 +116,10 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
 
     override fun observeData() {
         mainViewModel.findList.observe(viewLifecycleOwner){
-            val rfid = mBinding.tvRfid.text.toString().substring(4)
-            it.find { it.getId() == rfid }?.let {
-                LogUtil.d("寻物rssi成功: ${it.rssi}")
-                currentRssi = calculatePercentage(it.rssi)
+            val search = EpcSearch.search(it)
+            search.find { it.getId() == currentRfid }?.let {
+                currentRssi = it.rssi
+                LogUtil.d("寻物rssi成功: $currentRssi")
 
                 mBinding.tvProgress.text = "${currentRssi}%"
 
@@ -123,14 +128,18 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
         }
         mainViewModel.startBtn.observe(viewLifecycleOwner){
             if(it){
-                mBinding.cView.visibility = View.VISIBLE
+                mBinding.imgPoint.visibility = View.VISIBLE
                 //归位
-                resetBViewToTop(mBinding.layoutA, mBinding.cView)
+                resetBView()
+                startCircularMotion(mBinding.imgCompassShade,
+                    mBinding.imgCompassShade.x + (mBinding.imgCompassShade.width / 2f),
+                    mBinding.imgCompassShade.y + (mBinding.imgCompassShade.height / 2f))
             }
         }
         mainViewModel.stopBtn.observe(viewLifecycleOwner){
             if(it){
-                mBinding.cView.visibility = View.GONE
+                stopCircularMotion()
+                mBinding.imgPoint.visibility = View.GONE
             }
         }
     }
@@ -138,23 +147,14 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
     private fun onValueChanged(value: Int) {
         // 1️⃣ 先除以100得到比例
         val ratio = value / 100f  // 注意要用 Float
-
         // 2️⃣ 根据 viewA 的宽度计算目标宽度
         val targetWidth = (mBinding.vProgressBackground.width * ratio).toInt()
-
         // 3️⃣ 更新 viewB 宽度
         lifecycleScope.launch(Dispatchers.Main){
             val layoutParams = mBinding.vProgress.layoutParams
             layoutParams.width = targetWidth
             mBinding.vProgress.layoutParams = layoutParams
         }
-    }
-
-    private fun calculatePercentage(value: Int): Int {
-        require(value in -80..0) { "Value must be between -80 and 0" }
-        // 计算百分比：((当前值 + 80) / 80) * 100
-        val percentage = ((value + 80) / 80.0 * 100).toInt()
-        return percentage.coerceIn(0, 100) // 确保百分比在 0-100 范围内
     }
 
     private fun hideKeyboard(view: View) {
@@ -183,30 +183,57 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
         sensorManager = null
     }
 
+    private var centerX = 400f
+    private var centerY = 640f
+    private var radius = 200f
+    private var currentAngle = -90f
+    private var lastUpdateTime = 0L
+    private var isFirstSensorUpdate = true // 标记是否是第一次传感器更新
+    private var currentZ = 0f
+
+    private var currentPercentage = 0.5f // 初始位置在中间 (50%)
+    private var targetPercentage = 0.5f
+    private val minRadius = 0f
+    private val maxRadius = 150f
+
     override fun onSensorChanged(event: SensorEvent?) {
         event?.let {
             when {
                 event.sensor.type == Sensor.TYPE_GYROSCOPE -> {
-                    // 绕Z轴的角速度（垂直于屏幕的旋转）
-                    val axisZ = event.values[2]
-
-                    // 获取当前时间
-                    val currentTime = System.currentTimeMillis()
-
-                    if (lastUpdateTime == 0L) {
-                        lastUpdateTime = currentTime
+                    val now = System.currentTimeMillis()
+                    // 如果是第一次传感器更新，直接使用重置后的位置，不进行角度计算
+                    if (isFirstSensorUpdate) {
+                        isFirstSensorUpdate = false
+                        lastUpdateTime = now
                         return
                     }
+                    val dt = (now - lastUpdateTime) / 1000f // 转换为秒
 
-                    // 计算时间间隔（转换为秒）
-                    val deltaTime = (currentTime - lastUpdateTime) / 1000f
-                    lastUpdateTime = currentTime
+                    if (dt > 0) {
+                        // 获取Z轴角速度并反向
+                        val zRotation = -event.values[2] // 负号实现反向
+                        // 更新角度
+                        currentAngle += zRotation * dt * 180f / Math.PI.toFloat() // 转换为角度
+                        currentZ += zRotation * dt * 180f / Math.PI.toFloat() // 转换为角度
+                        // 2. compassView 跟随旋转（反向）
+                        mBinding.imgCompass.rotation = currentZ
 
-                    // 将角速度转换为角度变化（弧度转角度）
-                    val angleChange = Math.toDegrees((axisZ * deltaTime).toDouble()).toFloat()
+                        // pointView 绕圆心旋转
+                        if (abs(currentPercentage - targetPercentage) < 0.01f) {
+                            targetPercentage = (currentRssi/100).toFloat() // 0.0到1.0之间的随机百分比
+                        }
+                        currentPercentage += (targetPercentage - currentPercentage) * 0.05f // 平滑过渡
 
-                    // 更新设备累计旋转角度
-                    deviceRotationAngle += angleChange
+                        // 将百分比转换为实际半径 (圆心100%→半径最小，边缘0%→半径最大)
+                        val radiusRange = maxRadius - minRadius
+                        val currentRadius = minRadius + (1f - currentPercentage) * radiusRange
+
+                        val rad = Math.toRadians(currentAngle.toDouble())
+                        mBinding.imgPoint.x = centerX + currentRadius * cos(rad).toFloat() - mBinding.imgPoint.width / 2
+                        mBinding.imgPoint.y = centerY + currentRadius * sin(rad).toFloat() - mBinding.imgPoint.height / 2
+
+                        lastUpdateTime = now
+                    }
                 }
                 northDegree==null && event.sensor?.type == Sensor.TYPE_ROTATION_VECTOR -> {
                     val rotationMatrix = FloatArray(9)
@@ -217,61 +244,56 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
 
                     val azimuth = Math.toDegrees(orientationAngles[0].toDouble()).toFloat()
 
-                    northDegree = (azimuth + 360) % 360  // 0° 表示正北
+                    currentZ += (azimuth + 360) % 360  // 0° 表示正北
+                    northDegree = currentZ
+                    mBinding.imgCompass.rotation = currentZ
+
                 }
             }
-            updateViewRotation()
         }
     }
 
-    private fun updateViewRotation() {
-        requireActivity().runOnUiThread {
-            if(firstCount==0 && northDegree != null){
-                mBinding.img.rotation = northDegree!!
-                firstCount++
+    /** 重置：回到 AView 顶部 **/
+    private fun resetBView() {
+        // 重置时直接放回顶部 (不依赖 yaw)
+        centerX = mBinding.imgCompass.x + (mBinding.imgCompass.width / 2f)
+        centerY = mBinding.imgCompass.y + (mBinding.imgCompass.height / 2f)
+        // 放置bView到圆心正上方位置
+        currentAngle = -90f // 确保初始角度为-90度（正上方）
+        val rad = Math.toRadians(-currentAngle.toDouble())
+        mBinding.imgPoint.x = centerX + radius * cos(rad).toFloat() - mBinding.imgPoint.width / 2
+        mBinding.imgPoint.y = centerY + radius * sin(rad).toFloat() - mBinding.imgPoint.height / 2
+        lastUpdateTime = System.currentTimeMillis() // 重置时间戳
+        isFirstSensorUpdate = true // 标记下一次传感器更新为第一次
+    }
+
+    // 动画控制变量
+    private var animator: ValueAnimator? = null
+    private var currentAnimatorAngle = 0f // 记录当前角度
+    // 启动圆周运动
+    private fun startCircularMotion(view: View, centerX1: Float, centerY1: Float, radius: Float = 0f) {
+        animator?.cancel() // 取消之前的动画
+        animator = ValueAnimator.ofFloat(currentAnimatorAngle, currentAnimatorAngle + 360f).apply {
+            duration = 2000
+            interpolator = LinearInterpolator()
+            repeatCount = ValueAnimator.INFINITE
+
+            addUpdateListener {
+                val angle = it.animatedValue as Float
+                currentAnimatorAngle = angle % 360f // 更新当前角度
+                val rad = Math.toRadians(angle.toDouble())
+                view.x = centerX1 + radius * cos(rad).toFloat() - view.width / 2
+                view.y = centerY1 + radius * sin(rad).toFloat() - view.height / 2
+                view.rotation = angle
             }
-            // 设置View的旋转角度（反向）
-            mBinding.layoutA.rotation = deviceRotationAngle
-//            mBinding.cView.rotation = deviceRotationAngle
-            updateBViewPosition(mBinding.layoutA, mBinding.cView, currentRssi.toFloat(), deviceRotationAngle)
+
+            start()
         }
     }
-    private fun updateBViewPosition(aView: View, bView: View, value: Float, angleDegrees: Float) {
-        val fraction = value.coerceIn(0f, 100f) / 100f
-
-        val cx = aView.width / 2f
-        val cy = aView.height / 2f
-        val radius = minOf(cx, cy)
-        val rPrime = radius * (1 - fraction)
-
-        val theta = 0.0 // 转弧度
-
-        val newX = (cx + rPrime * Math.sin(theta) - bView.width / 2).toFloat()
-        val newY = (cy - rPrime * Math.cos(theta) - bView.height / 2).toFloat()
-
-        bView.x = newX
-        bView.y = newY
+    // 停止圆周运动
+    private fun stopCircularMotion() {
+        animator?.cancel()
     }
-    private fun resetBViewToTop(aView: View, bView: View) {
-        val cx = aView.width / 2f
-        val cy = aView.height / 2f
-        val radius = minOf(cx, cy)
-
-        // 顶部正Y轴 -> angle = 0, fraction = 0
-        val fraction = 0f
-        val rPrime = radius * (1 - fraction) // rPrime = radius
-
-        val theta = 0.0 // 顶部正Y轴
-
-        val newX = (cx + rPrime * Math.sin(theta) - bView.width / 2).toFloat()
-        val newY = (cy - rPrime * Math.cos(theta) - bView.height / 2).toFloat()
-
-        bView.x = newX
-        bView.y = newY
-    }
-
-
-
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) { }
 

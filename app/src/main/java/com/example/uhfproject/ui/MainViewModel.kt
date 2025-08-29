@@ -13,6 +13,7 @@ import com.example.uhfproject.utils.SingleLiveEvent
 import com.example.uhfproject.utils.retrofit.*
 import com.seuic.uhf.EPC
 import com.seuic.uhf.UHFService
+import com.seuic.uhfutils.EpcSearch
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
 
@@ -83,6 +84,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private var mInventoryStart = true
     fun startStock() {
         if (UHFService.getInstance(appContext).inventoryStart()) {
+            UHFService.getInstance().registerReadTags {  }
             LogUtil.d("UHF盘点开启")
             mInventoryStart = true
             _startBtn.postValue(true)
