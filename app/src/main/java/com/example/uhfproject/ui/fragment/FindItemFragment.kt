@@ -86,12 +86,22 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
             }
         }
         mBinding.btnUpload.setOnClickListener {
+            LogUtil.d("btnUpload")
+            mBinding.edtRfid.editText?.clearFocus()
+            hideKeyboard(mBinding.edtRfid.editText!!)
             val tracking = mBinding.edtRfid.editText?.text.toString()
+            if(tracking.isEmpty()){
+                return@setOnClickListener
+            }
             mainViewModel.getItemByTracking(tracking, success = {
-                currentRfid = it.epc?:""
-                mBinding.tvRfid.text = "EPC:$currentRfid"
+                lifecycleScope.launch(Dispatchers.Main){
+                    currentRfid = it.epc?:""
+                    mBinding.tvRfid.text = "EPC:$currentRfid"
+                }
             }, empty = {
-                mBinding.tvRfid.text = "Tracking# Error"
+                lifecycleScope.launch(Dispatchers.Main){
+                    mBinding.tvRfid.text = "Tracking# Error"
+                }
             })
         }
         mBinding.root.setOnTouchListener { _, event ->
@@ -107,10 +117,6 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
                 }
             }
             false
-        }
-        mBinding.btnUpload.setOnClickListener {
-            mBinding.edtRfid.editText?.clearFocus()
-            hideKeyboard(mBinding.edtRfid.editText!!)
         }
     }
 
