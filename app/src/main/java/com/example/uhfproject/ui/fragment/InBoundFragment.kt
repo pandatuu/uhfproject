@@ -6,12 +6,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.FragmentBoundBinding
-import com.example.uhfproject.ui.BaseFragment
-import com.example.uhfproject.utils.Const
+import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const.inBoundPower
 import com.example.uhfproject.utils.Const.simpleAlert
 import com.example.uhfproject.utils.Const.simpleEditAlert
-import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

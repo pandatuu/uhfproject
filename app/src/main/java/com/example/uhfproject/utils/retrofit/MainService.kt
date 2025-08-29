@@ -1,6 +1,8 @@
 package com.example.uhfproject.utils.retrofit
 
+import androidx.lifecycle.LiveData
 import com.example.uhfproject.model.*
+import com.example.uhfproject.ui.update.LatestVersionDto
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -57,4 +59,8 @@ interface MainService {
                                     @Query("status") status: Int,
                                      @Query("pageNum") pageNum: Int,
                                      @Query("pageSize") pageSize: Int) : HttpResultPager<List<ExcelDownloadVO>>
+
+
+    @GET("version/ver/getVersion")
+    fun getVersionNet(@Query("serverName") name: String = "POST_APP"): LiveData<HttpResult<LatestVersionDto>>
 }

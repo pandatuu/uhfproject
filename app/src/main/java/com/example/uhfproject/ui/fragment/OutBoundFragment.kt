@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.FragmentBoundBinding
-import com.example.uhfproject.ui.BaseFragment
+import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const.outBoundPower
 import com.example.uhfproject.utils.Const.simpleAlert
 import com.example.uhfproject.utils.Const.simpleEditAlert

@@ -8,10 +8,8 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -21,7 +19,7 @@ import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication
 import com.example.uhfproject.databinding.FragmentFindItemBinding
 import com.example.uhfproject.model.ExcelDownloadVO
-import com.example.uhfproject.ui.BaseFragment
+import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.Const.findItemPower
 import com.example.uhfproject.utils.LogUtil
@@ -30,11 +28,9 @@ import com.seuic.uhfutils.EpcSearch
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Integer.min
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.sin
-import kotlin.random.Random
 
 class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventListener {
 

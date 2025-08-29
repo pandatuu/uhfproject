@@ -1,21 +1,15 @@
 package com.example.uhfproject.ui.fragment
 
 import android.os.Bundle
-import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
-import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.FragmentInventoryBinding
 import com.example.uhfproject.model.ExcelDownloadVO
-import com.example.uhfproject.ui.BaseFragment
-import com.example.uhfproject.utils.Const
-import com.example.uhfproject.utils.Const.inventoryPower
+import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const.simpleAlert
-import com.example.uhfproject.utils.LogUtil
 import com.scwang.smart.refresh.footer.ClassicsFooter
-import com.seuic.uhf.UHFService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
