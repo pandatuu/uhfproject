@@ -175,10 +175,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
 
     //-----------------------OutBound--------------------------------
-//
-//    private val _outboundExcel: MutableLiveData<List<ExcelDownloadVO>> = MutableLiveData()
-//    val outboundExcel: LiveData<List<ExcelDownloadVO>> = _outboundExcel
-//
 
     fun submitOutBound(list: List<String>, success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {

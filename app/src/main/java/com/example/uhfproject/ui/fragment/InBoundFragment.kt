@@ -28,15 +28,20 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
             adapter = mAdapter
         }
         mAdapter.setList(emptyList())
-        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+        mBinding.tvRfidCount.text = "3000"
+//        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
     }
 
     override fun initData() {
         UHFService.getInstance(appContext).power = inBoundPower
 
         mBinding.tvBack.setOnClickListener {
-            simpleAlert(requireContext(), getString(R.string.inbound_click_back_title),getString(R.string.inbound_click_back_hint)){
-                findNavController().popBackStack()
+            if(mAdapter.data.isNotEmpty()){
+                simpleAlert(requireContext(), getString(R.string.inbound_click_back_title),getString(R.string.inbound_click_back_hint)){
+                    exit()
+                }
+            }else{
+                exit()
             }
         }
         mBinding.imgPower.setOnClickListener {
@@ -52,7 +57,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
         mBinding.btnClear.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.clear_click)){
                 mAdapter.setList(emptyList())
-                mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+//                mBinding.tvRfidCount.text = mAdapter.data.size.toString()
             }
         }
         mBinding.btnUpload.setOnClickListener {
@@ -62,7 +67,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
                 mainViewModel.submitInBound(mAdapter.data.map { it.epc?:"" }){
                     lifecycleScope.launch(Dispatchers.Main){
                         mainViewModel.stopLoading()
-                        findNavController().popBackStack()
+                        exit()
                     }
                 }
             }
@@ -72,7 +77,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
     override fun observeData() {
         mainViewModel.boundExcel.observe(viewLifecycleOwner){
             mAdapter.setList(it)
-            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+//            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
         }
     }
 
@@ -80,5 +85,9 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
         mainViewModel.clearBoundList()
         mainViewModel.stopStock()
         super.onStop()
+    }
+
+    private fun exit(){
+        findNavController().popBackStack()
     }
 }

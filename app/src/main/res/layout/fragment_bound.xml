@@ -13,15 +13,13 @@
         android:background="@drawable/bg_main_btn"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
+        <ImageView
             android:id="@+id/tv_back"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingStart="20dp"
-            android:paddingEnd="10dp"
-            android:text="@string/back"
-            android:textSize="18sp"
+            android:paddingStart="15dp"
+            android:paddingVertical="10dp"
+            android:src="@drawable/ic_back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -32,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="@string/inbound_title"
             android:textColor="#0055A3"
-            android:textSize="26sp"
+            android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +40,7 @@
             android:id="@+id/tv_rfid_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:textColor="#0055A3"
             app:layout_constraintStart_toEndOf="@+id/tv_title"
             app:layout_constraintEnd_toStartOf="@+id/img_power"

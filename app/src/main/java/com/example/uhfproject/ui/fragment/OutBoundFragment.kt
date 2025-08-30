@@ -35,12 +35,12 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
         UHFService.getInstance(appContext).power = outBoundPower
 
         mBinding.tvBack.setOnClickListener {
-            simpleAlert(
-                requireContext(), getString(R.string.outbound_click_back_title), getString(
-                    R.string.outbound_click_back_hint
-                )
-            ) {
-                findNavController().popBackStack()
+            if(mAdapter.data.isNotEmpty()){
+                simpleAlert(requireContext(), getString(R.string.outbound_click_back_title),getString(R.string.outbound_click_back_hint)){
+                    exit()
+                }
+            }else{
+                exit()
             }
         }
         mBinding.imgPower.setOnClickListener {
@@ -66,7 +66,7 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
                 mainViewModel.submitOutBound(mAdapter.data.map { it.epc?:"" }){
                     lifecycleScope.launch(Dispatchers.Main){
                         mainViewModel.stopLoading()
-                        findNavController().popBackStack()
+                        exit()
                     }
                 }
             }
@@ -84,5 +84,9 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
         mainViewModel.stopStock()
         mainViewModel.clearBoundList()
         super.onStop()
+    }
+
+    private fun exit(){
+        findNavController().popBackStack()
     }
 }

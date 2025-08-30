@@ -50,7 +50,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
             findNavController().popBackStack()
         }
         mAdapter.setOnItemClickListener{adapter, v ,position ->
-            simpleAlert(requireContext(), "Jump to FindItem page?"){
+            simpleAlert(requireContext(), "Navigate to Findltem?"){
                 val item = adapter.getItem(position) as ExcelDownloadVO
                 val bundle = Bundle()
                 bundle.putParcelable("item", item)

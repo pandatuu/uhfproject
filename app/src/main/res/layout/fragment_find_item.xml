@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:text="@string/finditem_title"
             android:textColor="#0055A3"
-            android:textSize="26sp"
+            android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
