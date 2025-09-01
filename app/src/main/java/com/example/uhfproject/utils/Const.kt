@@ -5,6 +5,8 @@ import android.text.InputType
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.example.uhfproject.R
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 object Const {
 
@@ -72,5 +74,11 @@ object Const {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    fun intToPercent(rssi: Int): BigDecimal {
+        return BigDecimal(rssi)
+            .divide(BigDecimal(100), 2, RoundingMode.HALF_UP)
+        // 除以 100，保留 2 位小数，四舍五入
     }
 }

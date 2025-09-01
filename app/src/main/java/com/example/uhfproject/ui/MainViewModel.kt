@@ -46,24 +46,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-
-
-
-    private val _epcList: MutableLiveData<List<String>> = MutableLiveData()
-    val epcList: LiveData<List<String>> = _epcList
-    private val _findList: MutableLiveData<List<EPC>> = MutableLiveData()
+    private val _findList: SingleLiveEvent<List<EPC>> = SingleLiveEvent()
     val findList: LiveData<List<EPC>> = _findList
 
     /**
      * 单次扫描
      */
     fun onceScan(epc: EPC) {
+        LogUtil.d("寻物onceScan")
         if (UHFService.getInstance(appContext).inventoryOnce(epc, 100)) {
             val id = epc.getId()
             if (id != null && "" != id) {
                 val currentList = _findList.value?.toMutableList() ?: mutableListOf()
                 if (currentList.all { it.getId() != id }) {
                     currentList.add(epc)
+                    LogUtil.d("寻物onceScan:${currentList}")
                     _findList.postValue(currentList)
                 }
             }
@@ -95,7 +92,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         _findList.postValue(tagIds.toList())
                         val epcList1 = tagIds.map { it.getId() }
                         LogUtil.d("tagIds-$epcList1")
-//                        _epcList.postValue(tagIds.map { it.getId() })
                         if(startQuest){
                             getExcelDownloadByEmp(epcList1)
                         }

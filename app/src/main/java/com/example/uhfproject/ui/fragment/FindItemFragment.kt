@@ -24,12 +24,14 @@ import com.example.uhfproject.ui.MainActivity
 import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.Const.findItemPower
+import com.example.uhfproject.utils.Const.intToPercent
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.EPC
 import com.seuic.uhf.UHFService
 import com.seuic.uhfutils.EpcSearch
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlin.math.abs
@@ -37,8 +39,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 
-class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventListener,
-    MainActivity.OnKeyEventListener {
+class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventListener {
 
     private var item: ExcelDownloadVO? = null
 
@@ -58,6 +59,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
             mBinding.edtRfid.editText?.setText(it.trackingNumber)
             mBinding.tvRfid.text = "EPC:${it.epc}"
         }
+        LogUtil.d("")
         //获取陀螺仪传感器管理器和服务
         sensorManager = requireActivity().getSystemService(Context.SENSOR_SERVICE) as SensorManager
         if (sensorManager != null) {
@@ -126,10 +128,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
             val search = EpcSearch.search(it)
             search.find { it.getId() == currentRfid }?.let {
                 currentRssi = it.rssi
-                LogUtil.d("寻物rssi成功: $currentRssi")
-
                 mBinding.tvProgress.text = "${currentRssi}%"
-
                 onValueChanged(currentRssi)
             }
         }
@@ -171,11 +170,6 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
 
     override fun onResume() {
         super.onResume()
-
-        if (requireActivity() is MainActivity) {
-            (activity as MainActivity).setKeyEventListener(this)
-        }
-
         // 注册监听器，设置采样速率（例如：SENSOR_DELAY_UI）
         gyroscopeSensor?.also { sensor ->
             sensorManager?.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
@@ -189,16 +183,15 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
         super.onPause()
         // 务必注销监听器以节省电量
 //        mainViewModel.stopStock()
-        scanJob.cancel()
         sensorManager?.unregisterListener(this)
         gyroscopeSensor = null
         rotationVectorSensor = null
         sensorManager = null
     }
 
-    private var centerX = 400f
-    private var centerY = 640f
-    private var radius = 200f
+    private var centerX = 0f
+    private var centerY = 0f
+    private var radius = 150f
     private var currentAngle = -90f
     private var lastUpdateTime = 0L
     private var isFirstSensorUpdate = true // 标记是否是第一次传感器更新
@@ -207,7 +200,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
     private var currentPercentage = 0.5f // 初始位置在中间 (50%)
     private var targetPercentage = 0.5f
     private val minRadius = 0f
-    private val maxRadius = 150f
+    private val maxRadius = 275f
 
     override fun onSensorChanged(event: SensorEvent) {
         when {
@@ -225,24 +218,12 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
                     // 获取Z轴角速度并反向
                     val zRotation = -event.values[2] // 负号实现反向
                     // 更新角度
-                    currentAngle += zRotation * dt * 180f / Math.PI.toFloat() // 转换为角度
+                    currentAngle += (-zRotation) * dt * 180f / Math.PI.toFloat() // 转换为角度
                     currentZ += zRotation * dt * 180f / Math.PI.toFloat() // 转换为角度
                     // 2. compassView 跟随旋转（反向）
                     mBinding.imgCompass.rotation = currentZ
 
-                    // pointView 绕圆心旋转
-                    if (abs(currentPercentage - targetPercentage) < 0.01f) {
-                        targetPercentage = (currentRssi/100).toFloat() // 0.0到1.0之间的随机百分比
-                    }
-                    currentPercentage += (targetPercentage - currentPercentage) * 0.05f // 平滑过渡
-
-                    // 将百分比转换为实际半径 (圆心100%→半径最小，边缘0%→半径最大)
-                    val radiusRange = maxRadius - minRadius
-                    val currentRadius = minRadius + (1f - currentPercentage) * radiusRange
-
-                    val rad = Math.toRadians(currentAngle.toDouble())
-                    mBinding.imgPoint.x = centerX + currentRadius * cos(rad).toFloat() - mBinding.imgPoint.width / 2
-                    mBinding.imgPoint.y = centerY + currentRadius * sin(rad).toFloat() - mBinding.imgPoint.height / 2
+                    updatePointPosition(intToPercent(currentRssi).toFloat())
 
                     lastUpdateTime = now
                 }
@@ -262,6 +243,16 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
 
             }
         }
+    }
+
+    private fun updatePointPosition(rssi: Float){
+        // 将百分比转换为实际半径 (圆心100%→半径最小，边缘0%→半径最大)
+        val radiusRange = maxRadius - minRadius
+        val currentRadius = minRadius + (1 - rssi) * radiusRange
+
+        val rad = Math.toRadians(currentAngle.toDouble())
+        mBinding.imgPoint.x = centerX + currentRadius * cos(rad).toFloat() - mBinding.imgPoint.width / 2
+        mBinding.imgPoint.y = centerY + currentRadius * sin(rad).toFloat() - mBinding.imgPoint.height / 2
     }
 
     /** 重置：回到 AView 顶部 **/
@@ -308,25 +299,5 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) { }
 
-    private var keyStatus = false
-    private val scanJob = lifecycleScope.launch(Dispatchers.IO){
-        val epc = EPC()
-        while (keyStatus){
-            mainViewModel.onceScan(epc)
-            delay(100)
-        }
-    }
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if(!keyStatus){
-            keyStatus = true
-            if (!scanJob.isActive){
-                scanJob.start()
-            }
-        }else{
-            keyStatus = false
-            scanJob.cancel()
-        }
-        return true // 返回true表示已处理该事件
-    }
 
 }

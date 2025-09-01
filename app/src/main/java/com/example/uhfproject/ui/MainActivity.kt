@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
-        val navController = navHostFragment.navController
+        navHostFragment.navController
     }
 
     override fun onResume() {
@@ -61,9 +61,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
-        if (keyEventListener != null && keyEventListener!!.onKeyDown(keyCode, event)) {
-            return true
-        }
         if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
             if(!keyStatus){
                 keyStatus = true
@@ -82,13 +79,5 @@ class MainActivity : AppCompatActivity() {
         uhfService?.close()
         LogUtil.d("UHF扫描关闭")
         uhfService = null
-    }
-
-    private var keyEventListener: OnKeyEventListener? = null
-    fun setKeyEventListener(listener: OnKeyEventListener?) {
-        keyEventListener = listener
-    }
-    interface OnKeyEventListener {
-        fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean
     }
 }

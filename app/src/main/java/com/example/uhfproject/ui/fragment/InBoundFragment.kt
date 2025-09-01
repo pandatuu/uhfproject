@@ -28,8 +28,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
             adapter = mAdapter
         }
         mAdapter.setList(emptyList())
-        mBinding.tvRfidCount.text = "3000"
-//        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
     }
 
     override fun initData() {
@@ -57,7 +56,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
         mBinding.btnClear.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.clear_click)){
                 mAdapter.setList(emptyList())
-//                mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+                mBinding.tvRfidCount.text = mAdapter.data.size.toString()
             }
         }
         mBinding.btnUpload.setOnClickListener {
@@ -77,7 +76,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
     override fun observeData() {
         mainViewModel.boundExcel.observe(viewLifecycleOwner){
             mAdapter.setList(it)
-//            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
         }
     }
 
