@@ -3,23 +3,16 @@ package com.example.uhfproject.ui
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.KeyEvent
-import android.view.MotionEvent
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.NavHostFragment
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.ActivityMainBinding
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
-import es.dmoral.toasty.Toasty
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -65,18 +58,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var keyStatus = false
-    private var countdownTimer: CountDownTimer? = null
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
+        if (keyEventListener != null && keyEventListener!!.onKeyDown(keyCode, event)) {
+            return true
+        }
         if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
             if(!keyStatus){
                 keyStatus = true
                 mViewModel.startStock()
             }else{
                 keyStatus = false
-                countdownTimer?.cancel()
-                countdownTimer = null
                 mViewModel.stopStock()
             }
             return true
@@ -89,7 +82,13 @@ class MainActivity : AppCompatActivity() {
         uhfService?.close()
         LogUtil.d("UHF扫描关闭")
         uhfService = null
-        countdownTimer?.cancel()
-        countdownTimer = null
+    }
+
+    private var keyEventListener: OnKeyEventListener? = null
+    fun setKeyEventListener(listener: OnKeyEventListener?) {
+        keyEventListener = listener
+    }
+    interface OnKeyEventListener {
+        fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean
     }
 }

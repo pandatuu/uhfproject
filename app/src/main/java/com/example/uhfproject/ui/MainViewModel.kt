@@ -57,15 +57,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * 单次扫描
      */
-    fun onceScan() {
-        val epc = EPC()
+    fun onceScan(epc: EPC) {
         if (UHFService.getInstance(appContext).inventoryOnce(epc, 100)) {
             val id = epc.getId()
             if (id != null && "" != id) {
-                val currentList = _epcList.value?.toMutableList() ?: mutableListOf()
-                if (currentList.all { it != id }) {
-                    currentList.add(epc.getId())
-                    _epcList.postValue(currentList)
+                val currentList = _findList.value?.toMutableList() ?: mutableListOf()
+                if (currentList.all { it.getId() != id }) {
+                    currentList.add(epc)
+                    _findList.postValue(currentList)
                 }
             }
         }
