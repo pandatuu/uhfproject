@@ -52,20 +52,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * 单次扫描
      */
-    fun onceScan(epc: EPC) {
-        LogUtil.d("寻物onceScan")
-        if (UHFService.getInstance(appContext).inventoryOnce(epc, 100)) {
-            val id = epc.getId()
-            if (id != null && "" != id) {
-                val currentList = _findList.value?.toMutableList() ?: mutableListOf()
-                if (currentList.all { it.getId() != id }) {
-                    currentList.add(epc)
-                    LogUtil.d("寻物onceScan:${currentList}")
-                    _findList.postValue(currentList)
-                }
-            }
-        }
-    }
+//    fun onceScan(epc: EPC) {
+//        LogUtil.d("寻物onceScan")
+//        if (UHFService.getInstance(appContext).inventoryOnce(epc, 100)) {
+//            val id = epc.getId()
+//            if (id != null && "" != id) {
+//                val currentList = _findList.value?.toMutableList() ?: mutableListOf()
+//                if (currentList.all { it.getId() != id }) {
+//                    currentList.add(epc)
+//                    LogUtil.d("寻物onceScan:${currentList}")
+//                    _findList.postValue(currentList)
+//                }
+//            }
+//        }
+//    }
 
     private val _startBtn: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val startBtn: LiveData<Boolean> = _startBtn

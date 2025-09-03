@@ -57,7 +57,8 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
         item = arguments?.getParcelable("item") as ExcelDownloadVO?
         item?.let {
             mBinding.edtRfid.editText?.setText(it.trackingNumber)
-            mBinding.tvRfid.text = "EPC:${it.epc}"
+            currentRfid = it.epc?:""
+            mBinding.tvRfid.text = "EPC:$currentRfid"
         }
         LogUtil.d("")
         //获取陀螺仪传感器管理器和服务

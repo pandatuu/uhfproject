@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 示例：共享外部存储根目录下的文件 -->
+    <external-path name="external_files" path="." />
+    <!-- 还可以根据需要添加其他路径，如 files-path, cache-path 等 -->
+</paths>
