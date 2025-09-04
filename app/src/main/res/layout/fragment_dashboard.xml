@@ -60,6 +60,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textColor="@color/black"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_total_num"
         app:layout_constraintStart_toEndOf="@+id/tv_total_num"
         app:layout_constraintTop_toTopOf="@+id/tv_total_num"
@@ -147,35 +148,59 @@
         app:layout_constraintStart_toEndOf="@+id/tv_completed_title"
         app:layout_constraintTop_toTopOf="@+id/tv_completed_title" />
 
-    <TextView
-        android:id="@+id/pending_inbound"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pending_inbound_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/dashboard_completed"
-        android:textSize="18sp"
-        android:textColor="#0055A3"
-        android:gravity="center"
         android:paddingVertical="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_inbound_title"
         app:layout_constraintEnd_toEndOf="@+id/tv_pending_title"
         app:layout_constraintStart_toStartOf="@+id/tv_pending_title"
-        app:layout_constraintTop_toTopOf="@+id/tv_inbound_title"
-        tools:text="4000" />
+        app:layout_constraintTop_toTopOf="@+id/tv_inbound_title" >
 
-    <TextView
-        android:id="@+id/pending_outbound"
+        <TextView
+            android:id="@+id/pending_inbound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dashboard_completed"
+            android:textSize="18sp"
+            android:textColor="#0055A3"
+            android:gravity="center"
+            android:background="@drawable/bg_blue_bottom_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="4000" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/pending_outbound_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/dashboard_completed"
-        android:textSize="18sp"
-        android:textColor="#0055A3"
-        android:gravity="center"
         android:paddingVertical="5dp"
         app:layout_constraintBottom_toBottomOf="@+id/tv_outbound_title"
         app:layout_constraintEnd_toEndOf="@+id/tv_pending_title"
         app:layout_constraintStart_toStartOf="@+id/tv_pending_title"
-        app:layout_constraintTop_toTopOf="@+id/tv_outbound_title"
-        tools:text="4000" />
+        app:layout_constraintTop_toTopOf="@+id/tv_outbound_title" >
+
+        <TextView
+            android:id="@+id/pending_outbound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dashboard_completed"
+            android:textSize="18sp"
+            android:textColor="#0055A3"
+            android:gravity="center"
+            android:background="@drawable/bg_blue_bottom_border"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="4000" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/tv_txt1"

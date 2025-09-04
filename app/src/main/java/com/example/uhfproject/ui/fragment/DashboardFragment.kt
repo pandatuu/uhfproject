@@ -13,6 +13,8 @@ import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.*
 
 class DashboardFragment:BaseFragment<FragmentDashboardBinding>() {
 
@@ -28,7 +30,7 @@ class DashboardFragment:BaseFragment<FragmentDashboardBinding>() {
     override fun initData() {
         mainViewModel.getHeadInfo{
             lifecycleScope.launch(Dispatchers.Main){
-                mBinding.totalNum.text = it.total.toString()
+                mBinding.totalNum.text = formatNumberWithCommas(it.total?:0)
                 mBinding.completedInbound.text = it.inboundNumber.toString()
                 mBinding.completedOutbound.text = it.outboundNumber.toString()
                 mBinding.pendingInbound.text = it.pendingInboundNumber.toString()
@@ -43,10 +45,10 @@ class DashboardFragment:BaseFragment<FragmentDashboardBinding>() {
         mBinding.tvBack.setOnClickListener {
             exit()
         }
-        mBinding.pendingInbound.setOnClickListener {
+        mBinding.pendingInboundLayout.setOnClickListener {
             showCheckBoundFragment("Pending Inbound")
         }
-        mBinding.pendingOutbound.setOnClickListener {
+        mBinding.pendingOutboundLayout.setOnClickListener {
             showCheckBoundFragment("Pending Outbound")
         }
     }
@@ -57,6 +59,11 @@ class DashboardFragment:BaseFragment<FragmentDashboardBinding>() {
 
     private fun exit(){
         findNavController().popBackStack()
+    }
+
+    private fun formatNumberWithCommas(number: Int): String {
+        val numberFormat = NumberFormat.getNumberInstance(Locale.US) // 使用美国 locale（逗号分隔）
+        return numberFormat.format(number)
     }
 }
 
