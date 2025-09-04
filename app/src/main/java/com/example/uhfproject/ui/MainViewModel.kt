@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.uhfproject.app.MyApplication.Companion.appContext
+import com.example.uhfproject.model.DashboardNumberVO
+import com.example.uhfproject.model.DashboardTopVO
 import com.example.uhfproject.model.ExcelDownloadVO
 import com.example.uhfproject.model.InfoPromptsVO
 import com.example.uhfproject.utils.LogUtil
@@ -20,6 +22,7 @@ import kotlinx.coroutines.*
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val rep = MainRep()
 
+    var username = ""
 
     private val _loading: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val loading: LiveData<Boolean> = _loading
@@ -251,9 +254,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     }
                 }.onServerError { _, msg ->
                     showWarn("Query failed")
+                    endLoading.invoke()
                     stopLoading()
                 }.onOtherError {
                     showWarn(it.message ?: "")
+                    endLoading.invoke()
                     stopLoading()
                 }
         }
@@ -334,6 +339,38 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    //-----------------------Dashboard--------------------------------
+
+    fun getHeadInfo(success: (DashboardNumberVO) -> Unit){
+        viewModelScope.launch(Dispatchers.IO){
+            rep.getStatisticsRep()
+                .onSuccess {
+                    success.invoke(this)
+                }.onServerError { code, msg ->
+                    showError(msg)
+                }.onOtherError {
+                    showError(it.message?:"")
+                }
+        }
+    }
+
+    fun getRvList(success: (List<DashboardTopVO>) -> Unit){
+        viewModelScope.launch(Dispatchers.IO){
+            rep.getTopRep()
+                .onSuccess {
+                    success.invoke(this)
+                }.onServerError { code, msg ->
+                    showError(msg)
+                }.onOtherError {
+                    showError(it.message?:"")
+                }
+        }
+    }
+
+
+
+
+
     private suspend fun showSuccess(msg: String) {
         withContext(Dispatchers.Main) {
             Toasty.success(appContext, msg).show()
@@ -388,4 +425,15 @@ class MainRep() {
         }
     }
 
+    suspend fun getStatisticsRep(): APIResult<DashboardNumberVO> {
+        return safeNetworkInvoke {
+            service.getStatisticsNet()
+        }
+    }
+
+    suspend fun getTopRep(): APIResult<List<DashboardTopVO>> {
+        return safeNetworkInvoke {
+            service.getTopNet()
+        }
+    }
 }

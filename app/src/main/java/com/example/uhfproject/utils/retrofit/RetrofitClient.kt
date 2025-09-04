@@ -1,5 +1,8 @@
 package com.example.uhfproject.utils.retrofit
 
+import com.example.uhfproject.utils.Const.ACCESS_TOKEN
+import com.example.uhfproject.utils.Const.ip
+import com.example.uhfproject.utils.Const.port
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -8,7 +11,10 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    private const val BASE_URL = "http://101.43.218.72:8080" // 替换为你的API基础URL
+    private val BASE_URL = "http://$ip:$port"
+    val urlInterceptor = BaseUrlInterceptor(BASE_URL)
+    private val tokenInterceptor = UpdateTokenInterceptor(ACCESS_TOKEN)
+
     private const val TIMEOUT = 30L // 超时时间30秒
 
     private val okHttpClient by lazy {
@@ -20,6 +26,8 @@ object RetrofitClient {
             .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(TIMEOUT, TimeUnit.SECONDS)
             .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+            .addInterceptor(urlInterceptor)
+            .addInterceptor(tokenInterceptor)
             .addInterceptor(loggingInterceptor)
             // 可以添加其他拦截器，如认证拦截器
             .build()
@@ -40,5 +48,11 @@ object RetrofitClient {
     // 使用内联函数和reified类型参数简化API服务创建
     inline fun <reified T> createService(): T {
         return createService(T::class.java)
+    }
+
+    fun updateTokenAndRefreshToken(token: String) {
+        if (token != null) {
+            tokenInterceptor.updateTokenAndRefreshToken(token)
+        }
     }
 }

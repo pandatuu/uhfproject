@@ -27,6 +27,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(mBinding.root)
         mViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
+        mViewModel.username = intent.getStringExtra("username") ?: ""
+
         uhfService = UHFService.getInstance(appContext)
 
         mViewModel.loading.observe(this) {

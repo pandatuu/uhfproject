@@ -4,7 +4,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/mainFragment">
 
-
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.uhfproject.ui.MainFragment"
@@ -21,6 +20,9 @@
         <action
             android:id="@+id/action_mainFragment_to_findItemFragment"
             app:destination="@id/findItemFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
     </fragment>
     <fragment
         android:id="@+id/inBoundFragment"
@@ -42,6 +44,18 @@
         android:id="@+id/findItemFragment"
         android:name="com.example.uhfproject.ui.fragment.FindItemFragment"
         android:label="FindItemFragment" />
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.uhfproject.ui.fragment.DashboardFragment"
+        android:label="DashboardFragment" >
+        <action
+            android:id="@+id/action_dashboardFragment_to_checkBoundFragment"
+            app:destination="@id/checkBoundFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkBoundFragment"
+        android:name="com.example.uhfproject.ui.fragment.CheckBoundFragment"
+        android:label="CheckBoundFragment" />
 
 
 </navigation>

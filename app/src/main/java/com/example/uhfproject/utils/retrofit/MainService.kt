@@ -27,6 +27,12 @@ interface MainService {
     /**
      * 查询快递单号列表
      */
+    @POST("login")
+    suspend fun loginNet(@Body body: LoginBody) : LoginResult<Any>
+
+    /**
+     * 查询快递单号列表
+     */
     @GET("post/getTrackingIdList")
     suspend fun getTrackingIdListNet(@Query("status") status: Int,
                                      @Query("pageNum") pageNum: Int,
@@ -60,6 +66,31 @@ interface MainService {
                                      @Query("pageNum") pageNum: Int,
                                      @Query("pageSize") pageSize: Int) : HttpResultPager<List<ExcelDownloadVO>>
 
+    /**
+     * 获取相关统计数量
+     */
+    @GET("dashboard/getStatistics")
+    suspend fun getStatisticsNet() : HttpResult<DashboardNumberVO>
+
+    /**
+     * 根据DB获取排行榜数据
+     */
+    @GET("dashboard/getTop")
+    suspend fun getTopNet() : HttpResult<List<DashboardTopVO>>
+
+    /**
+     * 获取待入库数据
+     */
+    @GET("dashboard/getPendingInbound")
+    suspend fun getPendingInboundNet(@Query("pageNum") pageNum: Int,
+                                     @Query("pageSize") pageSize: Int) : HttpResultPager<List<ExcelDownloadVO>>
+
+    /**
+     * 获取剩余出库数据
+     */
+    @GET("dashboard/getPendingOutbound")
+    suspend fun getPendingOutboundNet(@Query("pageNum") pageNum: Int,
+                                      @Query("pageSize") pageSize: Int) : HttpResultPager<List<ExcelDownloadVO>>
 
     @GET("version/ver/getVersion")
     fun getVersionNet(@Query("serverName") name: String = "POST_APP"): LiveData<HttpResult<LatestVersionDto>>

@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.AudioManager
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +32,8 @@ abstract class BaseDialogFragment<V : ViewBinding> : DialogFragment() {
     protected abstract fun initListener()
 
     protected abstract fun initResume()
+    var dialogWidth:Float = 550f
+    var dialogHeight:Float = 525f
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,6 +77,17 @@ abstract class BaseDialogFragment<V : ViewBinding> : DialogFragment() {
         super.onResume()
         //设置dialog的大小
         initResume()
+        val widthDP =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dialogWidth, resources.displayMetrics)
+                .toInt()
+        val heightDP =
+            TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dialogHeight, resources.displayMetrics)
+                .toInt()
+
+        val params: ViewGroup.LayoutParams = dialog!!.window!!.attributes
+        params.width = widthDP
+        params.height = heightDP
+        dialog!!.window!!.attributes = params as WindowManager.LayoutParams
     }
 
     /**

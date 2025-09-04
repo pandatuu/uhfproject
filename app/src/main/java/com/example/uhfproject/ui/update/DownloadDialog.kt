@@ -164,6 +164,15 @@ fun Fragment.showDownloadDialog(
     )
 }
 
+fun AppCompatActivity.showDownloadDialog(
+    latestVersion: LatestVersionDto
+) {
+    DownloadDialog(latestVersion).show(
+        supportFragmentManager,
+        "DownloadDialog"
+    )
+}
+
 data class LatestVersionDto(
     val apkName: String,
     val version: String,

@@ -26,4 +26,12 @@
     <string name="finditem_title">FINDITEM</string>
     <string name="finditem_click_power_hint">Set inbound power (numeric only)</string>
 
+    <string name="dashboard_title">Dashboard</string>
+    <string name="dashboard_txt1">Total Upload Today</string>
+    <string name="dashboard_completed">Completed</string>
+    <string name="dashboard_pending">Pending</string>
+    <string name="dashboard_txt2">Inbound</string>
+    <string name="dashboard_txt3">Outbound</string>
+    <string name="dashboard_txt4">Top 10 DB volume</string>
+
 </resources>

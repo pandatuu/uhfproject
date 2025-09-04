@@ -7,10 +7,9 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.WindowManager
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import com.example.uhfproject.databinding.DialogCheckversionBinding
 import com.example.uhfproject.utils.BaseDialogFragment
-import com.example.uhfproject.utils.LogUtil
 import com.example.uhfproject.utils.retrofit.LiveDataCallAdapterFactory
 import com.example.uhfproject.utils.retrofit.MainService
 import retrofit2.Retrofit
@@ -95,6 +94,6 @@ class CheckVersionDialog() : BaseDialogFragment<DialogCheckversionBinding>() {
     }
 }
 
-fun Fragment.showCheckVersionDialog() {
-    CheckVersionDialog().show(childFragmentManager, "CheckVersionDialog")
+fun AppCompatActivity.showCheckVersionDialog() {
+    CheckVersionDialog().show(supportFragmentManager, "CheckVersionDialog")
 }

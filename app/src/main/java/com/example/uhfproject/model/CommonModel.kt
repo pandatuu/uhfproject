@@ -13,3 +13,9 @@ data class HttpResult<T>(
     var data: T? = null
 )
 
+data class LoginResult<T>(
+    var code: Int = 0,
+    var msg: String? = "",
+    var token: String? = ""
+)
+

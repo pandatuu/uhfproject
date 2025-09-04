@@ -10,6 +10,33 @@ import java.math.RoundingMode
 
 object Const {
 
+    var ACCESS_TOKEN: String = ""
+
+    private const val IP_VALUE = "101.43.218.72"
+    var ip: String
+        set(value) = SPUtils.putString("IP_KEY", value)
+        get() = SPUtils.getString("IP_KEY", IP_VALUE)
+
+    private const val PORT_VALUE = "8080"
+    var port: String
+        set(value) = SPUtils.putString("PORT_KEY", value)
+        get() = SPUtils.getString("PORT_KEY", PORT_VALUE)
+
+    private const val READ_ME_VALUE = false
+    var isReadMe: Boolean
+        set(value) = SPUtils.putBoolean("READ_ME", value)
+        get() = SPUtils.getBoolean("READ_ME", READ_ME_VALUE)
+
+    private const val READ_ME_NAME = ""
+    var readMeName: String
+        set(value) = SPUtils.putString("READ_ME_NAME", value)
+        get() = SPUtils.getString("READ_ME_NAME", READ_ME_NAME)
+
+    private const val READ_ME_PASSWORD = ""
+    var readMePassword: String
+        set(value) = SPUtils.putString("READ_ME_PASSWORD", value)
+        get() = SPUtils.getString("READ_ME_PASSWORD", READ_ME_PASSWORD)
+
     private const val INBOUND_POWER = 30
     var inBoundPower: Int
         get() = SPUtils.getInt("INBOUND_POWER", INBOUND_POWER)
