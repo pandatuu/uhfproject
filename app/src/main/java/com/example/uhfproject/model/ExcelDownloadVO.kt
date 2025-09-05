@@ -13,9 +13,9 @@ data class ExcelDownloadVO(
 
     val trackingNumber: String? = null,
 
-    val postCode: String? = null,
+    val postalCode: String? = null,
 
-    val bitCode: String? = null,
+    val beat: String? = null,
 
     val reservedField1: String? = null,
 

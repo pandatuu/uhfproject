@@ -31,36 +31,36 @@
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintWidth_percent="0.35"
-        app:layout_constraintEnd_toStartOf="@+id/item_post_code"
+        app:layout_constraintEnd_toStartOf="@+id/item_postal_code"
         app:layout_constraintStart_toEndOf="@+id/item_sn"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
-        android:id="@+id/item_post_code"
+        android:id="@+id/item_postal_code"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        tools:text="Post Code"
+        tools:text="Postal Code"
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintWidth_percent="0.2"
-        app:layout_constraintEnd_toStartOf="@+id/item_bit_code"
+        app:layout_constraintEnd_toStartOf="@+id/item_beat"
         app:layout_constraintStart_toEndOf="@+id/item_traking_id"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
-        android:id="@+id/item_bit_code"
+        android:id="@+id/item_beat"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        tools:text="Bit Code"
+        tools:text="Beat"
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintWidth_percent="0.2"
         app:layout_constraintEnd_toStartOf="@+id/item_other"
-        app:layout_constraintStart_toEndOf="@+id/item_post_code"
+        app:layout_constraintStart_toEndOf="@+id/item_postal_code"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -74,7 +74,7 @@
         android:textSize="14sp"
         app:layout_constraintWidth_percent="0.15"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/item_bit_code"
+        app:layout_constraintStart_toEndOf="@+id/item_beat"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 

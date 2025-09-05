@@ -98,7 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingVertical="5dp"
-            app:layout_constraintEnd_toStartOf="@+id/post_code_head_layout"
+            app:layout_constraintEnd_toStartOf="@+id/postal_code_head_layout"
             app:layout_constraintStart_toEndOf="@+id/sn_head_layout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.35">
@@ -129,71 +129,71 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/post_code_head_layout"
+            android:id="@+id/postal_code_head_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingVertical="5dp"
-            app:layout_constraintEnd_toStartOf="@+id/bit_code_head_layout"
+            app:layout_constraintEnd_toStartOf="@+id/beat_head_layout"
             app:layout_constraintStart_toEndOf="@+id/tracking_id_head_layout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.2">
 
             <TextView
-                android:id="@+id/tv_post_code"
+                android:id="@+id/tv_postal_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Post Code"
+                android:text="Postal Code"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/img_post_code"
+                app:layout_constraintEnd_toStartOf="@+id/img_postal_code"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/img_post_code"
+                android:id="@+id/img_postal_code"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
                 android:src="@null"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_post_code"
+                app:layout_constraintStart_toEndOf="@+id/tv_postal_code"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bit_code_head_layout"
+            android:id="@+id/beat_head_layout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:paddingVertical="5dp"
             app:layout_constraintEnd_toStartOf="@+id/other_head_layout"
-            app:layout_constraintStart_toEndOf="@+id/post_code_head_layout"
+            app:layout_constraintStart_toEndOf="@+id/postal_code_head_layout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.2">
 
             <TextView
-                android:id="@+id/tv_bit_code"
+                android:id="@+id/tv_beat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Bit Code"
+                android:text="Beat"
                 android:textColor="@color/black"
                 android:textSize="12sp"
-                app:layout_constraintEnd_toStartOf="@+id/img_bit_code"
+                app:layout_constraintEnd_toStartOf="@+id/img_beat"
                 app:layout_constraintHorizontal_chainStyle="packed"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ImageView
-                android:id="@+id/img_bit_code"
+                android:id="@+id/img_beat"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
                 android:src="@null"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/tv_bit_code"
+                app:layout_constraintStart_toEndOf="@+id/tv_beat"
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -204,7 +204,7 @@
             android:layout_height="wrap_content"
             android:paddingVertical="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/bit_code_head_layout"
+            app:layout_constraintStart_toEndOf="@+id/beat_head_layout"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintWidth_percent="0.15">
 

@@ -42,8 +42,8 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
     override fun initData() {
         mainViewModel.snSort = 0
         mainViewModel.trackingIdSort = 0
-        mainViewModel.postCodeSort = 0
-        mainViewModel.bitCodeSort = 0
+        mainViewModel.postalCodeSort = 0
+        mainViewModel.beatSort = 0
         mainViewModel.otherSort = 0
 
         mBinding.tvBack.setOnClickListener {
@@ -89,34 +89,34 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
             }
             mainViewModel.listSort()
         }
-        mBinding.postCodeHeadLayout.setOnClickListener {
-            mainViewModel.postCodeSort++
-            when (mainViewModel.postCodeSort) {
+        mBinding.postalCodeHeadLayout.setOnClickListener {
+            mainViewModel.postalCodeSort++
+            when (mainViewModel.postalCodeSort) {
                 1 -> {
-                    mBinding.imgPostCode.setImageResource(R.drawable.ic_sort_down)
+                    mBinding.imgpostalCode.setImageResource(R.drawable.ic_sort_down)
                 }
                 2 -> {
-                    mBinding.imgPostCode.setImageResource(R.drawable.ic_sort_up)
+                    mBinding.imgpostalCode.setImageResource(R.drawable.ic_sort_up)
                 }
                 3 -> {
-                    mBinding.imgPostCode.setImageResource(0)
-                    mainViewModel.postCodeSort = 0
+                    mBinding.imgpostalCode.setImageResource(0)
+                    mainViewModel.postalCodeSort = 0
                 }
             }
             mainViewModel.listSort()
         }
-        mBinding.bitCodeHeadLayout.setOnClickListener {
-            mainViewModel.bitCodeSort++
-            when (mainViewModel.bitCodeSort) {
+        mBinding.beatHeadLayout.setOnClickListener {
+            mainViewModel.beatSort++
+            when (mainViewModel.beatSort) {
                 1 -> {
-                    mBinding.imgBitCode.setImageResource(R.drawable.ic_sort_down)
+                    mBinding.imgbeat.setImageResource(R.drawable.ic_sort_down)
                 }
                 2 -> {
-                    mBinding.imgBitCode.setImageResource(R.drawable.ic_sort_up)
+                    mBinding.imgbeat.setImageResource(R.drawable.ic_sort_up)
                 }
                 3 -> {
-                    mBinding.imgBitCode.setImageResource(0)
-                    mainViewModel.bitCodeSort = 0
+                    mBinding.imgbeat.setImageResource(0)
+                    mainViewModel.beatSort = 0
                 }
             }
             mainViewModel.listSort()

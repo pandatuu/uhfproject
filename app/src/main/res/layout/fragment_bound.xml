@@ -60,12 +60,34 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:id="@+id/v_scan_hint"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_scan_hint"
+        app:layout_constraintTop_toTopOf="@+id/tv_scan_hint"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_scan_hint" />
+
+    <TextView
+        android:id="@+id/tv_scan_hint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/title_layout"
+        app:layout_constraintBottom_toTopOf="@+id/table_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/table_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="10dp"
-        app:layout_constraintTop_toBottomOf="@+id/title_layout"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_scan_hint"
         app:layout_constraintBottom_toTopOf="@+id/btn_clear">
 
         <TextView
@@ -90,34 +112,34 @@
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintWidth_percent="0.35"
-            app:layout_constraintEnd_toStartOf="@+id/tv_post_code_head"
+            app:layout_constraintEnd_toStartOf="@+id/tv_postal_code_head"
             app:layout_constraintStart_toEndOf="@+id/tv_sn_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_post_code_head"
+            android:id="@+id/tv_postal_code_head"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Post Code"
+            android:text="Postal Code"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintWidth_percent="0.2"
-            app:layout_constraintEnd_toStartOf="@+id/tv_bit_code_head"
+            app:layout_constraintEnd_toStartOf="@+id/tv_beat_head"
             app:layout_constraintStart_toEndOf="@+id/tv_traking_id_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_bit_code_head"
+            android:id="@+id/tv_beat_head"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Bit Code"
+            android:text="Beat"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintWidth_percent="0.2"
             app:layout_constraintEnd_toStartOf="@+id/tv_other_head"
-            app:layout_constraintStart_toEndOf="@+id/tv_post_code_head"
+            app:layout_constraintStart_toEndOf="@+id/tv_postal_code_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -130,7 +152,7 @@
             android:textSize="12sp"
             app:layout_constraintWidth_percent="0.15"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_bit_code_head"
+            app:layout_constraintStart_toEndOf="@+id/tv_beat_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View

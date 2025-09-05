@@ -3,6 +3,7 @@ package com.example.uhfproject.ui.fragment
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Rect
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -53,6 +54,9 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
 
 
     override fun initView() {
+        mActivity = requireActivity() as MainActivity
+        mBinding.vScanHint.setBackgroundColor(Color.GRAY)
+        mBinding.tvScanHint.text = "Not Scanned"
         mainViewModel.startQuest = false
         item = arguments?.getParcelable("item") as ExcelDownloadVO?
         item?.let {
@@ -178,6 +182,24 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
         rotationVectorSensor?.also { sensor ->
             sensorManager?.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI)
         }
+        mActivity?.onKeyDownCallback = { keyCode, event ->
+            if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
+                if(!keyStatus){
+                    keyStatus = true
+                    mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
+                    mBinding.tvScanHint.text = "Scanning"
+                    mainViewModel.startStock()
+                }else{
+                    keyStatus = false
+                    mBinding.vScanHint.setBackgroundColor(Color.GRAY)
+                    mBinding.tvScanHint.text = "Not Scanned"
+                    mainViewModel.stopStock()
+                }
+                true
+            } else {
+                false
+            }
+        }
     }
 
     override fun onPause() {
@@ -299,6 +321,13 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) { }
+    private var keyStatus = false
+    private var mActivity: MainActivity? = null
 
+    override fun onStop() {
+        mainViewModel.stopStock()
+        mActivity?.onKeyDownCallback = null
+        super.onStop()
+    }
 
 }

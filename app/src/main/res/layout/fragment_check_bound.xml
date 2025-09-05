@@ -35,34 +35,34 @@
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintWidth_percent="0.35"
-            app:layout_constraintEnd_toStartOf="@+id/tv_post_code_head"
+            app:layout_constraintEnd_toStartOf="@+id/tv_postal_code_head"
             app:layout_constraintStart_toEndOf="@+id/tv_sn_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_post_code_head"
+            android:id="@+id/tv_postal_code_head"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Post Code"
+            android:text="Postal Code"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintWidth_percent="0.2"
-            app:layout_constraintEnd_toStartOf="@+id/tv_bit_code_head"
+            app:layout_constraintEnd_toStartOf="@+id/tv_beat_head"
             app:layout_constraintStart_toEndOf="@+id/tv_traking_id_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tv_bit_code_head"
+            android:id="@+id/tv_beat_head"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Bit Code"
+            android:text="Beat"
             android:textColor="@color/black"
             android:textSize="12sp"
             app:layout_constraintWidth_percent="0.2"
             app:layout_constraintEnd_toStartOf="@+id/tv_other_head"
-            app:layout_constraintStart_toEndOf="@+id/tv_post_code_head"
+            app:layout_constraintStart_toEndOf="@+id/tv_postal_code_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -75,7 +75,7 @@
             android:textSize="12sp"
             app:layout_constraintWidth_percent="0.15"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_bit_code_head"
+            app:layout_constraintStart_toEndOf="@+id/tv_beat_head"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View

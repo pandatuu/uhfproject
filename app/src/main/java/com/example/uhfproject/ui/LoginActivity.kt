@@ -4,8 +4,10 @@ import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.text.InputType
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.uhfproject.R
 import com.example.uhfproject.databinding.ActivityLoginBinding
 import com.example.uhfproject.model.LoginBody
 import com.example.uhfproject.ui.update.showCheckVersionDialog
@@ -28,6 +30,8 @@ class LoginActivity: AppCompatActivity() {
 
     private lateinit var mBinding: ActivityLoginBinding
 
+    private var eyeGone = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,6 +43,8 @@ class LoginActivity: AppCompatActivity() {
             mBinding.edtUsername.setText(readMeName)
             mBinding.edtPassword.setText(readMePassword)
         }
+
+        mBinding.imgEye.setImageResource(R.drawable.ic_eye_gone)
 
         initVersion()
         // getPackageName()是你当前类的包名，0代表是获取版本信息
@@ -88,6 +94,17 @@ class LoginActivity: AppCompatActivity() {
         }
         mBinding.tvVersion.setOnClickListener {
             showCheckVersionDialog()
+        }
+        mBinding.imgEye.setOnClickListener {
+            mBinding.edtPassword.clearFocus()
+            eyeGone = !eyeGone
+            if(eyeGone){
+                mBinding.imgEye.setImageResource(R.drawable.ic_eye_visibility)
+                mBinding.edtPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+            }else{
+                mBinding.imgEye.setImageResource(R.drawable.ic_eye_gone)
+                mBinding.edtPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+            }
         }
     }
 

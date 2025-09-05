@@ -59,20 +59,24 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var keyStatus = false
+//    private var keyStatus = false
+    var onKeyDownCallback: ((keyCode: Int, event: KeyEvent?) -> Boolean)? = null
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
-        if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
-            if(!keyStatus){
-                keyStatus = true
-                mViewModel.startStock()
-            }else{
-                keyStatus = false
-                mViewModel.stopStock()
-            }
-            return true
+        if (onKeyDownCallback?.invoke(keyCode, event) == true) {
+            return true // Fragment 消费掉
         }
+//        if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
+//            if(!keyStatus){
+//                keyStatus = true
+//                mViewModel.startStock()
+//            }else{
+//                keyStatus = false
+//                mViewModel.stopStock()
+//            }
+//            return true
+//        }
         return super.onKeyDown(keyCode, event)
     }
 

@@ -31,7 +31,16 @@
         tools:text="sa"
         android:textSize="18sp"
         android:textColor="@color/black"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_inbound"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="105dp"
+        android:src="@drawable/logo"
+        android:layout_marginBottom="45dp"
         app:layout_constraintBottom_toTopOf="@+id/btn_inbound"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -45,7 +54,7 @@
         android:gravity="center"
         android:textColor="#0055A3"
         android:textStyle="bold"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="130dp"
         android:background="@drawable/bg_main_btn"
         app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toTopOf="parent"

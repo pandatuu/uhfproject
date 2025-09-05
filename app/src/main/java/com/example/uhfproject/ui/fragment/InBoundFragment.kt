@@ -1,15 +1,19 @@
 package com.example.uhfproject.ui.fragment
 
+import android.graphics.Color
+import android.view.KeyEvent
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.FragmentBoundBinding
+import com.example.uhfproject.ui.MainActivity
 import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const.inBoundPower
 import com.example.uhfproject.utils.Const.simpleAlert
 import com.example.uhfproject.utils.Const.simpleEditAlert
+import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,6 +25,9 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
     }
 
     override fun initView() {
+        mActivity = requireActivity() as MainActivity
+        mBinding.vScanHint.setBackgroundColor(Color.GRAY)
+        mBinding.tvScanHint.text = "Not Scanned"
         mainViewModel.startQuest = true
         mBinding.tvTitle.text = getString(R.string.inbound_title)
         mBinding.rv.apply {
@@ -80,9 +87,36 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
         }
     }
 
+    private var keyStatus = false
+    private var mActivity: MainActivity? = null
+
+    override fun onResume() {
+        super.onResume()
+        // 按下时调用方法2
+        mActivity?.onKeyDownCallback = { keyCode, event ->
+            LogUtil.d("inbound-code-$keyCode, event-${event?.action}")
+            if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
+                if(!keyStatus){
+                    keyStatus = true
+                    mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
+                    mBinding.tvScanHint.text = "Scanning"
+                    mainViewModel.startStock()
+                }else{
+                    keyStatus = false
+                    mBinding.vScanHint.setBackgroundColor(Color.GRAY)
+                    mBinding.tvScanHint.text = "Not Scanned"
+                    mainViewModel.stopStock()
+                }
+                true
+            }else{
+                false
+            }
+        }
+    }
     override fun onStop() {
         mainViewModel.clearBoundList()
         mainViewModel.stopStock()
+        mActivity?.onKeyDownCallback = null
         super.onStop()
     }
 

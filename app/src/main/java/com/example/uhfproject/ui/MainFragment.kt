@@ -1,19 +1,36 @@
 package com.example.uhfproject.ui
 
 import android.content.Intent
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.uhfproject.R
 import com.example.uhfproject.databinding.FragmentMainBinding
-import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
 
-class MainFragment: BaseFragment<FragmentMainBinding>() {
+class MainFragment: Fragment() {
 
-    override fun initView() {
-        mBinding.loginUser.text = "Welcome, ${mainViewModel.username}"
+    private lateinit var mBinding: FragmentMainBinding
+
+    private val mainViewModel: MainViewModel by activityViewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        mBinding = FragmentMainBinding.inflate(inflater, container, false)
+        return mBinding.root
     }
 
-    override fun initData() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        mBinding.loginUser.text = "Welcome, ${mainViewModel.username}"
+
         mBinding.btnInbound.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_inBoundFragment)
         }
@@ -34,9 +51,6 @@ class MainFragment: BaseFragment<FragmentMainBinding>() {
                 startActivity(Intent(requireContext(), LoginActivity::class.java))
             }
         }
-    }
-
-    override fun observeData() {
 
     }
 }

@@ -200,8 +200,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      */
     var snSort: Int = 0
     var trackingIdSort: Int = 0
-    var postCodeSort: Int = 0
-    var bitCodeSort: Int = 0
+    var postalCodeSort: Int = 0
+    var beatSort: Int = 0
     var otherSort: Int = 0
 
     var sortPageNum = 0 // 当前页面索引
@@ -290,14 +290,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             2 -> addComparator(compareBy { it.trackingNumber })
             else -> {}
         }
-        when(postCodeSort){
-            1 -> addComparator(compareByDescending { it.postCode })
-            2 -> addComparator(compareBy { it.postCode })
+        when(postalCodeSort){
+            1 -> addComparator(compareByDescending { it.postalCode })
+            2 -> addComparator(compareBy { it.postalCode })
             else -> {}
         }
-        when(bitCodeSort){
-            1 -> addComparator(compareByDescending { it.bitCode })
-            2 -> addComparator(compareBy { it.bitCode })
+        when(beatSort){
+            1 -> addComparator(compareByDescending { it.beat })
+            2 -> addComparator(compareBy { it.beat })
             else -> {}
         }
         when(otherSort){
