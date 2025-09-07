@@ -31,10 +31,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Tracking ID"
+            android:text="Tracking#"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintWidth_percent="0.35"
+            app:layout_constraintWidth_percent="0.26"
             app:layout_constraintEnd_toStartOf="@+id/tv_postal_code_head"
             app:layout_constraintStart_toEndOf="@+id/tv_sn_head"
             app:layout_constraintTop_toTopOf="parent" />
@@ -47,7 +47,7 @@
             android:text="Postal Code"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintWidth_percent="0.23"
             app:layout_constraintEnd_toStartOf="@+id/tv_beat_head"
             app:layout_constraintStart_toEndOf="@+id/tv_traking_id_head"
             app:layout_constraintTop_toTopOf="parent" />
@@ -60,7 +60,7 @@
             android:text="Beat"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintWidth_percent="0.2"
+            app:layout_constraintWidth_percent="0.23"
             app:layout_constraintEnd_toStartOf="@+id/tv_other_head"
             app:layout_constraintStart_toEndOf="@+id/tv_postal_code_head"
             app:layout_constraintTop_toTopOf="parent" />
@@ -73,7 +73,7 @@
             android:text="DB"
             android:textColor="@color/black"
             android:textSize="12sp"
-            app:layout_constraintWidth_percent="0.15"
+            app:layout_constraintWidth_percent="0.18"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/tv_beat_head"
             app:layout_constraintTop_toTopOf="parent" />

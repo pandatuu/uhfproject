@@ -1,6 +1,7 @@
 package com.example.uhfproject.model
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -13,8 +14,10 @@ data class ExcelDownloadVO(
 
     val trackingNumber: String? = null,
 
+    @SerializedName("postCode")
     val postalCode: String? = null,
 
+    @SerializedName("bitCode")
     val beat: String? = null,
 
     val reservedField1: String? = null,

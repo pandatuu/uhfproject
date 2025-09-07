@@ -15,6 +15,11 @@ data class DashboardNumberVO (
     val total: Int? = null,
 
     /**
+     * （所选日期（默认当日））上传总数
+     */
+    val backlog: Int? = null,
+
+    /**
      * （所选日期（默认当日））入库完成数量
      */
     val inboundNumber: Int? = null,

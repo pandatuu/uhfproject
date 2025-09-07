@@ -27,6 +27,7 @@ import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.Const.findItemPower
 import com.example.uhfproject.utils.Const.intToPercent
 import com.example.uhfproject.utils.LogUtil
+import com.example.uhfproject.utils.VolumeController
 import com.seuic.uhf.EPC
 import com.seuic.uhf.UHFService
 import com.seuic.uhfutils.EpcSearch
@@ -48,7 +49,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
     private var gyroscopeSensor: Sensor? = null
     private var rotationVectorSensor: Sensor? = null
 
-    private var currentRfid = ""
+    private var currentRfid = "E2806894000050335391C105"
     private var northDegree: Float? = null
     private var currentRssi = 0
 
@@ -133,6 +134,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
             val search = EpcSearch.search(it)
             search.find { it.getId() == currentRfid }?.let {
                 currentRssi = it.rssi
+                VolumeController().setVolumePercent(currentRssi)
                 mBinding.tvProgress.text = "${currentRssi}%"
                 onValueChanged(currentRssi)
             }

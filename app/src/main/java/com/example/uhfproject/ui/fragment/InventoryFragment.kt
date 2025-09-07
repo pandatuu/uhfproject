@@ -93,13 +93,13 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
             mainViewModel.postalCodeSort++
             when (mainViewModel.postalCodeSort) {
                 1 -> {
-                    mBinding.imgpostalCode.setImageResource(R.drawable.ic_sort_down)
+                    mBinding.imgPostalCode.setImageResource(R.drawable.ic_sort_down)
                 }
                 2 -> {
-                    mBinding.imgpostalCode.setImageResource(R.drawable.ic_sort_up)
+                    mBinding.imgPostalCode.setImageResource(R.drawable.ic_sort_up)
                 }
                 3 -> {
-                    mBinding.imgpostalCode.setImageResource(0)
+                    mBinding.imgPostalCode.setImageResource(0)
                     mainViewModel.postalCodeSort = 0
                 }
             }
@@ -109,13 +109,13 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
             mainViewModel.beatSort++
             when (mainViewModel.beatSort) {
                 1 -> {
-                    mBinding.imgbeat.setImageResource(R.drawable.ic_sort_down)
+                    mBinding.imgBeat.setImageResource(R.drawable.ic_sort_down)
                 }
                 2 -> {
-                    mBinding.imgbeat.setImageResource(R.drawable.ic_sort_up)
+                    mBinding.imgBeat.setImageResource(R.drawable.ic_sort_up)
                 }
                 3 -> {
-                    mBinding.imgbeat.setImageResource(0)
+                    mBinding.imgBeat.setImageResource(0)
                     mainViewModel.beatSort = 0
                 }
             }

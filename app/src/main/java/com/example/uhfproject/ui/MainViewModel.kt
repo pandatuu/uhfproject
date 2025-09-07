@@ -15,7 +15,6 @@ import com.example.uhfproject.utils.SingleLiveEvent
 import com.example.uhfproject.utils.retrofit.*
 import com.seuic.uhf.EPC
 import com.seuic.uhf.UHFService
-import com.seuic.uhfutils.EpcSearch
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
 

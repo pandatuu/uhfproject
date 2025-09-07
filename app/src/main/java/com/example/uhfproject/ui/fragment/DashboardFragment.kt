@@ -30,11 +30,13 @@ class DashboardFragment:BaseFragment<FragmentDashboardBinding>() {
     override fun initData() {
         mainViewModel.getHeadInfo{
             lifecycleScope.launch(Dispatchers.Main){
-                mBinding.totalNum.text = formatNumberWithCommas(it.total?:0)
-                mBinding.completedInbound.text = it.inboundNumber.toString()
-                mBinding.completedOutbound.text = it.outboundNumber.toString()
-                mBinding.pendingInbound.text = it.pendingInboundNumber.toString()
-                mBinding.pendingOutbound.text = it.outboundRemainingNumber.toString()
+                mBinding.totalNum.text = formatNumberWithCommas((it.backlog?:0)+(it.total?:0))
+                mBinding.backlogNum.text = formatNumberWithCommas(it.backlog?:0)
+                mBinding.uploadNum.text = formatNumberWithCommas(it.total?:0)
+                mBinding.completedInbound.text = formatNumberWithCommas(it.inboundNumber?:0)
+                mBinding.completedOutbound.text = formatNumberWithCommas(it.outboundNumber?:0)
+                mBinding.pendingInbound.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
+                mBinding.pendingOutbound.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
             }
         }
         mainViewModel.getRvList {

@@ -101,14 +101,14 @@
             app:layout_constraintEnd_toStartOf="@+id/postal_code_head_layout"
             app:layout_constraintStart_toEndOf="@+id/sn_head_layout"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.35">
+            app:layout_constraintWidth_percent="0.26">
 
             <TextView
                 android:id="@+id/tv_tracking_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Tracking ID"
+                android:text="Tracking#"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/img_tracking_id"
@@ -136,7 +136,7 @@
             app:layout_constraintEnd_toStartOf="@+id/beat_head_layout"
             app:layout_constraintStart_toEndOf="@+id/tracking_id_head_layout"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.2">
+            app:layout_constraintWidth_percent="0.23">
 
             <TextView
                 android:id="@+id/tv_postal_code"
@@ -171,7 +171,7 @@
             app:layout_constraintEnd_toStartOf="@+id/other_head_layout"
             app:layout_constraintStart_toEndOf="@+id/postal_code_head_layout"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.2">
+            app:layout_constraintWidth_percent="0.23">
 
             <TextView
                 android:id="@+id/tv_beat"
@@ -206,7 +206,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/beat_head_layout"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_percent="0.15">
+            app:layout_constraintWidth_percent="0.18">
 
             <TextView
                 android:id="@+id/tv_other"

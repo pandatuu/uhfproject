@@ -46,13 +46,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="15dp"
-        android:text="@string/dashboard_txt1"
+        android:text="Total volume"
         android:textSize="15sp"
         android:textStyle="bold"
         android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="@+id/title_layout"
         app:layout_constraintTop_toBottomOf="@+id/title_layout" />
-
 
     <TextView
         android:id="@+id/total_num"
@@ -66,6 +65,53 @@
         app:layout_constraintTop_toTopOf="@+id/tv_total_num"
         tools:text="4000" />
 
+    <TextView
+        android:id="@+id/tv_backlog_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Backlog"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/tv_total_num"
+        app:layout_constraintTop_toBottomOf="@+id/tv_total_num" />
+
+    <TextView
+        android:id="@+id/backlog_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_backlog_num"
+        app:layout_constraintStart_toEndOf="@+id/tv_backlog_num"
+        app:layout_constraintTop_toTopOf="@+id/tv_backlog_num"
+        tools:text="4000" />
+
+    <TextView
+        android:id="@+id/tv_upload_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:text="Today upload"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toEndOf="@+id/backlog_num"
+        app:layout_constraintTop_toTopOf="@+id/tv_backlog_num" />
+
+    <TextView
+        android:id="@+id/upload_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_upload_num"
+        app:layout_constraintStart_toEndOf="@+id/tv_upload_num"
+        app:layout_constraintTop_toTopOf="@+id/tv_upload_num"
+        tools:text="4000" />
 
     <TextView
         android:id="@+id/tv_inbound_title"
@@ -104,7 +150,7 @@
         android:textStyle="bold"
         android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@+id/tv_inbound_title"
-        app:layout_constraintTop_toBottomOf="@+id/tv_total_num" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_backlog_num" />
 
     <TextView
         android:id="@+id/completed_inbound"
@@ -207,7 +253,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="25dp"
+        android:layout_marginTop="15dp"
         android:text="@string/dashboard_txt4"
         android:textSize="15sp"
         android:textStyle="bold"
@@ -225,7 +271,7 @@
         android:textSize="13sp"
         android:background="@drawable/bg_header_border"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toStartOf="@+id/tv_item_db"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_txt1"
