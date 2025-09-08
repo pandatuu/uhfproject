@@ -62,7 +62,6 @@ interface MainService {
      */
     @GET("post/getTrackingIdList")
     suspend fun getItemByTrackingIdNet(@Query("trackingId") trackingId: String,
-                                    @Query("status") status: Int,
                                      @Query("pageNum") pageNum: Int,
                                      @Query("pageSize") pageSize: Int) : HttpResultPager<List<ExcelDownloadVO>>
 

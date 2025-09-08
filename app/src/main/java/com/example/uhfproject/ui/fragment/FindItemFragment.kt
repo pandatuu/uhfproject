@@ -22,12 +22,9 @@ import com.example.uhfproject.app.MyApplication
 import com.example.uhfproject.databinding.FragmentFindItemBinding
 import com.example.uhfproject.model.ExcelDownloadVO
 import com.example.uhfproject.ui.MainActivity
-import com.example.uhfproject.utils.BaseFragment
-import com.example.uhfproject.utils.Const
+import com.example.uhfproject.utils.*
 import com.example.uhfproject.utils.Const.findItemPower
 import com.example.uhfproject.utils.Const.intToPercent
-import com.example.uhfproject.utils.LogUtil
-import com.example.uhfproject.utils.VolumeController
 import com.seuic.uhf.EPC
 import com.seuic.uhf.UHFService
 import com.seuic.uhfutils.EpcSearch
@@ -49,7 +46,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
     private var gyroscopeSensor: Sensor? = null
     private var rotationVectorSensor: Sensor? = null
 
-    private var currentRfid = "E2806894000050335391C105"
+    private var currentRfid = ""
     private var northDegree: Float? = null
     private var currentRssi = 0
 
@@ -94,7 +91,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
                 UHFService.getInstance(MyApplication.appContext).power = findItemPower
             }
         }
-        mBinding.btnUpload.setOnClickListener {
+        mBinding.btnQuery.setOnClickListener {
             LogUtil.d("btnUpload")
             mBinding.edtRfid.editText?.clearFocus()
             hideKeyboard(mBinding.edtRfid.editText!!)
@@ -134,6 +131,8 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
             val search = EpcSearch.search(it)
             search.find { it.getId() == currentRfid }?.let {
                 currentRssi = it.rssi
+                LogUtil.d("寻物rssi:${intToPercent(currentRssi).toFloat()}")
+                BeepSound.play()
                 VolumeController().setVolumePercent(currentRssi)
                 mBinding.tvProgress.text = "${currentRssi}%"
                 onValueChanged(currentRssi)
@@ -159,7 +158,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
 
     private fun onValueChanged(value: Int) {
         // 1️⃣ 先除以100得到比例
-        val ratio = value / 100f  // 注意要用 Float
+        val ratio = intToPercent(value).toFloat()  // 注意要用 Float
         // 2️⃣ 根据 viewA 的宽度计算目标宽度
         val targetWidth = (mBinding.vProgressBackground.width * ratio).toInt()
         // 3️⃣ 更新 viewB 宽度

@@ -10,6 +10,7 @@ import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.example.uhfproject.databinding.DialogCheckversionBinding
 import com.example.uhfproject.utils.BaseDialogFragment
+import com.example.uhfproject.utils.Const.ip
 import com.example.uhfproject.utils.retrofit.LiveDataCallAdapterFactory
 import com.example.uhfproject.utils.retrofit.MainService
 import retrofit2.Retrofit
@@ -74,7 +75,7 @@ class CheckVersionDialog() : BaseDialogFragment<DialogCheckversionBinding>() {
     private fun initVersion() {
         // 构建Retrofit实例
         val retrofit = Retrofit.Builder() //设置网络请求BaseUrl地址
-            .baseUrl("http://49.233.245.14:8010/") //设置数据解析器
+            .baseUrl("http://${ip}:8010/") //设置数据解析器
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

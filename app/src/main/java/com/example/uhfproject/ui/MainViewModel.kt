@@ -10,6 +10,7 @@ import com.example.uhfproject.model.DashboardNumberVO
 import com.example.uhfproject.model.DashboardTopVO
 import com.example.uhfproject.model.ExcelDownloadVO
 import com.example.uhfproject.model.InfoPromptsVO
+import com.example.uhfproject.utils.BeepSound
 import com.example.uhfproject.utils.LogUtil
 import com.example.uhfproject.utils.SingleLiveEvent
 import com.example.uhfproject.utils.retrofit.*
@@ -135,6 +136,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private fun getExcelDownloadByEmp(epcList: List<String>) {
+        BeepSound.play()
         if(epcList.isNotEmpty()){
             viewModelScope.launch(Dispatchers.IO) {
                 rep.getTrackingIdByEPCRep(epcList)
@@ -420,7 +422,7 @@ class MainRep() {
 
     suspend fun getItemByTrackingIdRep(tracking: String, pageNum: Int, sortPageSize: Int): APIResult<List<ExcelDownloadVO>> {
         return safeNetWorkPagerInvoke {
-            service.getItemByTrackingIdNet(tracking,2,pageNum, sortPageSize)
+            service.getItemByTrackingIdNet(tracking,pageNum, sortPageSize)
         }
     }
 

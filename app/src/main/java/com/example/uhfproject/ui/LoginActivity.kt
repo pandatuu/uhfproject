@@ -12,6 +12,7 @@ import com.example.uhfproject.databinding.ActivityLoginBinding
 import com.example.uhfproject.model.LoginBody
 import com.example.uhfproject.ui.update.showCheckVersionDialog
 import com.example.uhfproject.ui.update.showDownloadDialog
+import com.example.uhfproject.utils.Const.ip
 import com.example.uhfproject.utils.Const.isReadMe
 import com.example.uhfproject.utils.Const.readMeName
 import com.example.uhfproject.utils.Const.readMePassword
@@ -125,7 +126,7 @@ class LoginActivity: AppCompatActivity() {
     private fun initVersion(){
         // 构建Retrofit实例
         val retrofit = Retrofit.Builder() //设置网络请求BaseUrl地址
-            .baseUrl("http://49.233.245.14:8010/") //设置数据解析器
+            .baseUrl("http://${ip}:8010/") //设置数据解析器
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

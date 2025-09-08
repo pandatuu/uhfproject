@@ -32,6 +32,6 @@
     <string name="dashboard_pending">Pending</string>
     <string name="dashboard_txt2">Inbound</string>
     <string name="dashboard_txt3">Outbound</string>
-    <string name="dashboard_txt4">Top 10 DB volume</string>
+    <string name="dashboard_txt4">Top 10 Lastmile volume</string>
 
 </resources>

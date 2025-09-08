@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.ActivityMainBinding
+import com.example.uhfproject.utils.BeepSound
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
 
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity() {
             LogUtil.d("UHF扫描加载失败")
         }else{
             LogUtil.d("UHF扫描加载成功")
+            BeepSound.init()
         }
     }
 
@@ -85,5 +87,6 @@ class MainActivity : AppCompatActivity() {
         uhfService?.close()
         LogUtil.d("UHF扫描关闭")
         uhfService = null
+        BeepSound.release()
     }
 }

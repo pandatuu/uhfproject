@@ -18,6 +18,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import com.example.uhfproject.databinding.DialogDownloadBinding
 import com.example.uhfproject.utils.BaseDialogFragment
+import com.example.uhfproject.utils.Const.ip
 import com.example.uhfproject.utils.LogUtil
 import java.io.File
 
@@ -105,9 +106,8 @@ class DownloadDialog(private val latestVersion: LatestVersionDto) :
             }
         }, intentFilter)
 
-        //http://49.233.245.14/temp/haiyou_4.0.5.apk
         val downloadRequest =
-            DownloadManager.Request(Uri.parse("http://49.233.245.14/temp/${latestVersion.apkName}"))
+            DownloadManager.Request(Uri.parse("http://${ip}/apk/${latestVersion.apkName}"))
                 //允许移动网络下载
                 .setAllowedOverMetered(true)
                 //当处于下载中状态和下载完成时状态，均在通知栏中显示
