@@ -12,8 +12,10 @@ import com.example.uhfproject.databinding.ActivityLoginBinding
 import com.example.uhfproject.model.LoginBody
 import com.example.uhfproject.ui.update.showCheckVersionDialog
 import com.example.uhfproject.ui.update.showDownloadDialog
+import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.Const.ip
 import com.example.uhfproject.utils.Const.isReadMe
+import com.example.uhfproject.utils.Const.port
 import com.example.uhfproject.utils.Const.readMeName
 import com.example.uhfproject.utils.Const.readMePassword
 import com.example.uhfproject.utils.LogUtil
