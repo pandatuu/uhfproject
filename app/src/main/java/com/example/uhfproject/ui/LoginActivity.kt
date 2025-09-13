@@ -126,7 +126,7 @@ class LoginActivity: AppCompatActivity() {
     private fun initVersion(){
         // 构建Retrofit实例
         val retrofit = Retrofit.Builder() //设置网络请求BaseUrl地址
-            .baseUrl("http://${ip}:8010/") //设置数据解析器
+            .baseUrl("http://${ip}:9002/") //设置数据解析器
             .addCallAdapterFactory(LiveDataCallAdapterFactory())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

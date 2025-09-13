@@ -12,12 +12,12 @@ object Const {
 
     var ACCESS_TOKEN: String = ""
 
-    private const val IP_VALUE = "101.43.218.72"
+    private const val IP_VALUE = "singpost.jwctsg.com"
     var ip: String
         set(value) = SPUtils.putString("IP_KEY", value)
         get() = SPUtils.getString("IP_KEY", IP_VALUE)
 
-    private const val PORT_VALUE = "8080"
+    private const val PORT_VALUE = "9010"
     var port: String
         set(value) = SPUtils.putString("PORT_KEY", value)
         get() = SPUtils.getString("PORT_KEY", PORT_VALUE)

@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.uhfproject.R
 import com.example.uhfproject.databinding.FragmentMainBinding
 import com.example.uhfproject.utils.Const
+import com.example.uhfproject.utils.retrofit.RetrofitClient
 
 class MainFragment: Fragment() {
 
@@ -48,6 +49,7 @@ class MainFragment: Fragment() {
         }
         mBinding.logoutBtn.setOnClickListener {
             Const.simpleAlert(requireContext(), "Log out?"){
+                RetrofitClient.updateTokenAndRefreshToken("")
                 startActivity(Intent(requireContext(), LoginActivity::class.java))
             }
         }

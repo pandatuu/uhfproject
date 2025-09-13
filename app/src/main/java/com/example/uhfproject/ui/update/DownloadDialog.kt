@@ -107,7 +107,7 @@ class DownloadDialog(private val latestVersion: LatestVersionDto) :
         }, intentFilter)
 
         val downloadRequest =
-            DownloadManager.Request(Uri.parse("http://${ip}/apk/${latestVersion.apkName}"))
+            DownloadManager.Request(Uri.parse("http://${ip}:80/file/${latestVersion.apkName}"))
                 //允许移动网络下载
                 .setAllowedOverMetered(true)
                 //当处于下载中状态和下载完成时状态，均在通知栏中显示
