@@ -13,8 +13,8 @@ android {
         applicationId "com.example.uhfproject"
         minSdkVersion 26
         targetSdkVersion 31
-        versionCode 7
-        versionName "1.6"
+        versionCode 6
+        versionName "1.5"
     }
 
     buildTypes {
