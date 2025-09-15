@@ -13,12 +13,8 @@ import android.content.Intent
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 
 import com.example.uhfproject.ui.LoginActivity
-
-
-
-
-
-
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 
 
 class UpdateTokenInterceptor(
@@ -46,33 +42,41 @@ class UpdateTokenInterceptor(
         try {
             val response = chain.proceed(builder.build())
 
-            val code = response.code
-            if (code != 200) {
-                Log.d(TAG, "intercept:  = $code")
-                return response
-            }
+            if (response.isSuccessful) {
+                val code = response.code
+                if (code != 200) {
+                    Log.d(TAG, "intercept:  = $code")
+                    return response
+                }
 
 
-            if (isTokenExpired(response)) {
-                //TODo 跳转到登陆界面
-                Handler(Looper.getMainLooper()).post {
-                    val intent = Intent(appContext, LoginActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // 清除现有任务栈并创建新任务
-                    appContext.startActivity(intent)
+                if (isTokenExpired(response)) {
+                    //TODo 跳转到登陆界面
+                    Handler(Looper.getMainLooper()).post {
+                        val intent = Intent(appContext, LoginActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // 清除现有任务栈并创建新任务
+                        appContext.startActivity(intent)
+                    }
                 }
             }
             return response
         } catch (e: Exception) {
-            e.printStackTrace()
+            when (e) {
+                is ConnectException -> {
+                    Log.e(TAG, "Network connection failed: ${e.message}")
+                    // 可以在这里处理网络连接失败的情况
+                    // 例如，发送广播通知 UI 层显示网络错误
+                }
+                is SocketTimeoutException -> {
+                    Log.e(TAG, "Request timeout: ${e.message}")
+                }
+                else -> {
+                    Log.e(TAG, "Unexpected error: ${e.message}")
+                }
+            }
 
-            // 发生异常时返回一个表示网络请求失败的响应
-            return Response.Builder()
-                .request(chain.request())
-                .protocol(Protocol.HTTP_1_1)
-                .code(500)
-                .message("Internal Server Error")
-                .body(ResponseBody.create(null, ""))
-                .build()
+            // 重新抛出异常，让上层代码处理
+            throw e
         }
 
 

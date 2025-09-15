@@ -26,8 +26,11 @@ import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 
 class LoginActivity: AppCompatActivity() {
 
@@ -113,14 +116,29 @@ class LoginActivity: AppCompatActivity() {
 
     private fun login(userName: String, password: String, success: () -> Unit){
         lifecycleScope.launch(Dispatchers.IO){
-            val retrofit = RetrofitClient.createService<MainService>()
-            val result = retrofit.loginNet(LoginBody(userName, password))
-            if (result.code == 200 && result.token != null) {
-                LogUtil.d("login:${result}")
-                RetrofitClient.updateTokenAndRefreshToken(result.token!!)
-                withContext(Dispatchers.Main){
-                    Toasty.success(this@LoginActivity, "Login Success", Toasty.LENGTH_SHORT).show()
-                    success.invoke()
+            try{
+                val retrofit = RetrofitClient.createService<MainService>()
+                val result = retrofit.loginNet(LoginBody(userName, password))
+                if (result.code == 200 && result.token != null) {
+                    LogUtil.d("login:${result}")
+                    RetrofitClient.updateTokenAndRefreshToken(result.token!!)
+                    withContext(Dispatchers.Main){
+                        Toasty.success(this@LoginActivity, "Login Success", Toasty.LENGTH_SHORT).show()
+                        success.invoke()
+                    }
+                }
+            } catch (e: Exception) {
+                // 捕获异常，包括拦截器中抛出的异常和网络异常等
+                e.printStackTrace()
+                withContext(Dispatchers.Main) {
+                    // 根据异常类型显示错误信息
+                    val errorMessage = when (e) {
+                        is ConnectException -> "Connection failed. Check network settings."
+                        is SocketTimeoutException -> "Time Out."
+                        is HttpException -> "Server Error：${e.code()}."
+                        else -> "Login Failed: ${e.message}."
+                    }
+                    Toasty.error(this@LoginActivity, errorMessage, Toasty.LENGTH_SHORT).show()
                 }
             }
         }

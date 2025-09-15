@@ -105,8 +105,11 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
                         mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
                         mBinding.tvScanHint.text = "Scanning"
                         mainViewModel.startStock{
-                            mBinding.vScanHint.setBackgroundColor(Color.GRAY)
-                            mBinding.tvScanHint.text = "Not Scanned"
+                            lifecycleScope.launch(Dispatchers.Main){
+                                mBinding.vScanHint.setBackgroundColor(Color.GRAY)
+                                mBinding.tvScanHint.text = "Not Scanned"
+                                keyStatus = false
+                            }
                         }
                     }
                 }else{

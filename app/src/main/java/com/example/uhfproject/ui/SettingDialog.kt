@@ -59,7 +59,7 @@ class SettingDialog(private val mContext: Context) : AlertDialog(mContext) {
         val debug = findViewById<TextView>(R.id.btn_setting_debug)
         debug!!.setOnClickListener {
             edtIp.setText("101.43.218.72")
-            edtPort.setText("9010")
+            edtPort.setText("9101")
             mode = false
         }
         val release = findViewById<TextView>(R.id.btn_setting_release)

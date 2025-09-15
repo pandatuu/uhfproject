@@ -6,10 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.uhfproject.app.MyApplication.Companion.appContext
-import com.example.uhfproject.model.DashboardNumberVO
-import com.example.uhfproject.model.DashboardTopVO
-import com.example.uhfproject.model.ExcelDownloadVO
-import com.example.uhfproject.model.InfoPromptsVO
+import com.example.uhfproject.model.*
 import com.example.uhfproject.utils.BeepSound
 import com.example.uhfproject.utils.LogUtil
 import com.example.uhfproject.utils.SingleLiveEvent
