@@ -2,7 +2,6 @@ package com.example.uhfproject.utils.retrofit
 
 import com.example.uhfproject.utils.Const.ACCESS_TOKEN
 import com.example.uhfproject.utils.Const.ip
-import com.example.uhfproject.utils.Const.mode
 import com.example.uhfproject.utils.Const.port
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -12,7 +11,7 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    private val BASE_URL = "${if(mode)"https" else "http"}://${ip}:${port}/prod-api/"
+    private val BASE_URL = "http://${ip}:${port}/prod-api/"
     val urlInterceptor = BaseUrlInterceptor(BASE_URL)
     private val tokenInterceptor = UpdateTokenInterceptor(ACCESS_TOKEN)
 

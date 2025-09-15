@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment
 import com.example.uhfproject.databinding.DialogDownloadBinding
 import com.example.uhfproject.utils.BaseDialogFragment
 import com.example.uhfproject.utils.Const.ip
+import com.example.uhfproject.utils.Const.mode
 import com.example.uhfproject.utils.LogUtil
 import java.io.File
 
@@ -101,8 +102,9 @@ class DownloadDialog(private val latestVersion: LatestVersionDto) :
             }
         }, intentFilter)
 
+        val downloadIp = if(mode) "https://www.jwctsg.com/files/" else "http://101.43.218.72/apk"
         val downloadRequest =
-            DownloadManager.Request(Uri.parse("https://www.jwctsg.com/files/${latestVersion.apkName}"))
+            DownloadManager.Request(Uri.parse("${downloadIp}/${latestVersion.apkName}"))
                 .setAllowedOverMetered(true)
                 .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
                 .setDestinationInExternalFilesDir(

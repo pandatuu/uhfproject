@@ -70,5 +70,5 @@ class SettingDialog(private val mContext: Context) : AlertDialog(mContext) {
         }
     }
 
-    private fun getUrl() = "${if(mode)"https" else "http"}://$ip:$port/"
+    private fun getUrl() = "http://$ip:$port/prod-api/"
 }
