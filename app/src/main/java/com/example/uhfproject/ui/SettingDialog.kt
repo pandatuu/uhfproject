@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import com.example.uhfproject.R
 import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.Const.ip
+import com.example.uhfproject.utils.Const.mode
 import com.example.uhfproject.utils.Const.port
 import com.example.uhfproject.utils.retrofit.RetrofitClient
 import es.dmoral.toasty.Toasty
@@ -48,14 +49,26 @@ class SettingDialog(private val mContext: Context) : AlertDialog(mContext) {
                 dismiss()
                 return@setOnClickListener
             }
-
             Const.ip = ip
             Const.port = port
 //            Toasty.success(mContext, "修改成功，请退出软件重新登陆！").show()
             RetrofitClient.urlInterceptor.setBaseUrl(getUrl())
             dismiss()
         }
+
+        val debug = findViewById<TextView>(R.id.btn_setting_debug)
+        debug!!.setOnClickListener {
+            edtIp.setText("101.43.218.72")
+            edtPort.setText("9010")
+            mode = false
+        }
+        val release = findViewById<TextView>(R.id.btn_setting_release)
+        release!!.setOnClickListener {
+            edtIp.setText("singpost.jwctsg.com")
+            edtPort.setText("9010")
+            mode = true
+        }
     }
 
-    private fun getUrl() = "http://$ip:$port/"
+    private fun getUrl() = "${if(mode)"https" else "http"}://$ip:$port/"
 }

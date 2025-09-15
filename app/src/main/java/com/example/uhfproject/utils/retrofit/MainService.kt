@@ -47,8 +47,8 @@ interface MainService {
     /**
      * 查询快递单号列表
      */
-    @GET("post/getTrackingIdByEPC")
-    suspend fun getTrackingIdByEPCNet(@Query("epcList") epcList: List<String>) : HttpResult<List<ExcelDownloadVO>>
+    @POST("post/getTrackingIdByEPC")
+    suspend fun getTrackingIdByEPCNet(@Body epcList: List<String>) : HttpResult<List<ExcelDownloadVO>>
 
     /**
      * 出库

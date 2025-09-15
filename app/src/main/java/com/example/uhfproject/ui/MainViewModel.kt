@@ -81,7 +81,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      */
     private var stockListener: Job? = null
     private var mInventoryStart = true
-    fun startStock() {
+    fun startStock(stop: () -> Unit) {
         if (UHFService.getInstance(appContext).inventoryStart()) {
             UHFService.getInstance().registerReadTags {  }
             LogUtil.d("UHF盘点开启")
@@ -96,7 +96,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                         val epcList1 = tagIds.map { it.getId() }
                         LogUtil.d("tagIds-$epcList1")
                         if(startQuest){
-                            getExcelDownloadByEmp(epcList1)
+                            if(epcList1.size<=200){
+                                getExcelDownloadByEmp(epcList1)
+                            }else{
+                                showWarn("Scan count exceeds 200, please upload first.")
+                                stopStock()
+                                stop.invoke()
+                            }
                         }
                         delay(100)
                     }

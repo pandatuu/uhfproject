@@ -22,6 +22,11 @@ object Const {
         set(value) = SPUtils.putString("PORT_KEY", value)
         get() = SPUtils.getString("PORT_KEY", PORT_VALUE)
 
+    private const val MODE_VALUE = true
+    var mode: Boolean
+        set(value) = SPUtils.putBoolean("MODE_KEY", value)
+        get() = SPUtils.getBoolean("MODE_KEY", MODE_VALUE)
+
     private const val READ_ME_VALUE = false
     var isReadMe: Boolean
         set(value) = SPUtils.putBoolean("READ_ME", value)

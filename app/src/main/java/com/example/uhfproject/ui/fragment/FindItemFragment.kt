@@ -189,7 +189,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
                     keyStatus = true
                     mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
                     mBinding.tvScanHint.text = "Scanning"
-                    mainViewModel.startStock()
+                    mainViewModel.startStock{}
                 }else{
                     keyStatus = false
                     mBinding.vScanHint.setBackgroundColor(Color.GRAY)

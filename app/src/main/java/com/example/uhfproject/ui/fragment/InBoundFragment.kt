@@ -15,6 +15,7 @@ import com.example.uhfproject.utils.Const.simpleAlert
 import com.example.uhfproject.utils.Const.simpleEditAlert
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -98,9 +99,16 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
             if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
                 if(!keyStatus){
                     keyStatus = true
-                    mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
-                    mBinding.tvScanHint.text = "Scanning"
-                    mainViewModel.startStock()
+                    if(mAdapter.data.size>199){
+                        Toasty.warning(requireContext(), "Scan limit exceeded. Please upload.", Toasty.LENGTH_SHORT).show()
+                    }else{
+                        mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
+                        mBinding.tvScanHint.text = "Scanning"
+                        mainViewModel.startStock{
+                            mBinding.vScanHint.setBackgroundColor(Color.GRAY)
+                            mBinding.tvScanHint.text = "Not Scanned"
+                        }
+                    }
                 }else{
                     keyStatus = false
                     mBinding.vScanHint.setBackgroundColor(Color.GRAY)
