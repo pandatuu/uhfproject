@@ -9,6 +9,7 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 data class ExcelDownloadVO(
+    val position: Int? = null,
 
     val sn: Long? = null,
 

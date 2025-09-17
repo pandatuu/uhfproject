@@ -6,8 +6,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.uhfproject.R
 import com.example.uhfproject.model.ExcelDownloadVO
 
@@ -15,21 +13,24 @@ class CommonItemAdapter(private val clickItem:(ExcelDownloadVO)->Unit) : Recycle
     private val items = mutableListOf<ExcelDownloadVO>()
 
     fun submitList(newList: List<ExcelDownloadVO>) {
+        val updatedList = newList.mapIndexed { index, item ->
+            item.copy(position = index + 1) // 为每个item重新计算序号
+        }
         val diffCallback = object : DiffUtil.Callback() {
             override fun getOldListSize() = items.size
-            override fun getNewListSize() = newList.size
+            override fun getNewListSize() = updatedList.size
 
             override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return items[oldItemPosition].epc == newList[newItemPosition].epc
+                return items[oldItemPosition].epc == updatedList[newItemPosition].epc
             }
 
             override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
-                return items[oldItemPosition] == newList[newItemPosition]
+                return items[oldItemPosition] == updatedList[newItemPosition]
             }
         }
         val diffResult = DiffUtil.calculateDiff(diffCallback)
         items.clear()
-        items.addAll(newList)
+        items.addAll(updatedList)
         diffResult.dispatchUpdatesTo(this)
     }
 
@@ -41,7 +42,7 @@ class CommonItemAdapter(private val clickItem:(ExcelDownloadVO)->Unit) : Recycle
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = items[position]
-        holder.snTv.text = item.sn.toString()
+        holder.snTv.text = item.position.toString()
         holder.trakingIdTv.text = item.trackingNumber.toString()
         holder.posralCodeTv.text = item.postalCode.toString()
         holder.beatTv.text = item.beat.toString()
