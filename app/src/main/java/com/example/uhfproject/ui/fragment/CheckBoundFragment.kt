@@ -16,7 +16,7 @@ class CheckBoundFragment(private val title: String) : BaseDialogFragment<Fragmen
     private val mViewModel: CheckBoundViewModel by viewModels()
 
     private val mAdapter: CommonItemAdapter by lazy {
-        CommonItemAdapter()
+        CommonItemAdapter{}
     }
 
     override fun bindLayout(
@@ -51,7 +51,7 @@ class CheckBoundFragment(private val title: String) : BaseDialogFragment<Fragmen
                 }
             }
         }
-        mAdapter.setList(emptyList())
+        mAdapter.submitList(emptyList())
 
         if(title == "Pending Inbound"){
             mViewModel.getCheckInboundList({
@@ -70,10 +70,10 @@ class CheckBoundFragment(private val title: String) : BaseDialogFragment<Fragmen
 
     override fun initListener() {
         mViewModel.checkInbound.observe(viewLifecycleOwner){
-            mAdapter.setList(it)
+            mAdapter.submitList(it)
         }
         mViewModel.checkOutbound.observe(viewLifecycleOwner){
-            mAdapter.setList(it)
+            mAdapter.submitList(it)
         }
     }
 

@@ -93,4 +93,10 @@ interface MainService {
 
     @GET("version/ver/getVersion")
     fun getVersionNet(@Query("serverName") name: String = "POST_APP"): LiveData<HttpResult<LatestVersionDto>>
+
+    /**
+     * 查询快递单号列表
+     */
+    @GET("post/getTrackingIdListNoPage")
+    suspend fun getAllListNet(@Query("status") status: Int) : HttpResult<List<ExcelDownloadVO>>
 }

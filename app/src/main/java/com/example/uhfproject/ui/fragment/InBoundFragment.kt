@@ -2,6 +2,7 @@ package com.example.uhfproject.ui.fragment
 
 import android.graphics.Color
 import android.view.KeyEvent
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,12 +18,14 @@ import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
 
     private val mAdapter: CommonItemAdapter by lazy {
-        CommonItemAdapter()
+        CommonItemAdapter{}
     }
 
     override fun initView() {
@@ -35,15 +38,16 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
-        mAdapter.setList(emptyList())
-        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+        mAdapter.submitList(emptyList())
+        mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
     }
 
     override fun initData() {
+        mainViewModel.getBoundList(1)
         UHFService.getInstance(appContext).power = inBoundPower
 
         mBinding.tvBack.setOnClickListener {
-            if(mAdapter.data.isNotEmpty()){
+            if(mAdapter.itemCount>0){
                 simpleAlert(requireContext(), getString(R.string.inbound_click_back_title),getString(R.string.inbound_click_back_hint)){
                     exit()
                 }
@@ -63,15 +67,15 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
         }
         mBinding.btnClear.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.clear_click)){
-                mAdapter.setList(emptyList())
-                mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+                mAdapter.submitList(emptyList())
+                mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
             }
         }
         mBinding.btnUpload.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.submit_click)){
                 mainViewModel.stopStock()
                 mainViewModel.startLoading()
-                mainViewModel.submitInBound(mAdapter.data.map { it.epc?:"" }){
+                mainViewModel.submitInBound(mAdapter.getList().map { it.epc?:"" }){
                     lifecycleScope.launch(Dispatchers.Main){
                         mainViewModel.stopLoading()
                         exit()
@@ -83,8 +87,8 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
 
     override fun observeData() {
         mainViewModel.boundExcel.observe(viewLifecycleOwner){
-            mAdapter.setList(it)
-            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+            mAdapter.submitList(it)
+            mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
         }
     }
 
@@ -99,17 +103,13 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
             if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
                 if(!keyStatus){
                     keyStatus = true
-                    if(mAdapter.data.size>199){
-                        Toasty.warning(requireContext(), "Scan limit exceeded. Please upload.", Toasty.LENGTH_SHORT).show()
-                    }else{
-                        mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
-                        mBinding.tvScanHint.text = "Scanning"
-                        mainViewModel.startStock{
-                            lifecycleScope.launch(Dispatchers.Main){
-                                mBinding.vScanHint.setBackgroundColor(Color.GRAY)
-                                mBinding.tvScanHint.text = "Not Scanned"
-                                keyStatus = false
-                            }
+                    mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
+                    mBinding.tvScanHint.text = "Scanning"
+                    mainViewModel.startStock{
+                        lifecycleScope.launch(Dispatchers.Main){
+                            mBinding.vScanHint.setBackgroundColor(Color.GRAY)
+                            mBinding.tvScanHint.text = "Not Scanned"
+                            keyStatus = false
                         }
                     }
                 }else{

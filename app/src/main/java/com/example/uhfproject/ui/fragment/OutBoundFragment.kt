@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
 
     private val mAdapter: CommonItemAdapter by lazy {
-        CommonItemAdapter()
+        CommonItemAdapter{}
     }
 
     override fun initView() {
@@ -35,15 +35,16 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
-        mAdapter.setList(emptyList())
-        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+        mAdapter.submitList(emptyList())
+        mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
     }
 
     override fun initData() {
+        mainViewModel.getBoundList(2)
         UHFService.getInstance(appContext).power = outBoundPower
 
         mBinding.tvBack.setOnClickListener {
-            if(mAdapter.data.isNotEmpty()){
+            if(mAdapter.itemCount>0){
                 simpleAlert(requireContext(), getString(R.string.outbound_click_back_title),getString(R.string.outbound_click_back_hint)){
                     exit()
                 }
@@ -63,15 +64,15 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
         }
         mBinding.btnClear.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.clear_click)){
-                mAdapter.setList(emptyList())
-                mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+                mAdapter.submitList(emptyList())
+                mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
             }
         }
         mBinding.btnUpload.setOnClickListener {
             simpleAlert(requireContext(), getString(R.string.submit_click)){
                 mainViewModel.stopStock()
                 mainViewModel.startLoading()
-                mainViewModel.submitOutBound(mAdapter.data.map { it.epc?:"" }){
+                mainViewModel.submitOutBound(mAdapter.getList().map { it.epc?:"" }){
                     lifecycleScope.launch(Dispatchers.Main){
                         mainViewModel.stopLoading()
                         exit()
@@ -83,8 +84,8 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
 
     override fun observeData() {
         mainViewModel.boundExcel.observe(viewLifecycleOwner){
-            mAdapter.setList(it)
-            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+            mAdapter.submitList(it)
+            mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
         }
     }
 
@@ -99,17 +100,13 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
             if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
                 if(!keyStatus){
                     keyStatus = true
-                    if(mAdapter.data.size>199){
-                        Toasty.warning(requireContext(), "Scan count exceeds 200, please upload first.", Toasty.LENGTH_SHORT).show()
-                    }else{
-                        mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
-                        mBinding.tvScanHint.text = "Scanning"
-                        mainViewModel.startStock{
-                            lifecycleScope.launch(Dispatchers.Main){
-                                mBinding.vScanHint.setBackgroundColor(Color.GRAY)
-                                mBinding.tvScanHint.text = "Not Scanned"
-                                keyStatus = false
-                            }
+                    mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
+                    mBinding.tvScanHint.text = "Scanning"
+                    mainViewModel.startStock{
+                        lifecycleScope.launch(Dispatchers.Main){
+                            mBinding.vScanHint.setBackgroundColor(Color.GRAY)
+                            mBinding.tvScanHint.text = "Not Scanned"
+                            keyStatus = false
                         }
                     }
                 }else{

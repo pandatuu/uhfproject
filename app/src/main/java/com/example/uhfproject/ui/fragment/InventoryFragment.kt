@@ -16,7 +16,13 @@ import kotlinx.coroutines.launch
 class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
 
     private val mAdapter: CommonItemAdapter by lazy {
-        CommonItemAdapter()
+        CommonItemAdapter{ item ->
+            simpleAlert(requireContext(), "Navigate to Findltem?"){
+                val bundle = Bundle()
+                bundle.putParcelable("item", item)
+                findNavController().navigate(R.id.action_inventoryFragment_to_findItemFragment, bundle)
+            }
+        }
     }
 
     override fun initView() {
@@ -25,7 +31,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
         }
-        mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+        mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
 
         mBinding.smartRefresh.apply {
             setRefreshFooter(ClassicsFooter(requireContext()))
@@ -48,14 +54,6 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
 
         mBinding.tvBack.setOnClickListener {
             findNavController().popBackStack()
-        }
-        mAdapter.setOnItemClickListener{adapter, v ,position ->
-            simpleAlert(requireContext(), "Navigate to Findltem?"){
-                val item = adapter.getItem(position) as ExcelDownloadVO
-                val bundle = Bundle()
-                bundle.putParcelable("item", item)
-                findNavController().navigate(R.id.action_inventoryFragment_to_findItemFragment, bundle)
-            }
         }
         mBinding.snHeadLayout.setOnClickListener {
             mainViewModel.snSort++
@@ -141,12 +139,12 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
 
     override fun observeData() {
         mainViewModel.inventoryList.observe(viewLifecycleOwner) {
-            mAdapter.setList(it)
-            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+            mAdapter.submitList(it)
+            mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
         }
         mainViewModel.sortList.observe(viewLifecycleOwner) {
-            mAdapter.setList(it)
-            mBinding.tvRfidCount.text = mAdapter.data.size.toString()
+            mAdapter.submitList(it)
+            mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
         }
     }
 

@@ -15,6 +15,9 @@ import com.seuic.uhf.EPC
 import com.seuic.uhf.UHFService
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val rep = MainRep()
@@ -49,30 +52,35 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _findList: SingleLiveEvent<List<EPC>> = SingleLiveEvent()
     val findList: LiveData<List<EPC>> = _findList
 
-    /**
-     * 单次扫描
-     */
-//    fun onceScan(epc: EPC) {
-//        LogUtil.d("寻物onceScan")
-//        if (UHFService.getInstance(appContext).inventoryOnce(epc, 100)) {
-//            val id = epc.getId()
-//            if (id != null && "" != id) {
-//                val currentList = _findList.value?.toMutableList() ?: mutableListOf()
-//                if (currentList.all { it.getId() != id }) {
-//                    currentList.add(epc)
-//                    LogUtil.d("寻物onceScan:${currentList}")
-//                    _findList.postValue(currentList)
-//                }
-//            }
-//        }
-//    }
-
     private val _startBtn: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val startBtn: LiveData<Boolean> = _startBtn
     private val _stopBtn: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val stopBtn: LiveData<Boolean> = _stopBtn
 
+    private var sumBoundList: List<ExcelDownloadVO> = emptyList()
+
+    fun getBoundList(status: Int){
+        startLoading()
+        viewModelScope.launch(Dispatchers.IO) {
+            rep.getBoundListRep(status)
+                .onSuccess{
+                    sumBoundList = this
+                    LogUtil.d("sumBoundList:${this.size}")
+                    stopLoading()
+                }.onServerError { code, msg ->
+                    showWarn(msg)
+                    LogUtil.d("code:$code, msg:$msg")
+                    stopLoading()
+                }.onOtherError {
+                    showWarn(it.message ?: "")
+                    LogUtil.d(it.message ?: "")
+                    stopLoading()
+                }
+        }
+    }
+
     var startQuest = false
+    private val stringSet = mutableSetOf<String>()   // 用来存最新的 String 集合
     /**
      * 盘点监听
      */
@@ -88,20 +96,34 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             if (stockListener == null) {
                 stockListener = viewModelScope.launch(Dispatchers.IO) {
                     while (mInventoryStart) {
-                        val tagIds = UHFService.getInstance(appContext).tagIDs.toSet()
-                        _findList.postValue(tagIds.toList())
-                        val epcList1 = tagIds.map { it.getId() }
-                        LogUtil.d("tagIds-$epcList1")
+                        val epcList = UHFService.getInstance(appContext).tagIDs.toSet()
                         if(startQuest){
-                            if(epcList1.size<=200){
-                                getExcelDownloadByEmp(epcList1)
-                            }else{
-                                showWarn("Scan count exceeds 200, please upload first.")
-                                stopStock()
-                                stop.invoke()
+                            val idList = epcList.map { it.getId() }
+                            LogUtil.d("idList:$idList")
+                            LogUtil.d("idList:${idList.size}")
+                            val change = synchronized(stringSet) {
+                                val toAdd = idList - stringSet
+                                val toRemove = stringSet - idList
+                                stringSet.addAll(toAdd)
+                                stringSet.removeAll(toRemove)
+                                toAdd.isNotEmpty() || toRemove.isNotEmpty()
                             }
+                            LogUtil.d("change:$change")
+                            LogUtil.d("stringSet:$stringSet")
+                            if(change){
+                                val result = synchronized(stringSet) {
+                                    sumBoundList.filter { it.epc in stringSet }
+                                }
+                                LogUtil.d("result123-sumBoundList:${sumBoundList.toString()}")
+                                LogUtil.d("result123-stringSet:${stringSet.toString()}")
+                                LogUtil.d("result123:${result.toString()}")
+                                _boundExcel.postValue(result)
+                            }
+                            delay(500)
+                        }else{
+                            _findList.postValue(epcList.toList())
+                            delay(100)
                         }
-                        delay(100)
                     }
                 }
             } else {
@@ -138,22 +160,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _boundExcel.postValue(emptyList())
     }
 
-    private fun getExcelDownloadByEmp(epcList: List<String>) {
+    private suspend fun getExcelDownloadByEmp(epcList: List<String>) {
         BeepSound.play()
         if(epcList.isNotEmpty()){
-            viewModelScope.launch(Dispatchers.IO) {
-                rep.getTrackingIdByEPCRep(epcList)
-                    .onSuccess {
-                        LogUtil.d("getTrackingIdByEPCRep-result:${this}")
-                        _boundExcel.postValue(this)
-                    }.onServerError { code, msg ->
-                        showWarn(msg)
-                        LogUtil.d("code:$code, msg:$msg")
-                    }.onOtherError {
-                        showWarn(it.message ?: "")
-                        LogUtil.d(it.message ?: "")
-                    }
-            }
+            rep.getTrackingIdByEPCRep(epcList)
+                .onSuccess {
+                    LogUtil.d("getTrackingIdByEPCRep-result:${this}")
+                    _boundExcel.postValue(this)
+                }.onServerError { code, msg ->
+                    showWarn(msg)
+                    LogUtil.d("code:$code, msg:$msg")
+                }.onOtherError {
+                    showWarn(it.message ?: "")
+                    LogUtil.d(it.message ?: "")
+                }
         }
     }
 
@@ -438,6 +458,12 @@ class MainRep() {
     suspend fun getTopRep(): APIResult<List<DashboardTopVO>> {
         return safeNetworkInvoke {
             service.getTopNet()
+        }
+    }
+
+    suspend fun getBoundListRep(status: Int): APIResult<List<ExcelDownloadVO>> {
+        return safeNetworkInvoke {
+            service.getAllListNet(status)
         }
     }
 }
