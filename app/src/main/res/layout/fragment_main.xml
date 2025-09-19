@@ -10,9 +10,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
+        android:layout_marginBottom="20dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/inbound_layout">
+
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
@@ -21,109 +23,322 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
-        
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-    
+
+    <TextView
+        android:id="@+id/tv_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SingPost |"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@+id/statics_pending_layout"
+        app:layout_constraintTop_toTopOf="@+id/logout_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/logout_btn" />
+
     <TextView
         android:id="@+id/login_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="sa"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textColor="@color/black"
-        android:layout_marginBottom="15dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_inbound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_logo"
+        app:layout_constraintTop_toTopOf="@+id/tv_logo"
+        app:layout_constraintStart_toEndOf="@+id/tv_logo" />
 
-    <ImageView
+
+    <TextView
+        android:id="@+id/tv_statices"
         android:layout_width="wrap_content"
-        android:layout_height="105dp"
-        android:src="@drawable/logo"
-        android:layout_marginBottom="45dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_inbound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:layout_height="wrap_content"
+        android:text="Statistics"
+        android:textSize="18sp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toTopOf="@+id/statics_pending_layout"
+        app:layout_constraintStart_toStartOf="@+id/statics_pending_layout"/>
 
-    <TextView
-        android:id="@+id/btn_inbound"
-        android:layout_width="240dp"
-        android:layout_height="80dp"
-        android:text="Inbound"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:textColor="#0055A3"
-        android:textStyle="bold"
-        android:layout_marginTop="130dp"
-        android:background="@drawable/bg_main_btn"
-        app:layout_constraintVertical_chainStyle="packed"
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/refresh_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="@+id/tv_statices"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_statices"
+        app:layout_constraintStart_toEndOf="@+id/tv_statices">
+
+        <ImageView
+            android:id="@+id/img_refresh"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_refresh"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <LinearLayout
+        android:id="@+id/statics_pending_layout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_gray_10"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/btn_outbound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toStartOf="@+id/inbound_layout"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <TextView
-        android:id="@+id/btn_outbound"
-        android:layout_width="240dp"
-        android:layout_height="80dp"
-        android:text="Outbound"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:textColor="#0055A3"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_main_btn"
-        app:layout_constraintTop_toBottomOf="@+id/btn_inbound"
-        app:layout_constraintBottom_toTopOf="@+id/btn_inventory"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pending Inbound"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"/>
 
-    <TextView
-        android:id="@+id/btn_inventory"
-        android:layout_width="240dp"
-        android:layout_height="80dp"
-        android:textSize="22sp"
-        android:text="Inventory"
-        android:gravity="center"
-        android:textColor="#0055A3"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_main_btn"
-        app:layout_constraintBottom_toTopOf="@+id/btn_find_item"
-        app:layout_constraintTop_toBottomOf="@+id/btn_outbound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:id="@+id/tv_pending_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="342"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"/>
 
-    <TextView
-        android:id="@+id/btn_find_item"
-        android:layout_width="240dp"
-        android:layout_height="80dp"
-        android:text="Find Item"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:textColor="#0055A3"
-        android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/bg_main_btn"
-        app:layout_constraintBottom_toTopOf="@+id/btn_dashboard"
-        app:layout_constraintTop_toBottomOf="@+id/btn_inventory"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pending Outbound"
+            android:textSize="15sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"/>
 
-    <TextView
-        android:id="@+id/btn_dashboard"
-        android:layout_width="240dp"
-        android:layout_height="80dp"
-        android:text="Dashboard"
-        android:textSize="22sp"
-        android:gravity="center"
-        android:textColor="#0055A3"
-        android:textStyle="bold"
+        <TextView
+            android:id="@+id/tv_pending_ob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="342"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/inbound_layout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/bg_blue_10"
+        app:layout_constraintTop_toTopOf="@+id/statics_pending_layout"
+        app:layout_constraintStart_toEndOf="@+id/statics_pending_layout"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_main_inbound" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inbound"
+            android:textSize="18sp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:layout_marginTop="25dp"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/inventory_layout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_orange_10"
+        app:layout_constraintTop_toBottomOf="@+id/statics_pending_layout"
+        app:layout_constraintStart_toStartOf="@+id/statics_pending_layout">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_main_inventory" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Inventory"
+            android:textSize="18sp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:layout_marginTop="25dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/outbound_layout"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/bg_purple_10"
+        app:layout_constraintTop_toTopOf="@+id/inventory_layout"
+        app:layout_constraintStart_toStartOf="@+id/inbound_layout">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/ic_main_outbound" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Outbound"
+            android:textSize="18sp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            android:layout_marginTop="25dp"/>
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/more_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/bg_main_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_find_item"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/inventory_layout"
+        app:layout_constraintStart_toStartOf="@+id/inventory_layout"
+        app:layout_constraintEnd_toEndOf="@+id/outbound_layout">
+
+        <TextView
+            android:id="@+id/tv_more_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="More"
+            android:textSize="20sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/find_item_layout"/>
+
+        <LinearLayout
+            android:id="@+id/find_item_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_more_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_query_layout">
+
+            <ImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Find Item"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/item_query_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="@+id/find_item_layout"
+            app:layout_constraintStart_toEndOf="@+id/find_item_layout"
+            app:layout_constraintEnd_toStartOf="@+id/dashboard_layout">
+
+            <ImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_item_query" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Item Query"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/dashboard_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="@+id/item_query_layout"
+            app:layout_constraintStart_toEndOf="@+id/item_query_layout"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_dashboard" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dashboard"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ob_verify_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            app:layout_constraintTop_toBottomOf="@+id/find_item_layout"
+            app:layout_constraintStart_toStartOf="@+id/find_item_layout">
+
+            <ImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_ob_verify" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OB Verify"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
