@@ -23,6 +23,12 @@
         <action
             android:id="@+id/action_mainFragment_to_dashboardFragment"
             app:destination="@id/dashboardFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_itemQueryFragment"
+            app:destination="@id/itemQueryFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_OBVerifyFragment"
+            app:destination="@id/OBVerifyFragment" />
     </fragment>
     <fragment
         android:id="@+id/inBoundFragment"
@@ -56,6 +62,14 @@
         android:id="@+id/checkBoundFragment"
         android:name="com.example.uhfproject.ui.fragment.CheckBoundFragment"
         android:label="CheckBoundFragment" />
+    <fragment
+        android:id="@+id/itemQueryFragment"
+        android:name="com.example.uhfproject.ui.fragment.ItemQueryFragment"
+        android:label="ItemQueryFragment" />
+    <fragment
+        android:id="@+id/OBVerifyFragment"
+        android:name="com.example.uhfproject.ui.fragment.OBVerifyFragment"
+        android:label="OBVerifyFragment" />
 
 
 </navigation>

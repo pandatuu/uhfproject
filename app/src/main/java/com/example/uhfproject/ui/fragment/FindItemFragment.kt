@@ -132,7 +132,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
             search.find { it.getId() == currentRfid }?.let {
                 currentRssi = it.rssi
                 LogUtil.d("寻物rssi:${intToPercent(currentRssi).toFloat()}")
-                BeepSound.play()
+                BeepSound.controlPlay((currentRssi/100).toFloat())
                 VolumeController().setVolumePercent(currentRssi)
                 mBinding.tvProgress.text = "${currentRssi}%"
                 onValueChanged(currentRssi)
@@ -189,7 +189,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
                     keyStatus = true
                     mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
                     mBinding.tvScanHint.text = "Scanning"
-                    mainViewModel.startStock{}
+                    mainViewModel.startStock()
                 }else{
                     keyStatus = false
                     mBinding.vScanHint.setBackgroundColor(Color.GRAY)

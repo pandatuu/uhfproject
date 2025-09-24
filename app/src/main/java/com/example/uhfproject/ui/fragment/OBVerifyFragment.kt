@@ -6,31 +6,32 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
-import com.example.uhfproject.app.MyApplication.Companion.appContext
-import com.example.uhfproject.databinding.FragmentBoundBinding
+import com.example.uhfproject.app.MyApplication
+import com.example.uhfproject.databinding.FragmentObVerifyBinding
 import com.example.uhfproject.ui.MainActivity
 import com.example.uhfproject.utils.BaseFragment
-import com.example.uhfproject.utils.Const.outBoundPower
-import com.example.uhfproject.utils.Const.simpleAlert
-import com.example.uhfproject.utils.Const.simpleEditAlert
+import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
-import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
+class OBVerifyFragment: BaseFragment<FragmentObVerifyBinding>() {
 
     private val mAdapter: CommonItemAdapter by lazy {
         CommonItemAdapter{}
     }
+    private var keyStatus = false
+    private var mActivity: MainActivity? = null
 
     override fun initView() {
         mActivity = requireActivity() as MainActivity
         mBinding.vScanHint.setBackgroundColor(Color.GRAY)
         mBinding.tvScanHint.text = "Not Scanned"
         mainViewModel.startQuest = true
-        mBinding.tvTitle.text = getString(R.string.outbound_title)
+        mBinding.tvTotalNum.text = "T:0"
+        mBinding.tvCompletedNum.text = "C:0"
+        mBinding.tvErrorNum.text = "E:0"
         mBinding.rv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
@@ -40,12 +41,18 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
     }
 
     override fun initData() {
-        mainViewModel.getBoundList(2){}
-        UHFService.getInstance(appContext).power = outBoundPower
+        mainViewModel.getBoundList(2){
+            mBinding.tvTotalNum.text = it.size.toString()
+        }
+        UHFService.getInstance(MyApplication.appContext).power = Const.outBoundPower
 
         mBinding.tvBack.setOnClickListener {
             if(mAdapter.itemCount>0){
-                simpleAlert(requireContext(), getString(R.string.outbound_click_back_title),getString(R.string.outbound_click_back_hint)){
+                Const.simpleAlert(
+                    requireContext(),
+                    getString(R.string.outbound_click_back_title),
+                    getString(R.string.outbound_click_back_hint)
+                ) {
                     exit()
                 }
             }else{
@@ -53,27 +60,27 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
             }
         }
         mBinding.imgPower.setOnClickListener {
-            simpleEditAlert(
+            Const.simpleEditAlert(
                 requireContext(),
                 getString(R.string.outbound_click_power_hint),
-                outBoundPower.toString()
+                Const.outBoundPower.toString()
             ) {
-                outBoundPower = it
-                UHFService.getInstance(appContext).power = outBoundPower
+                Const.outBoundPower = it
+                UHFService.getInstance(MyApplication.appContext).power = Const.outBoundPower
             }
         }
         mBinding.btnClear.setOnClickListener {
-            simpleAlert(requireContext(), getString(R.string.clear_click)){
+            Const.simpleAlert(requireContext(), getString(R.string.clear_click)) {
                 mAdapter.submitList(emptyList())
                 mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
             }
         }
         mBinding.btnUpload.setOnClickListener {
-            simpleAlert(requireContext(), getString(R.string.submit_click)){
+            Const.simpleAlert(requireContext(), getString(R.string.submit_click)) {
                 mainViewModel.stopStock()
                 mainViewModel.startLoading()
-                mainViewModel.submitOutBound(mAdapter.getList().map { it.epc?:"" }){
-                    lifecycleScope.launch(Dispatchers.Main){
+                mainViewModel.submitOutBound(mAdapter.getList().map { it.epc ?: "" }) {
+                    lifecycleScope.launch(Dispatchers.Main) {
                         mainViewModel.stopLoading()
                         exit()
                     }
@@ -84,19 +91,23 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
 
     override fun observeData() {
         mainViewModel.boundExcel.observe(viewLifecycleOwner){
-            mAdapter.submitList(it)
+            if(mBinding.edtDb.text.toString().isNotEmpty()){
+                val result = it.filter { it.db!=null && it.db.contains(mBinding.edtDb.text.toString()) }
+                val result2 = it.filter { it.db!=null && !it.db.contains(mBinding.edtDb.text.toString()) }
+                mBinding.tvErrorNum.text = result2.size.toString()
+                mAdapter.submitList(result)
+            }else{
+                mAdapter.submitList(it)
+                mBinding.tvErrorNum.text = "0"
+            }
             mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
+            mBinding.tvCompletedNum.text = mAdapter.itemCount.toString()
         }
     }
-
-    private var keyStatus = false
-    private var mActivity: MainActivity? = null
-
     override fun onResume() {
         super.onResume()
         // 按下时调用方法2
         mActivity?.onKeyDownCallback = { keyCode, event ->
-            LogUtil.d("inbound-code-$keyCode, event-${event?.action}")
             if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
                 if(!keyStatus){
                     keyStatus = true
@@ -125,4 +136,5 @@ class OutBoundFragment : BaseFragment<FragmentBoundBinding>() {
     private fun exit(){
         findNavController().popBackStack()
     }
+
 }

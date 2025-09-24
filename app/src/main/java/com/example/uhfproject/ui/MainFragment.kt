@@ -60,6 +60,12 @@ class MainFragment: Fragment() {
         mBinding.dashboardLayout.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_dashboardFragment)
         }
+        mBinding.itemQueryLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_itemQueryFragment)
+        }
+        mBinding.obVerifyLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_OBVerifyFragment)
+        }
         mBinding.logoutBtn.setOnClickListener {
             Const.simpleAlert(requireContext(), "Log out?"){
                 RetrofitClient.updateTokenAndRefreshToken("")

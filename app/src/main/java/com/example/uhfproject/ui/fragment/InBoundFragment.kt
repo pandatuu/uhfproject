@@ -43,7 +43,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
     }
 
     override fun initData() {
-        mainViewModel.getBoundList(1)
+        mainViewModel.getBoundList(1){}
         UHFService.getInstance(appContext).power = inBoundPower
 
         mBinding.tvBack.setOnClickListener {
@@ -105,13 +105,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
                     keyStatus = true
                     mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
                     mBinding.tvScanHint.text = "Scanning"
-                    mainViewModel.startStock{
-                        lifecycleScope.launch(Dispatchers.Main){
-                            mBinding.vScanHint.setBackgroundColor(Color.GRAY)
-                            mBinding.tvScanHint.text = "Not Scanned"
-                            keyStatus = false
-                        }
-                    }
+                    mainViewModel.startStock()
                 }else{
                     keyStatus = false
                     mBinding.vScanHint.setBackgroundColor(Color.GRAY)

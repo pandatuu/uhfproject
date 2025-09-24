@@ -59,12 +59,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private var sumBoundList: List<ExcelDownloadVO> = emptyList()
 
-    fun getBoundList(status: Int){
+    fun getBoundList(status: Int, success: (List<ExcelDownloadVO>) -> Unit){
         startLoading()
         viewModelScope.launch(Dispatchers.IO) {
             rep.getBoundListRep(status)
                 .onSuccess{
                     sumBoundList = this
+                    success.invoke(this)
                     LogUtil.d("sumBoundList:${this.size}")
                     stopLoading()
                 }.onServerError { code, msg ->
@@ -86,7 +87,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      */
     private var stockListener: Job? = null
     private var mInventoryStart = true
-    fun startStock(stop: () -> Unit) {
+    fun startStock() {
         if (UHFService.getInstance(appContext).inventoryStart()) {
             UHFService.getInstance().registerReadTags {  }
             LogUtil.d("UHF盘点开启")
@@ -97,10 +98,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 stockListener = viewModelScope.launch(Dispatchers.IO) {
                     while (mInventoryStart) {
                         val epcList = UHFService.getInstance(appContext).tagIDs.toSet()
+                        BeepSound.play()
                         if(startQuest){
                             val idList = epcList.map { it.getId() }
-                            LogUtil.d("idList:$idList")
-                            LogUtil.d("idList:${idList.size}")
                             val change = synchronized(stringSet) {
                                 val toAdd = idList - stringSet
                                 val toRemove = stringSet - idList
@@ -108,15 +108,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                                 stringSet.removeAll(toRemove)
                                 toAdd.isNotEmpty() || toRemove.isNotEmpty()
                             }
-                            LogUtil.d("change:$change")
-                            LogUtil.d("stringSet:$stringSet")
                             if(change){
                                 val result = synchronized(stringSet) {
                                     sumBoundList.filter { it.epc in stringSet }
                                 }
-                                LogUtil.d("result123-sumBoundList:${sumBoundList.toString()}")
-                                LogUtil.d("result123-stringSet:${stringSet.toString()}")
-                                LogUtil.d("result123:${result.toString()}")
                                 _boundExcel.postValue(result)
                             }
                             delay(500)
@@ -161,7 +156,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private suspend fun getExcelDownloadByEmp(epcList: List<String>) {
-        BeepSound.play()
         if(epcList.isNotEmpty()){
             rep.getTrackingIdByEPCRep(epcList)
                 .onSuccess {

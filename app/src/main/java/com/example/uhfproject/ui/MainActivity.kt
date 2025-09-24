@@ -61,24 +61,22 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-//    private var keyStatus = false
     var onKeyDownCallback: ((keyCode: Int, event: KeyEvent?) -> Boolean)? = null
+    var onKeyUpCallback: ((keyCode: Int, event: KeyEvent?) -> Boolean)? = null
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
         if (onKeyDownCallback?.invoke(keyCode, event) == true) {
             return true // Fragment 消费掉
         }
-//        if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
-//            if(!keyStatus){
-//                keyStatus = true
-//                mViewModel.startStock()
-//            }else{
-//                keyStatus = false
-//                mViewModel.stopStock()
-//            }
-//            return true
-//        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
+        if (onKeyUpCallback?.invoke(keyCode, event) == true) {
+            return true // Fragment 消费掉
+        }
         return super.onKeyDown(keyCode, event)
     }
 
