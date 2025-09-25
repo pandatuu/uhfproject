@@ -10,11 +10,16 @@ import android.view.animation.LinearInterpolator
 import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.uhfproject.R
 import com.example.uhfproject.databinding.FragmentMainBinding
 import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.retrofit.RetrofitClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.text.NumberFormat
+import java.util.*
 
 class MainFragment: Fragment() {
 
@@ -27,7 +32,7 @@ class MainFragment: Fragment() {
         Animation.RELATIVE_TO_SELF, 0.5f, // 旋转中心 X 轴为自身中心
         Animation.RELATIVE_TO_SELF, 0.5f  // 旋转中心 Y 轴为自身中心
     ).apply {
-        duration = 1000L                 // 动画持续时间为 1000 毫秒（1 秒）
+        duration = 800L                 // 动画持续时间为 1000 毫秒（1 秒）
         interpolator = LinearInterpolator() // 设置 interpolator 为匀速线性插值器，确保旋转速度均匀 :cite[2]:cite[5]
         fillAfter = true                 // 动画结束后保持最后状态（可选）
     }
@@ -44,6 +49,12 @@ class MainFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mBinding.loginUser.text = "Welcome, ${mainViewModel.username}"
+        mainViewModel.getHeadInfo{
+            lifecycleScope.launch(Dispatchers.Main){
+                mBinding.tvPendingIb.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
+                mBinding.tvPendingOb.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
+            }
+        }
 
         mBinding.inboundLayout.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_inBoundFragment)
@@ -74,8 +85,18 @@ class MainFragment: Fragment() {
         }
         mBinding.refreshBtn.setOnClickListener {
             mBinding.imgRefresh.startAnimation(rotateAnimation)
-
+            mainViewModel.getHeadInfo{
+                lifecycleScope.launch(Dispatchers.Main){
+                    mBinding.tvPendingIb.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
+                    mBinding.tvPendingOb.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
+                }
+            }
         }
 
+    }
+
+    private fun formatNumberWithCommas(number: Int): String {
+        val numberFormat = NumberFormat.getNumberInstance(Locale.US) // 使用美国 locale（逗号分隔）
+        return numberFormat.format(number)
     }
 }

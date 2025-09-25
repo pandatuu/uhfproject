@@ -99,7 +99,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
         super.onResume()
         // 按下时调用方法2
         mActivity?.onKeyDownCallback = { keyCode, event ->
-            LogUtil.d("inbound-code-$keyCode, event-${event?.action}")
+//            LogUtil.d("inbound-code-$keyCode, event-${event?.action}")
             if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
                 if(!keyStatus){
                     keyStatus = true

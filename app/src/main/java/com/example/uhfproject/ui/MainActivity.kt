@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
     var onKeyUpCallback: ((keyCode: Int, event: KeyEvent?) -> Boolean)? = null
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
+//        LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
         if (onKeyDownCallback?.invoke(keyCode, event) == true) {
             return true // Fragment 消费掉
         }
@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
+//        LogUtil.d("按键keyCode:$keyCode, action:${event?.action}")
         if (onKeyUpCallback?.invoke(keyCode, event) == true) {
             return true // Fragment 消费掉
         }

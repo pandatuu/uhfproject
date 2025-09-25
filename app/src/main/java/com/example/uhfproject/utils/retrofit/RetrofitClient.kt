@@ -11,7 +11,8 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-    private val BASE_URL = "http://${ip}:${port}/prod-api/"
+    private val BASE_URL = "http://${ip}:${port}/"
+//    private val BASE_URL = "http://${ip}:${port}/prod-api/"
     val urlInterceptor = BaseUrlInterceptor(BASE_URL)
     private val tokenInterceptor = UpdateTokenInterceptor(ACCESS_TOKEN)
 

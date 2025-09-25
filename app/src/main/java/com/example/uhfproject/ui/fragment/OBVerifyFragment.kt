@@ -8,30 +8,35 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication
 import com.example.uhfproject.databinding.FragmentObVerifyBinding
+import com.example.uhfproject.model.ExcelDownloadVO
 import com.example.uhfproject.ui.MainActivity
 import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
-import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class OBVerifyFragment: BaseFragment<FragmentObVerifyBinding>() {
+class OBVerifyFragment : BaseFragment<FragmentObVerifyBinding>() {
 
     private val mAdapter: CommonItemAdapter by lazy {
-        CommonItemAdapter{}
+        CommonItemAdapter {}
     }
     private var keyStatus = false
     private var mActivity: MainActivity? = null
+
+    private var errorList = listOf<ExcelDownloadVO>()
 
     override fun initView() {
         mActivity = requireActivity() as MainActivity
         mBinding.vScanHint.setBackgroundColor(Color.GRAY)
         mBinding.tvScanHint.text = "Not Scanned"
         mainViewModel.startQuest = true
+        mBinding.tvBacklogNum.text = "B:0"
         mBinding.tvTotalNum.text = "T:0"
         mBinding.tvCompletedNum.text = "C:0"
         mBinding.tvErrorNum.text = "E:0"
+        errorList = emptyList()
         mBinding.rv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter
@@ -41,13 +46,40 @@ class OBVerifyFragment: BaseFragment<FragmentObVerifyBinding>() {
     }
 
     override fun initData() {
-        mainViewModel.getBoundList(2){
-            mBinding.tvTotalNum.text = it.size.toString()
+        mainViewModel.getBoundList(2) {
+            lifecycleScope.launch(Dispatchers.Main){
+                mBinding.tvTotalNum.text = "T:${it.size}"
+            }
         }
-        UHFService.getInstance(MyApplication.appContext).power = Const.outBoundPower
+        UHFService.getInstance(MyApplication.appContext).power = Const.obVerifyPower
 
+        mBinding.btnQuery.setOnClickListener {
+            if (mBinding.edtDb.text.isEmpty()) {
+                Toasty.warning(requireContext(), "Cannot be empty", Toasty.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+            if (mAdapter.itemCount > 0) {
+                Const.simpleAlert(
+                    requireContext(),
+                    "Hint",
+                    "List has data. Clear and query?"
+                ) {
+                    mAdapter.submitList(emptyList())
+                }
+                return@setOnClickListener
+            }
+            mBinding.tvErrorNum.text = "E:0"
+            errorList = emptyList()
+            mainViewModel.getBeatData(mBinding.edtDb.text.toString()) {
+                lifecycleScope.launch(Dispatchers.Main){
+                    mBinding.tvBacklogNum.text = "B:${it.backlog}"
+                    mBinding.tvTotalNum.text = "T:${it.total}"
+                    mBinding.tvCompletedNum.text = "C:${it.completed}"
+                }
+            }
+        }
         mBinding.tvBack.setOnClickListener {
-            if(mAdapter.itemCount>0){
+            if (mAdapter.itemCount > 0) {
                 Const.simpleAlert(
                     requireContext(),
                     getString(R.string.outbound_click_back_title),
@@ -55,18 +87,18 @@ class OBVerifyFragment: BaseFragment<FragmentObVerifyBinding>() {
                 ) {
                     exit()
                 }
-            }else{
+            } else {
                 exit()
             }
         }
         mBinding.imgPower.setOnClickListener {
             Const.simpleEditAlert(
                 requireContext(),
-                getString(R.string.outbound_click_power_hint),
-                Const.outBoundPower.toString()
+                "Set ObVerify power (numeric only)",
+                Const.obVerifyPower.toString()
             ) {
-                Const.outBoundPower = it
-                UHFService.getInstance(MyApplication.appContext).power = Const.outBoundPower
+                Const.obVerifyPower = it
+                UHFService.getInstance(MyApplication.appContext).power = Const.obVerifyPower
             }
         }
         mBinding.btnClear.setOnClickListener {
@@ -78,54 +110,70 @@ class OBVerifyFragment: BaseFragment<FragmentObVerifyBinding>() {
         mBinding.btnUpload.setOnClickListener {
             Const.simpleAlert(requireContext(), getString(R.string.submit_click)) {
                 mainViewModel.stopStock()
-                mainViewModel.startLoading()
                 mainViewModel.submitOutBound(mAdapter.getList().map { it.epc ?: "" }) {
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        mainViewModel.stopLoading()
-                        exit()
+                    //调用接口
+                    mAdapter.submitList(emptyList())
+                    mBinding.tvErrorNum.text = "E:0"
+                    errorList = emptyList()
+                    mainViewModel.getBeatData(mBinding.edtDb.text.toString()) {
+                        lifecycleScope.launch(Dispatchers.Main){
+                            mBinding.tvBacklogNum.text = "B:${it.backlog}"
+                            mBinding.tvTotalNum.text = "T:${it.total}"
+                            mBinding.tvCompletedNum.text = "C:${it.completed}"
+                        }
                     }
                 }
+            }
+        }
+        mBinding.tvErrorNum.setOnClickListener {
+            if(errorList.isNotEmpty()){
+                showErrorBoundFragment(errorList)
             }
         }
     }
 
     override fun observeData() {
-        mainViewModel.boundExcel.observe(viewLifecycleOwner){
-            if(mBinding.edtDb.text.toString().isNotEmpty()){
-                val result = it.filter { it.db!=null && it.db.contains(mBinding.edtDb.text.toString()) }
-                val result2 = it.filter { it.db!=null && !it.db.contains(mBinding.edtDb.text.toString()) }
-                mBinding.tvErrorNum.text = result2.size.toString()
+        mainViewModel.boundExcel.observe(viewLifecycleOwner) {
+            if (mBinding.edtDb.text.toString().isNotEmpty()) {
+                val result =
+                    it.filter { it.db != null && it.db.contains(mBinding.edtDb.text.toString()) }
+                val result2 =
+                    it.filter { it.db != null && !it.db.contains(mBinding.edtDb.text.toString()) }
+                errorList = result2
+                mBinding.tvErrorNum.text = "E:${errorList.size}"
                 mAdapter.submitList(result)
-            }else{
+            } else {
                 mAdapter.submitList(it)
-                mBinding.tvErrorNum.text = "0"
+                errorList = emptyList()
+                mBinding.tvErrorNum.text = "E:${errorList.size}"
             }
             mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
-            mBinding.tvCompletedNum.text = mAdapter.itemCount.toString()
         }
     }
+
     override fun onResume() {
         super.onResume()
         // 按下时调用方法2
         mActivity?.onKeyDownCallback = { keyCode, event ->
             if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
-                if(!keyStatus){
+                if (!keyStatus) {
                     keyStatus = true
                     mBinding.vScanHint.setBackgroundColor(Color.parseColor("#0055A3"))
                     mBinding.tvScanHint.text = "Scanning"
                     mainViewModel.startStock()
-                }else{
+                } else {
                     keyStatus = false
                     mBinding.vScanHint.setBackgroundColor(Color.GRAY)
                     mBinding.tvScanHint.text = "Not Scanned"
                     mainViewModel.stopStock()
                 }
                 true
-            }else{
+            } else {
                 false
             }
         }
     }
+
     override fun onStop() {
         mainViewModel.clearBoundList()
         mainViewModel.stopStock()
@@ -133,7 +181,7 @@ class OBVerifyFragment: BaseFragment<FragmentObVerifyBinding>() {
         super.onStop()
     }
 
-    private fun exit(){
+    private fun exit() {
         findNavController().popBackStack()
     }
 

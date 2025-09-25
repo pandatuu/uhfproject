@@ -25,10 +25,16 @@ import retrofit2.http.Query
 interface MainService {
 
     /**
-     * 查询快递单号列表
+     * 登录方法
      */
     @POST("login")
     suspend fun loginNet(@Body body: LoginBody) : LoginResult<Any>
+
+    /**
+     * 获取用户信息
+     */
+    @POST("getInfo")
+    suspend fun getInfoNet() : UserInfoVo
 
     /**
      * 查询快递单号列表
@@ -99,4 +105,10 @@ interface MainService {
      */
     @GET("post/getTrackingIdListNoPage")
     suspend fun getAllListNet(@Query("status") status: Int) : HttpResult<List<ExcelDownloadVO>>
+
+    @GET("post/getBeatData")
+    suspend fun getBeatDataNet(@Query("beatPrefix") beatPrefix: String): HttpResult<OutboundVerifyVO>
+
+    @GET("post/getLifeCycleByEPC")
+    suspend fun getLifeCycleByEPCNet(@Query("epc") epc: String): HttpResult<LifeCycleVO>
 }

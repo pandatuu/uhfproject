@@ -62,6 +62,16 @@ object Const {
         get() = SPUtils.getInt("FIND_ITEM_POWER", FIND_ITEM_POWER)
         set(value) = SPUtils.putInt("FIND_ITEM_POWER", value)
 
+    private const val OB_VERIFY_POWER = 30
+    var obVerifyPower: Int
+        get() = SPUtils.getInt("OB_VERIFY_POWER", OB_VERIFY_POWER)
+        set(value) = SPUtils.putInt("OB_VERIFY_POWER", value)
+
+    private const val ITEM_QUERY_POWER = 5
+    var itemQueryPower: Int
+        get() = SPUtils.getInt("ITEM_QUERY_POWER", ITEM_QUERY_POWER)
+        set(value) = SPUtils.putInt("ITEM_QUERY_POWER", value)
+
     fun simpleAlert(context: Context, title: String, confirm: ()->Unit ){
         AlertDialog.Builder(context)
             .setTitle(title)

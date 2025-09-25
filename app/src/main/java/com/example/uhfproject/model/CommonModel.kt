@@ -1,10 +1,10 @@
 package com.example.uhfproject.model
 
 data class HttpResultPager<T>(
-    var total: Int,
-    var msg: String,
-    var code: Int,
-    var rows: T? = null,
+    val total: Int,
+    val msg: String,
+    val code: Int,
+    val rows: T? = null,
 )
 
 data class HttpResult<T>(
@@ -14,8 +14,18 @@ data class HttpResult<T>(
 )
 
 data class LoginResult<T>(
-    var code: Int = 0,
-    var msg: String? = "",
-    var token: String? = ""
+    val code: Int = 0,
+    val msg: String? = "",
+    val token: String? = ""
+)
+data class UserInfoVo(
+    val code: Int = 0,
+    val msg: String? = "",
+    val user: UserInfo? = null
+)
+data class UserInfo(
+    val userId: String,
+    val userName: String,
+    val nickName: String,
 )
 

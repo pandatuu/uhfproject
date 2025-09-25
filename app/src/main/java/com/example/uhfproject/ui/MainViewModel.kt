@@ -66,7 +66,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 .onSuccess{
                     sumBoundList = this
                     success.invoke(this)
-                    LogUtil.d("sumBoundList:${this.size}")
                     stopLoading()
                 }.onServerError { code, msg ->
                     showWarn(msg)
@@ -90,7 +89,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun startStock() {
         if (UHFService.getInstance(appContext).inventoryStart()) {
             UHFService.getInstance().registerReadTags {  }
-            LogUtil.d("UHF盘点开启")
+//            LogUtil.d("UHF盘点开启")
             mInventoryStart = true
             _startBtn.postValue(true)
             //开始盘点
@@ -112,11 +111,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                                 val result = synchronized(stringSet) {
                                     sumBoundList.filter { it.epc in stringSet }
                                 }
-                                _boundExcel.postValue(result)
+                                _boundExcel.postValue(result.reversed())
                             }
                             delay(500)
                         }else{
-                            _findList.postValue(epcList.toList())
+                            _findList.postValue(epcList.toList().reversed())
                             delay(100)
                         }
                     }
@@ -136,7 +135,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         if (UHFService.getInstance(appContext).inventoryStop()) {
             _stopBtn.postValue(true)
             mInventoryStart = false
-            LogUtil.d("UHF盘点关闭")
+//            LogUtil.d("UHF盘点关闭")
             //停止盘点
             stockListener?.cancel()
             stockListener = null
@@ -155,29 +154,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _boundExcel.postValue(emptyList())
     }
 
-    private suspend fun getExcelDownloadByEmp(epcList: List<String>) {
-        if(epcList.isNotEmpty()){
-            rep.getTrackingIdByEPCRep(epcList)
-                .onSuccess {
-                    LogUtil.d("getTrackingIdByEPCRep-result:${this}")
-                    _boundExcel.postValue(this)
-                }.onServerError { code, msg ->
-                    showWarn(msg)
-                    LogUtil.d("code:$code, msg:$msg")
-                }.onOtherError {
-                    showWarn(it.message ?: "")
-                    LogUtil.d(it.message ?: "")
-                }
-        }
-    }
-
     fun submitInBound(list: List<String>, success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             rep.inboundRep(list)
                 .onSuccess {
-                    withContext(Dispatchers.Main) {
-                        Toasty.success(appContext, this@onSuccess.msg?:"Submission Success", Toasty.LENGTH_LONG).show()
-                    }
+                    showSuccess(this@onSuccess.msg?:"Submission Success")
                     success.invoke()
                 }.onServerError { _, msg ->
                     showWarn("Submission failed")
@@ -193,13 +174,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     //-----------------------OutBound--------------------------------
 
     fun submitOutBound(list: List<String>, success: () -> Unit) {
+        startLoading()
         viewModelScope.launch(Dispatchers.IO) {
             rep.outboundRep(list)
                 .onSuccess {
-                    withContext(Dispatchers.Main) {
-                        Toasty.success(appContext, this@onSuccess.msg?:"Submission Success", Toasty.LENGTH_LONG).show()
-                    }
+                    showSuccess(this@onSuccess.msg?:"Submission Success")
                     success.invoke()
+                    stopLoading()
                 }.onServerError { _, msg ->
                     showWarn("Submission failed")
                     stopLoading()
@@ -386,6 +367,34 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
+    fun getBeatData(db: String, success: (OutboundVerifyVO) -> Unit){
+        viewModelScope.launch(Dispatchers.IO){
+            rep.getBeatDataRep(db)
+                .onSuccess {
+                    success.invoke(this)
+                }.onServerError { code, msg ->
+                    showError(msg)
+                }.onOtherError {
+                    showError(it.message?:"")
+                }
+        }
+    }
+
+    fun getLifeCycleByEPCRep(epc: String, success: (LifeCycleVO) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO){
+            rep.getLifeCycleByEPCRep(epc)
+                .onSuccess {
+                    LogUtil.d("getTrackingIdByEPCRep-result:${this}")
+                    success.invoke(this)
+                }.onServerError { code, msg ->
+                    showWarn(msg)
+                    LogUtil.d("code:$code, msg:$msg")
+                }.onOtherError {
+                    showWarn(it.message ?: "")
+                    LogUtil.d(it.message ?: "")
+                }
+        }
+    }
 
 
 
@@ -458,6 +467,18 @@ class MainRep() {
     suspend fun getBoundListRep(status: Int): APIResult<List<ExcelDownloadVO>> {
         return safeNetworkInvoke {
             service.getAllListNet(status)
+        }
+    }
+
+    suspend fun getBeatDataRep(beatPrefix: String): APIResult<OutboundVerifyVO> {
+        return safeNetworkInvoke {
+            service.getBeatDataNet(beatPrefix)
+        }
+    }
+
+    suspend fun getLifeCycleByEPCRep(epc: String): APIResult<LifeCycleVO> {
+        return safeNetworkInvoke {
+            service.getLifeCycleByEPCNet(epc)
         }
     }
 }
