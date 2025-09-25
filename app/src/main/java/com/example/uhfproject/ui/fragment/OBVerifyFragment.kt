@@ -142,12 +142,8 @@ class OBVerifyFragment : BaseFragment<FragmentObVerifyBinding>() {
                 errorList = result2
                 mBinding.tvErrorNum.text = "E:${errorList.size}"
                 mAdapter.submitList(result)
-            } else {
-                mAdapter.submitList(it)
-                errorList = emptyList()
-                mBinding.tvErrorNum.text = "E:${errorList.size}"
+                mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
             }
-            mBinding.tvRfidCount.text = mAdapter.itemCount.toString()
         }
     }
 

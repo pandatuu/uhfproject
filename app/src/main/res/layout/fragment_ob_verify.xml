@@ -68,6 +68,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:paddingHorizontal="5dp"
+        android:hint="Beat"
         android:background="@drawable/bg_blue_border_5"
         app:layout_constraintStart_toStartOf="@+id/title_layout"
         app:layout_constraintTop_toBottomOf="@+id/title_layout" />

@@ -115,7 +115,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                             }
                             delay(500)
                         }else{
-                            _findList.postValue(epcList.toList().reversed())
+                            _findList.postValue(epcList.toList())
                             delay(100)
                         }
                     }
@@ -396,6 +396,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun bind(body: BindBody){
+        viewModelScope.launch(Dispatchers.IO){
+            rep.bindRep(body)
+                .onSuccess {
+                    showSuccess("Bind Success")
+                }.onServerError { code, msg ->
+                    showWarn(msg)
+                    LogUtil.d("code:$code, msg:$msg")
+                }.onOtherError {
+                    showWarn(it.message ?: "")
+                    LogUtil.d(it.message ?: "")
+                }
+        }
+    }
+
 
 
     private suspend fun showSuccess(msg: String) {
@@ -479,6 +494,12 @@ class MainRep() {
     suspend fun getLifeCycleByEPCRep(epc: String): APIResult<LifeCycleVO> {
         return safeNetworkInvoke {
             service.getLifeCycleByEPCNet(epc)
+        }
+    }
+
+    suspend fun bindRep(body: BindBody): APIResult<Any> {
+        return safeNetworkInvoke {
+            service.bindNet(body)
         }
     }
 }

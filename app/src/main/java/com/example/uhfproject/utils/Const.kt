@@ -11,6 +11,7 @@ import java.math.RoundingMode
 object Const {
 
     var ACCESS_TOKEN: String = ""
+    const val SCAN_ACTION: String = "com.android.server.scannerservice.broadcast"
 
     private const val IP_VALUE = "singpost.jwctsg.com"
     var ip: String

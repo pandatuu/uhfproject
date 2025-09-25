@@ -40,7 +40,7 @@ class ItemQueryFragment : BaseFragment<FragmentItemQueryBinding>() {
     override fun observeData() {
         mainViewModel.findList.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
-                mainViewModel.getLifeCycleByEPCRep(it[it.lastIndex].getId()) { item ->
+                mainViewModel.getLifeCycleByEPCRep(it[0].getId()) { item ->
                     mBinding.epc.text = item.epc
                     mBinding.trackingId.text = item.trackingNumber
                     mBinding.postalCode.text = item.postCode
