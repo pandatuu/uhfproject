@@ -97,9 +97,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 stockListener = viewModelScope.launch(Dispatchers.IO) {
                     while (mInventoryStart) {
                         val epcList = UHFService.getInstance(appContext).tagIDs.toSet()
+                        LogUtil.d("epcList:$epcList")
                         BeepSound.play()
+                        LogUtil.d("epcList-startQuest:$startQuest")
                         if(startQuest){
                             val idList = epcList.map { it.getId() }
+                            LogUtil.d("epcList-idList:$idList")
                             val change = synchronized(stringSet) {
                                 val toAdd = idList - stringSet
                                 val toRemove = stringSet - idList
@@ -107,13 +110,15 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                                 stringSet.removeAll(toRemove)
                                 toAdd.isNotEmpty() || toRemove.isNotEmpty()
                             }
+                            LogUtil.d("epcList-change:$change")
                             if(change){
                                 val result = synchronized(stringSet) {
                                     sumBoundList.filter { it.epc in stringSet }
                                 }
+                                LogUtil.d("epcList-result:$result")
                                 _boundExcel.postValue(result.reversed())
                             }
-                            delay(500)
+                            delay(300)
                         }else{
                             _findList.postValue(epcList.toList())
                             delay(100)
@@ -372,6 +377,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             rep.getBeatDataRep(db)
                 .onSuccess {
                     success.invoke(this)
+                    showSuccess("Query Success")
                 }.onServerError { code, msg ->
                     showError(msg)
                 }.onOtherError {
@@ -396,16 +402,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun bind(body: BindBody){
+    fun bind(body: BindBody, success: () -> Unit, failed: (String) -> Unit){
         viewModelScope.launch(Dispatchers.IO){
-            rep.bindRep(body)
+            rep.bindRep(listOf(body))
                 .onSuccess {
-                    showSuccess("Bind Success")
+//                    showSuccess("Bind Success")
+                    success.invoke()
                 }.onServerError { code, msg ->
-                    showWarn(msg)
+//                    showWarn(msg)
+                    failed.invoke(msg)
                     LogUtil.d("code:$code, msg:$msg")
                 }.onOtherError {
-                    showWarn(it.message ?: "")
+//                    showWarn(it.message ?: "")
+                    failed.invoke(it.message ?: "")
                     LogUtil.d(it.message ?: "")
                 }
         }
@@ -497,7 +506,7 @@ class MainRep() {
         }
     }
 
-    suspend fun bindRep(body: BindBody): APIResult<Any> {
+    suspend fun bindRep(body: List<BindBody>): APIResult<Any> {
         return safeNetworkInvoke {
             service.bindNet(body)
         }

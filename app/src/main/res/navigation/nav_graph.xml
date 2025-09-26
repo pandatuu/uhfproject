@@ -29,6 +29,9 @@
         <action
             android:id="@+id/action_mainFragment_to_OBVerifyFragment"
             app:destination="@id/OBVerifyFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_rfidBindingFragment"
+            app:destination="@id/rfidBindingFragment" />
     </fragment>
     <fragment
         android:id="@+id/inBoundFragment"
@@ -70,6 +73,10 @@
         android:id="@+id/OBVerifyFragment"
         android:name="com.example.uhfproject.ui.fragment.OBVerifyFragment"
         android:label="OBVerifyFragment" />
+    <fragment
+        android:id="@+id/rfidBindingFragment"
+        android:name="com.example.uhfproject.ui.fragment.RfidBindingFragment"
+        android:label="RfidBindingFragment" />
 
 
 </navigation>

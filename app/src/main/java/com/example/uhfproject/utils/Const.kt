@@ -2,8 +2,11 @@ package com.example.uhfproject.utils
 
 import android.content.Context
 import android.text.InputType
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.uhfproject.R
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -73,6 +76,11 @@ object Const {
         get() = SPUtils.getInt("ITEM_QUERY_POWER", ITEM_QUERY_POWER)
         set(value) = SPUtils.putInt("ITEM_QUERY_POWER", value)
 
+    private const val RFID_BIND_POWER = 5
+    var rfidBindingPower: Int
+        get() = SPUtils.getInt("RFID_BIND_POWER", RFID_BIND_POWER)
+        set(value) = SPUtils.putInt("RFID_BIND_POWER", value)
+
     fun simpleAlert(context: Context, title: String, confirm: ()->Unit ){
         AlertDialog.Builder(context)
             .setTitle(title)
@@ -117,6 +125,14 @@ object Const {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    fun Fragment.hideKeyboard() {
+        activity?.let {
+            val imm = it.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            // 使用 Fragment 的根视图的 windowToken
+            imm.hideSoftInputFromWindow(requireView().windowToken, 0)
+        }
     }
 
     fun intToPercent(rssi: Int): BigDecimal {

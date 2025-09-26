@@ -73,7 +73,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/edt_rfid"
-        android:layout_width="240dp"
+        android:layout_width="300dp"
         android:layout_height="40dp"
         android:layout_marginTop="10dp"
         android:background="@drawable/bg_blue_border_5"
@@ -91,6 +91,17 @@
             android:paddingHorizontal="8dp" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_scan_hint_word"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        tools:text="12312312"
+        android:layout_marginTop="15dp"
+        app:layout_constraintEnd_toEndOf="@+id/title_layout"
+        app:layout_constraintTop_toBottomOf="@+id/edt_rfid"
+        app:layout_constraintStart_toStartOf="@+id/edt_rfid" />
 
 
 

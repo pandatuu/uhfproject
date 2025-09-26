@@ -12,6 +12,8 @@ import com.example.uhfproject.model.ExcelDownloadVO
 import com.example.uhfproject.ui.MainActivity
 import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
+import com.example.uhfproject.utils.Const.hideKeyboard
+import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
@@ -46,14 +48,12 @@ class OBVerifyFragment : BaseFragment<FragmentObVerifyBinding>() {
     }
 
     override fun initData() {
-        mainViewModel.getBoundList(2) {
-            lifecycleScope.launch(Dispatchers.Main){
-                mBinding.tvTotalNum.text = "T:${it.size}"
-            }
-        }
+        mainViewModel.getBoundList(2) { }
         UHFService.getInstance(MyApplication.appContext).power = Const.obVerifyPower
 
         mBinding.btnQuery.setOnClickListener {
+            mBinding.edtDb.clearFocus()
+            hideKeyboard()
             if (mBinding.edtDb.text.isEmpty()) {
                 Toasty.warning(requireContext(), "Cannot be empty", Toasty.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -65,17 +65,11 @@ class OBVerifyFragment : BaseFragment<FragmentObVerifyBinding>() {
                     "List has data. Clear and query?"
                 ) {
                     mAdapter.submitList(emptyList())
+                    mBinding.tvRfidCount.text = "0"
+                    startQuery()
                 }
-                return@setOnClickListener
-            }
-            mBinding.tvErrorNum.text = "E:0"
-            errorList = emptyList()
-            mainViewModel.getBeatData(mBinding.edtDb.text.toString()) {
-                lifecycleScope.launch(Dispatchers.Main){
-                    mBinding.tvBacklogNum.text = "B:${it.backlog}"
-                    mBinding.tvTotalNum.text = "T:${it.total}"
-                    mBinding.tvCompletedNum.text = "C:${it.completed}"
-                }
+            }else{
+                startQuery()
             }
         }
         mBinding.tvBack.setOnClickListener {
@@ -134,11 +128,12 @@ class OBVerifyFragment : BaseFragment<FragmentObVerifyBinding>() {
 
     override fun observeData() {
         mainViewModel.boundExcel.observe(viewLifecycleOwner) {
+            LogUtil.d("rfid-beat:${it.map { it.beat }}")
             if (mBinding.edtDb.text.toString().isNotEmpty()) {
                 val result =
-                    it.filter { it.db != null && it.db.contains(mBinding.edtDb.text.toString()) }
+                    it.filter { it.beat != null && it.beat.contains(mBinding.edtDb.text.toString()) }
                 val result2 =
-                    it.filter { it.db != null && !it.db.contains(mBinding.edtDb.text.toString()) }
+                    it.filter { it.beat != null && !it.beat.contains(mBinding.edtDb.text.toString()) }
                 errorList = result2
                 mBinding.tvErrorNum.text = "E:${errorList.size}"
                 mAdapter.submitList(result)
@@ -177,7 +172,20 @@ class OBVerifyFragment : BaseFragment<FragmentObVerifyBinding>() {
         super.onStop()
     }
 
+    private fun startQuery(){
+        mBinding.tvErrorNum.text = "E:0"
+        errorList = emptyList()
+        mainViewModel.getBeatData(mBinding.edtDb.text.toString()) {
+            lifecycleScope.launch(Dispatchers.Main){
+                mBinding.tvBacklogNum.text = "B:${it.backlog}"
+                mBinding.tvTotalNum.text = "T:${it.total}"
+                mBinding.tvCompletedNum.text = "C:${it.completed}"
+            }
+        }
+    }
+
     private fun exit() {
+        mainViewModel.stopLoading()
         findNavController().popBackStack()
     }
 

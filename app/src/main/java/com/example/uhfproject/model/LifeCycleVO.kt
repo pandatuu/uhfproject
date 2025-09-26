@@ -40,47 +40,47 @@ data class LifeCycleVO(
     /**
      * 上传时间
      */
-    val uploadTime: String,
+    val uploadTime: String? = "",
 
 
     /**
      * 上传人姓名
      */
-    val uploadBy: String,
+    val uploadBy: String? = "",
 
 
     /**
      * 打印时间
      */
-    val rfidPrintTime: String,
+    val rfidPrintTime: String? = "",
 
 
     /**
      * rfid打印人姓名
      */
-    val printBy: String,
+    val printBy: String? = "",
 
 
     /**
      * 入库时间
      */
-    val inboundDate: String,
+    val inboundDate: String? = "",
 
 
     /**
      * 入库人姓名
      */
-    val inboundBy: String,
+    val inboundBy: String? = "",
 
 
     /**
      * 出库时间
      */
-    val outboundDate: String,
+    val outboundDate: String? = "",
 
 
     /**
      * 出库人姓名
      */
-    val outboundBy: String,
+    val outboundBy: String? = "",
 )

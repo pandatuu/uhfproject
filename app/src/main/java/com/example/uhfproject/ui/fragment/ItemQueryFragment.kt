@@ -1,6 +1,7 @@
 package com.example.uhfproject.ui.fragment
 
 import android.view.KeyEvent
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.uhfproject.app.MyApplication
 import com.example.uhfproject.databinding.FragmentItemQueryBinding
@@ -8,6 +9,8 @@ import com.example.uhfproject.ui.MainActivity
 import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
 import com.seuic.uhf.UHFService
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ItemQueryFragment : BaseFragment<FragmentItemQueryBinding>() {
 
@@ -23,6 +26,7 @@ class ItemQueryFragment : BaseFragment<FragmentItemQueryBinding>() {
         UHFService.getInstance(MyApplication.appContext).power = Const.itemQueryPower
 
         mBinding.tvBack.setOnClickListener {
+            mainViewModel.stopLoading()
             findNavController().popBackStack()
         }
         mBinding.imgPower.setOnClickListener {
@@ -41,20 +45,22 @@ class ItemQueryFragment : BaseFragment<FragmentItemQueryBinding>() {
         mainViewModel.findList.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 mainViewModel.getLifeCycleByEPCRep(it[0].getId()) { item ->
-                    mBinding.epc.text = item.epc
-                    mBinding.trackingId.text = item.trackingNumber
-                    mBinding.postalCode.text = item.postCode
-                    mBinding.beat.text = item.bitCode
-                    mBinding.rb.text = item.db
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        mBinding.epc.text = item.epc
+                        mBinding.trackingId.text = item.trackingNumber
+                        mBinding.postalCode.text = item.postCode
+                        mBinding.beat.text = item.bitCode
+                        mBinding.rb.text = item.db
 
-                    mBinding.uploadTime.text =
-                        "Upload date & time: ${item.uploadTime} By: ${item.uploadBy}"
-                    mBinding.printTime.text =
-                        "Print date & time: ${item.rfidPrintTime} By: ${item.printBy}"
-                    mBinding.inboundTime.text =
-                        "Inbound date & time: ${item.inboundDate} By: ${item.inboundBy}"
-                    mBinding.outboundTime.text =
-                        "Outbound date & time: ${item.outboundDate} By: ${item.outboundBy}"
+                        mBinding.uploadTime.text =
+                            "Upload date & time: ${item.uploadTime?:"nothing"}\nBy: ${item.uploadBy?:"nothing"}"
+                        mBinding.printTime.text =
+                            "Print date & time: ${item.rfidPrintTime?:"nothing"}\nBy: ${item.printBy?:"nothing"}"
+                        mBinding.inboundTime.text =
+                            "Inbound date & time: ${item.inboundDate?:"nothing"}\nBy: ${item.inboundBy?:"nothing"}"
+                        mBinding.outboundTime.text =
+                            "Outbound date & time: ${item.outboundDate?:"nothing"}\nBy: ${item.outboundBy?:"nothing"}"
+                    }
                 }
             }
         }

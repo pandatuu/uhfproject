@@ -113,5 +113,5 @@ interface MainService {
     suspend fun getLifeCycleByEPCNet(@Query("epc") epc: String): HttpResult<LifeCycleVO>
 
     @POST("post/bind")
-    suspend fun bindNet(@Body body: BindBody): HttpResult<Any>
+    suspend fun bindNet(@Body body: List<BindBody>): HttpResult<Any>
 }

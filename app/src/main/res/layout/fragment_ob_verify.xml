@@ -66,8 +66,7 @@
         android:layout_width="60dp"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
-        android:layout_marginStart="10dp"
-        android:paddingHorizontal="5dp"
+        android:paddingHorizontal="8dp"
         android:hint="Beat"
         android:background="@drawable/bg_blue_border_5"
         app:layout_constraintStart_toStartOf="@+id/title_layout"
@@ -100,7 +99,7 @@
             android:id="@+id/tv_backlog_num"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#1716FE"
             tools:text="B:254" />
@@ -110,7 +109,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#1716FE"
             tools:text="T:254" />
@@ -120,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#02790E"
             tools:text="C:254" />
@@ -130,8 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#D9001B"
             tools:text="E:254" />

@@ -77,10 +77,14 @@ class MainFragment: Fragment() {
         mBinding.obVerifyLayout.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_OBVerifyFragment)
         }
+        mBinding.rfidBindingLayout.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_rfidBindingFragment)
+        }
         mBinding.logoutBtn.setOnClickListener {
             Const.simpleAlert(requireContext(), "Log out?"){
                 RetrofitClient.updateTokenAndRefreshToken("")
                 startActivity(Intent(requireContext(), LoginActivity::class.java))
+                requireActivity().finish()
             }
         }
         mBinding.refreshBtn.setOnClickListener {

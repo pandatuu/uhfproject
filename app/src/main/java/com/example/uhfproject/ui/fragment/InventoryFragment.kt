@@ -53,6 +53,7 @@ class InventoryFragment : BaseFragment<FragmentInventoryBinding>() {
         mainViewModel.otherSort = 0
 
         mBinding.tvBack.setOnClickListener {
+            mainViewModel.stopLoading()
             findNavController().popBackStack()
         }
         mBinding.snHeadLayout.setOnClickListener {

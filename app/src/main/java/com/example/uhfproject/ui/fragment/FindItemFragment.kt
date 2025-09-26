@@ -79,6 +79,7 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
         UHFService.getInstance(MyApplication.appContext).power = Const.inventoryPower
 
         mBinding.tvBack.setOnClickListener {
+            mainViewModel.stopLoading()
             findNavController().popBackStack()
         }
         mBinding.imgPower.setOnClickListener {

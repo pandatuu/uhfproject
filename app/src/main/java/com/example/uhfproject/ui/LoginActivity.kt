@@ -5,6 +5,7 @@ import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.text.InputType
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.uhfproject.R
@@ -72,25 +73,33 @@ class LoginActivity: AppCompatActivity() {
             }
         }
         mBinding.btnLogin.setOnClickListener {
+            mBinding.loginLoading.visibility = View.VISIBLE
             val username = mBinding.edtUsername.text.toString()
             val password = mBinding.edtPassword.text.toString()
             if(username.isEmpty()){
                 Toasty.warning(this, "Please enter your username.", Toasty.LENGTH_SHORT).show()
+                mBinding.loginLoading.visibility = View.GONE
                 return@setOnClickListener
             }
             if(password.isEmpty()){
                 Toasty.warning(this, "Please enter your password.", Toasty.LENGTH_SHORT).show()
+                mBinding.loginLoading.visibility = View.GONE
                 return@setOnClickListener
             }
             if(isReadMe){
                 readMeName = username
                 readMePassword = password
             }
-            login(username,password){
+            login(username,password, success = {
+                mBinding.loginLoading.visibility = View.GONE
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("username", username)
                 startActivity(intent)
-            }
+            }, failed = {
+                lifecycleScope.launch(Dispatchers.Main){
+                    mBinding.loginLoading.visibility = View.GONE
+                }
+            })
         }
         mBinding.mainImg.setOnLongClickListener {
             SettingDialog(this).show()
@@ -112,7 +121,7 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
-    private fun login(userName: String, password: String, success: () -> Unit){
+    private fun login(userName: String, password: String, success: () -> Unit, failed: () -> Unit){
         lifecycleScope.launch(Dispatchers.IO){
             try{
                 val retrofit = RetrofitClient.createService<MainService>()
@@ -125,9 +134,11 @@ class LoginActivity: AppCompatActivity() {
                         success.invoke()
                     }
                 }
+                failed.invoke()
             } catch (e: Exception) {
                 // 捕获异常，包括拦截器中抛出的异常和网络异常等
                 e.printStackTrace()
+                failed.invoke()
                 withContext(Dispatchers.Main) {
                     // 根据异常类型显示错误信息
                     val errorMessage = when (e) {

@@ -60,6 +60,7 @@ class DashboardFragment:BaseFragment<FragmentDashboardBinding>() {
     }
 
     private fun exit(){
+        mainViewModel.stopLoading()
         findNavController().popBackStack()
     }
 

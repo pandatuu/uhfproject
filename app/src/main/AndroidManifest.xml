@@ -26,6 +26,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.MainActivity" />
+        <activity
+            android:name=".ui.GreenFlashActivity"
+            android:theme="@style/Theme.GreenFlash"
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

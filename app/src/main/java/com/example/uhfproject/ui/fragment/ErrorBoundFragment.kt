@@ -26,7 +26,6 @@ class ErrorBoundFragment(private val errorList: List<ExcelDownloadVO>) : BaseDia
     override fun initView(savedInstanceState: Bundle?) {
         dialogWidth = 322f
         dialogHeight = 480f
-        mainViewModel?.startQuest = false
         mBinding.rv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = mAdapter

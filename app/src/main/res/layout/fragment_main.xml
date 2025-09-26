@@ -339,6 +339,30 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/rfid_binding_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="@+id/ob_verify_layout"
+            app:layout_constraintStart_toStartOf="@+id/item_query_layout"
+            app:layout_constraintEnd_toEndOf="@+id/item_query_layout">
+
+            <ImageView
+                android:layout_gravity="center_horizontal"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_main_binding" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Find Binding"
+                android:textSize="16sp"
+                android:textColor="@color/black" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

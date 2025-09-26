@@ -126,6 +126,7 @@ class InBoundFragment : BaseFragment<FragmentBoundBinding>() {
     }
 
     private fun exit(){
+        mainViewModel.stopLoading()
         findNavController().popBackStack()
     }
 }
