@@ -134,6 +134,11 @@ object Const {
             imm.hideSoftInputFromWindow(requireView().windowToken, 0)
         }
     }
+    fun String.clean(): String =
+        this.replace(Regex("""[\p{C}\p{Z}]"""), "") // \p{C} = control/format/other, \p{Z} = separators
+            .trim()
+
+
 
     fun intToPercent(rssi: Int): BigDecimal {
         return BigDecimal(rssi)

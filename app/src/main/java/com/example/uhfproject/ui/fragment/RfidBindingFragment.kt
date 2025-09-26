@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Color
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.KeyEvent
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -15,7 +17,9 @@ import com.example.uhfproject.ui.GreenFlashActivity
 import com.example.uhfproject.ui.MainActivity
 import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
+import com.example.uhfproject.utils.Const.clean
 import com.example.uhfproject.utils.LogUtil
+import com.google.android.material.textfield.TextInputLayout
 import com.seuic.uhf.UHFService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,11 +34,12 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
         override fun onReceive(context: Context, intent: Intent) {
             LogUtil.d("广播ACTION:${intent.action}")
             if (intent.action.equals(Const.SCAN_ACTION)) {
-                val code = intent.getStringExtra("scannerdata")
-                LogUtil.d("广播接收扫描:${code?.trim()}")
-                mBinding.edtRfid.editText?.setText(code?.trim())
-                scanCode = code?.trim()
-                checkBothValuesReady()
+                val code = intent.getStringExtra("scannerdata")?.clean()?.trim()
+                val code1 = intent.getStringExtra("scannerdata")
+                LogUtil.d("binding-条形码接收扫描:${code1},${code1?.length}")
+                LogUtil.d("binding-条形码接收扫描:${code},${code?.length}")
+                mBinding.edtRfid.editText?.setText(code)
+                scanCode = code
             }
         }
     }
@@ -43,6 +48,8 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
 
     override fun initView() {
         mActivity = requireActivity() as MainActivity
+        mBinding.edtRfid.requestFocus()
+
     }
 
     override fun initData() {
@@ -67,7 +74,8 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
 
     override fun observeData() {
         mainViewModel.findList.observe(viewLifecycleOwner) {
-            if (it.isNotEmpty() && mBinding.edtRfid.editText?.text.toString().isNotEmpty()) {
+            LogUtil.d("binding-rfid:${it.map { it.getId() }}")
+            if (it.isNotEmpty()) {
                 rfidValue = it[0].getId()
                 checkBothValuesReady()
             }
@@ -84,7 +92,7 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
 
         mActivity?.onKeyDownCallback = { keyCode, event ->
             if (keyCode == 142 && event?.action == KeyEvent.ACTION_DOWN) {
-                if (!keyStatus) {
+                if (!keyStatus && scanCode != null) {
                     keyStatus = true
                     mainViewModel.startStock()
                 }
@@ -122,11 +130,12 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
 
     private fun onBothValuesReady(scanCode: String, rfidValue: String) {
         // 在这里调用你的另一个方法
+        mainViewModel.stopStock()
         mainViewModel.bind(BindBody(scanCode, rfidValue),
             success = {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    mBinding.tvScanHintWord.text = "scan: ${scanCode}\n" +
-                            "rfid: ${rfidValue}\n" +
+                    mBinding.tvScanHintWord.text = "tracking#: ${scanCode}\n" +
+                            "epc: ${rfidValue}\n" +
                             "RFlD bound successfully!"
                     mBinding.tvScanHintWord.setTextColor(Color.GREEN)
                     mBinding.edtRfid.editText?.setText("")
@@ -136,8 +145,8 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
                 }
             }, failed = {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    mBinding.tvScanHintWord.text = "scan: ${scanCode}\n" +
-                            "rfid: ${rfidValue}\n" + "ErrorMsg: ${it}"
+                    mBinding.tvScanHintWord.text = "tracking#: ${scanCode}\n" +
+                            "epc: ${rfidValue}\n" + "ErrorMsg: ${it}"
                     mBinding.tvScanHintWord.setTextColor(Color.RED)
                     mBinding.edtRfid.editText?.setText("")
                 }

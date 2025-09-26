@@ -51,6 +51,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _findList: SingleLiveEvent<List<EPC>> = SingleLiveEvent()
     val findList: LiveData<List<EPC>> = _findList
+    private val _onceRfid: SingleLiveEvent<EPC> = SingleLiveEvent()
+    val onceRfid: LiveData<EPC> = _onceRfid
 
     private val _startBtn: SingleLiveEvent<Boolean> = SingleLiveEvent()
     val startBtn: LiveData<Boolean> = _startBtn
@@ -86,6 +88,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      */
     private var stockListener: Job? = null
     private var mInventoryStart = true
+
     fun startStock() {
         if (UHFService.getInstance(appContext).inventoryStart()) {
             UHFService.getInstance().registerReadTags {  }
