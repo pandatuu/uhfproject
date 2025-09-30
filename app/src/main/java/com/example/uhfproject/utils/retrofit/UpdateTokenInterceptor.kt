@@ -13,6 +13,7 @@ import android.content.Intent
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 
 import com.example.uhfproject.ui.LoginActivity
+import es.dmoral.toasty.Toasty
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
@@ -53,6 +54,7 @@ class UpdateTokenInterceptor(
                 if (isTokenExpired(response)) {
                     //TODo 跳转到登陆界面
                     Handler(Looper.getMainLooper()).post {
+                        Toasty.warning(appContext, "Token expired, please log in again.", Toasty.LENGTH_SHORT).show()
                         val intent = Intent(appContext, LoginActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK) // 清除现有任务栈并创建新任务
                         appContext.startActivity(intent)
