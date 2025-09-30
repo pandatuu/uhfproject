@@ -20,7 +20,7 @@ data class LifeCycleVO(
 
 
     /**
-     * RB
+     * LM
      */
     val db: String,
 

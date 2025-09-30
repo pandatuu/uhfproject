@@ -213,7 +213,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="RB"
+                android:text="LM"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 app:layout_constraintEnd_toStartOf="@+id/img_other"
