@@ -254,7 +254,7 @@
 
             <ImageView
                 android:layout_gravity="center_horizontal"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_search" />
 
@@ -262,7 +262,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Find Item"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -278,7 +278,7 @@
 
             <ImageView
                 android:layout_gravity="center_horizontal"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_item_query" />
 
@@ -286,7 +286,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Item Query"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -302,7 +302,7 @@
 
             <ImageView
                 android:layout_gravity="center_horizontal"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_dashboard" />
 
@@ -310,7 +310,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Dashboard"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -326,7 +326,7 @@
 
             <ImageView
                 android:layout_gravity="center_horizontal"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_ob_verify" />
 
@@ -334,7 +334,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="OB Verify"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -350,7 +350,7 @@
 
             <ImageView
                 android:layout_gravity="center_horizontal"
-                android:layout_width="40dp"
+                android:layout_width="30dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_main_binding" />
 
@@ -358,7 +358,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Binding"
-                android:textSize="16sp"
+                android:textSize="15sp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
