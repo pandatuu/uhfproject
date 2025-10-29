@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/setting_tittle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="SETTING"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edt_ip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="IP"
+        android:padding="8dp"
+        android:background="@drawable/bg_edittext_rounded"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/setting_tittle" />
+
+    <EditText
+        android:id="@+id/edt_port"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="port"
+        android:padding="8dp"
+        android:background="@drawable/bg_edittext_rounded"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edt_ip" />
+
+    <TextView
+        android:id="@+id/btn_setting_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:paddingHorizontal="15dp"
+        android:text="confirm"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_port" />
+
+    <TextView
+        android:id="@+id/btn_setting_release"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Release"
+        android:paddingHorizontal="5dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edt_port" />
+
+    <TextView
+        android:id="@+id/btn_setting_debug"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Debug"
+        android:paddingHorizontal="5dp"
+        android:gravity="center"
+        app:layout_constraintStart_toEndOf="@+id/btn_setting_release"
+        app:layout_constraintTop_toBottomOf="@+id/edt_port" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

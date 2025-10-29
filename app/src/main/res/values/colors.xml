@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="scan_status_active">#4CAF50</color>
+    <color name="scan_status_inactive">#BDBDBD</color>
+
+    <!-- Google Style UI Redesign Colors -->
+    <color name="google_blue">#4285F4</color>
+    <color name="google_red">#DB4437</color>
+    <color name="google_yellow">#F4B400</color>
+    <color name="google_green">#0F9D58</color>
+
+    <color name="light_green_background">#E6F4EA</color>
+    <color name="dark_green_text">#0A6522</color>
+
+    <color name="light_grey_background">#F5F5F5</color>
+    <color name="dark_grey_text">#5F6368</color>
+
+    <color name="light_blue_background">#E8F0FE</color>
+    <color name="card_background">#FFFFFF</color>
+    <color name="main_background">#F8F9FA</color>
+    <color name="divider_color">#E0E0E0</color>
+    <color name="dark_text">#202124</color>
+    <color name="light_text">#5F6368</color>
+</resources>

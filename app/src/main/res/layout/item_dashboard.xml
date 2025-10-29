@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="37dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/item_sn"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        tools:text="SFSBFDBSBSBN"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:background="@drawable/bg_dash_item_border_1"
+        app:layout_constraintWidth_percent="0.1"
+        app:layout_constraintEnd_toStartOf="@+id/item_db"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/item_db"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        tools:text="Tracking#"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:background="@drawable/bg_dash_item_border_2"
+        app:layout_constraintWidth_percent="0.35"
+        app:layout_constraintEnd_toStartOf="@+id/item_total"
+        app:layout_constraintStart_toEndOf="@+id/item_sn"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/item_total"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        tools:text="Postal Code"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:background="@drawable/bg_dash_item_border_2"
+        app:layout_constraintWidth_percent="0.15"
+        app:layout_constraintEnd_toStartOf="@+id/item_inbound_completed"
+        app:layout_constraintStart_toEndOf="@+id/item_db"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/item_inbound_completed"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        tools:text="Beat"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:background="@drawable/bg_dash_item_border_2"
+        app:layout_constraintWidth_percent="0.2"
+        app:layout_constraintEnd_toStartOf="@+id/item_outbound_completed"
+        app:layout_constraintStart_toEndOf="@+id/item_total"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/item_outbound_completed"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        tools:text="Other"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:background="@drawable/bg_dash_item_border_2"
+        app:layout_constraintWidth_percent="0.2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/item_inbound_completed"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
