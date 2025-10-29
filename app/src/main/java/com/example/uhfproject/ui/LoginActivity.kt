@@ -3,6 +3,7 @@ package com.example.uhfproject.ui
 import android.content.Intent
 import android.content.pm.PackageInfo
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
 import android.view.View
@@ -36,6 +37,7 @@ class LoginActivity: AppCompatActivity() {
     private lateinit var mBinding: ActivityLoginBinding
 
     private var eyeGone = false
+    private var mode = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,12 +52,12 @@ class LoginActivity: AppCompatActivity() {
         }
 
         mBinding.imgEye.setImageResource(R.drawable.ic_eye_gone)
-
+        setMode()
         initVersion()
         // getPackageName()是你当前类的包名，0代表是获取版本信息
         val packageInfo: PackageInfo = packageManager.getPackageInfo(packageName, 0)
         // 获取versionCode
-        mBinding.tvVersion.text = "Current Version: ${packageInfo.versionName}"
+        mBinding.tvVersion.text = "Version ${packageInfo.versionName}"
 
         setListener()
     }
@@ -94,6 +96,7 @@ class LoginActivity: AppCompatActivity() {
                 mBinding.loginLoading.visibility = View.GONE
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("username", username)
+                intent.putExtra("mode", mode)
                 startActivity(intent)
             }, failed = {
                 lifecycleScope.launch(Dispatchers.Main){
@@ -118,6 +121,14 @@ class LoginActivity: AppCompatActivity() {
                 mBinding.imgEye.setImageResource(R.drawable.ic_eye_gone)
                 mBinding.edtPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             }
+        }
+        mBinding.btnPon.setOnClickListener {
+            mode = 0
+            setMode()
+        }
+        mBinding.btnApple.setOnClickListener {
+            mode = 1
+            setMode()
         }
     }
 
@@ -176,6 +187,27 @@ class LoginActivity: AppCompatActivity() {
                     // 应用的包名未找到，这通常不会发生
                     e.printStackTrace()
                 }
+            }
+        }
+    }
+
+    private fun setMode(){
+        when(mode){
+            0 -> {
+                mBinding.btnPon.setBackgroundResource(R.drawable.bg_blue_5_1)
+                mBinding.btnPon.setTextColor(Color.WHITE)
+                mBinding.btnPon.textSize = 16f
+                mBinding.btnApple.setBackgroundResource(R.drawable.bg_blue_border_5_1)
+                mBinding.btnApple.setTextColor(Color.parseColor("#1684fc"))
+                mBinding.btnApple.textSize = 12f
+            }
+            1 -> {
+                mBinding.btnPon.setBackgroundResource(R.drawable.bg_blue_border_5_2)
+                mBinding.btnPon.setTextColor(Color.parseColor("#1684fc"))
+                mBinding.btnPon.textSize = 12f
+                mBinding.btnApple.setBackgroundResource(R.drawable.bg_blue_5_2)
+                mBinding.btnApple.setTextColor(Color.WHITE)
+                mBinding.btnApple.textSize = 16f
             }
         }
     }

@@ -2,3 +2,4 @@
 /.gradle
 /.idea
 /output
+app/release/output-metadata.json
