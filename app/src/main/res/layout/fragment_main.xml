@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
-        android:text="SingPost |"
+        android:text="SingPost | Welcome"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -25,13 +25,40 @@
         android:id="@+id/login_user"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:textColor="@android:color/black"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/tv_logo"
-        app:layout_constraintStart_toEndOf="@+id/tv_logo"
-        app:layout_constraintTop_toTopOf="@+id/tv_logo"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/tv_logo"
+        app:layout_constraintStart_toStartOf="@+id/tv_logo"
         tools:text="sa" />
+
+
+    <TextView
+        android:id="@+id/tv_statistics"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:text="*Statistics"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/login_user"
+        app:layout_constraintStart_toStartOf="@+id/login_user" />
+
+    <ImageView
+        android:id="@+id/img_refresh"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="Refresh Button"
+        android:elevation="10dp"
+        android:focusable="true"
+        android:padding="8dp"
+        android:src="@drawable/ic_refresh"
+        app:layout_constraintStart_toEndOf="@+id/tv_statistics"
+        app:layout_constraintTop_toTopOf="@+id/tv_statistics"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_statistics"/>
+
 
     <ImageView
         android:id="@+id/logout_btn"
@@ -44,9 +71,9 @@
         android:focusable="true"
         android:padding="8dp"
         android:src="@drawable/ic_logout"
-        app:layout_constraintBottom_toBottomOf="@+id/login_user"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_logo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/login_user" />
+        app:layout_constraintTop_toTopOf="@+id/tv_logo" />
 
 
     <!-- Main Functions Cluster -->
@@ -55,13 +82,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_logo">
+        app:layout_constraintTop_toBottomOf="@+id/tv_statistics">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -77,7 +104,7 @@
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toStartOf="@+id/inbound_layout"
+                app:layout_constraintEnd_toStartOf="@+id/card_1_layout"
                 app:layout_constraintHorizontal_weight="1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -85,21 +112,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#EFEFFB"
+                    android:background="@drawable/bg_card_0"
                     android:orientation="vertical"
                     android:padding="12dp">
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Pending IB"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_pending_ib"
@@ -110,19 +132,13 @@
                         android:textStyle="bold"
                         tools:text="342" />
 
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="4dp"
-                        android:background="#D0D5DD" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Pending OB"
+                        android:layout_marginTop="40dp"
                         android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_pending_ob"
@@ -133,22 +149,14 @@
                         android:textStyle="bold"
                         tools:text="156" />
 
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="12dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_margin="3dp"
-                        android:src="@drawable/ic_dashboard"
-                        app:tint="@android:color/black" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/inbound_layout"
+                android:id="@+id/card_1_layout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
-                app:cardBackgroundColor="#4A7AFF"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:layout_constraintDimensionRatio="1:1"
@@ -160,19 +168,26 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/bg_card_1"
                     android:padding="12dp">
 
                     <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:id="@+id/img_card_1"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginStart="20dp"
                         android:src="@drawable/ic_main_inbound"
                         app:tint="@color/white" />
 
                     <TextView
+                        android:id="@+id/tv_card_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:text="Inbound"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="20dp"
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold" />
@@ -180,11 +195,10 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/inventory_layout"
+                android:id="@+id/card_2_layout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginTop="16dp"
-                app:cardBackgroundColor="#F79009"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:layout_constraintDimensionRatio="1:1"
@@ -195,19 +209,26 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/bg_card_2"
                     android:padding="12dp">
 
                     <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:id="@+id/img_card_2"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginStart="20dp"
                         android:src="@drawable/ic_main_inventory"
                         app:tint="@color/white" />
 
                     <TextView
+                        android:id="@+id/tv_card_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:text="Inventory"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="20dp"
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold" />
@@ -215,53 +236,44 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:id="@+id/outbound_layout"
+                android:id="@+id/card_3_layout"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:cardBackgroundColor="#7F56D9"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp"
                 app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="@+id/inbound_layout"
-                app:layout_constraintStart_toStartOf="@+id/inbound_layout"
-                app:layout_constraintTop_toTopOf="@+id/inventory_layout">
+                app:layout_constraintEnd_toEndOf="@+id/card_1_layout"
+                app:layout_constraintStart_toStartOf="@+id/card_1_layout"
+                app:layout_constraintTop_toTopOf="@+id/card_2_layout">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/bg_card_3"
                     android:padding="12dp">
 
                     <ImageView
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
+                        android:id="@+id/img_card_3"
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="40dp"
+                        android:layout_marginStart="20dp"
                         android:src="@drawable/ic_main_outbound"
                         app:tint="@color/white" />
 
                     <TextView
+                        android:id="@+id/tv_card_3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:text="Outbound"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginStart="20dp"
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
-
-            <ImageView
-                android:id="@+id/img_refresh"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_margin="8dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:clickable="true"
-                android:contentDescription="Refresh Button"
-                android:elevation="10dp"
-                android:focusable="true"
-                android:padding="10dp"
-                android:src="@drawable/ic_refresh"
-                app:layout_constraintEnd_toEndOf="@+id/dashboard_card_clickable"
-                app:layout_constraintTop_toTopOf="@+id/dashboard_card_clickable" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
@@ -299,7 +311,7 @@
             <!-- Row 1 -->
             <!-- IB Verify Button -->
             <LinearLayout
-                android:id="@+id/ib_verify_layout"
+                android:id="@+id/features_1_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -316,6 +328,7 @@
                     android:layout_height="60dp">
 
                     <ImageView
+                        android:id="@+id/img_features_1"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center"
@@ -323,6 +336,7 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/tv_features_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -333,7 +347,7 @@
 
             <!-- Binding Button -->
             <LinearLayout
-                android:id="@+id/binding_layout"
+                android:id="@+id/features_2_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -350,6 +364,7 @@
                     android:layout_height="60dp">
 
                     <ImageView
+                        android:id="@+id/img_features_2"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center"
@@ -357,6 +372,7 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/tv_features_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -367,6 +383,7 @@
 
             <!-- Placeholder 1 -->
             <LinearLayout
+                android:id="@+id/features_3_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -382,6 +399,7 @@
                     android:layout_height="60dp">
 
                     <ImageView
+                        android:id="@+id/img_features_3"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
                         android:layout_gravity="center"
@@ -389,6 +407,7 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/tv_features_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="0dp"
@@ -400,7 +419,7 @@
             <!-- Row 2 -->
             <!-- OB Verify Button -->
             <LinearLayout
-                android:id="@+id/ob_verify_layout"
+                android:id="@+id/features_4_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -434,6 +453,7 @@
 
             <!-- Placeholder 2 -->
             <LinearLayout
+                android:id="@+id/features_5_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -466,6 +486,7 @@
 
             <!-- Placeholder 3 -->
             <LinearLayout
+                android:id="@+id/features_6_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -499,7 +520,7 @@
             <!-- Row 3 -->
             <!-- Item Query Button -->
             <LinearLayout
-                android:id="@+id/item_query_layout"
+                android:id="@+id/features_7_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -533,7 +554,7 @@
 
             <!-- Find Item Button -->
             <LinearLayout
-                android:id="@+id/find_item_layout"
+                android:id="@+id/features_8_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"
@@ -567,7 +588,7 @@
 
             <!-- Debug Scan Button -->
             <LinearLayout
-                android:id="@+id/debug_scan_layout"
+                android:id="@+id/features_9_layout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_columnWeight="1"

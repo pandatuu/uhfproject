@@ -10,7 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.ActivityMainBinding
-import com.example.uhfproject.ui.fragment.DebugScanFragment
+import com.example.uhfproject.ui.fragment.apple.DebugScanFragment
 import com.example.uhfproject.utils.BeepSound
 import com.example.uhfproject.utils.LogUtil
 import com.seuic.uhf.UHFService
@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
 
         mainViewModel.username = intent.getStringExtra("username") ?: ""
+        mainViewModel.mode = intent.getIntExtra("mode", 0)
 
         uhfService = UHFService.getInstance(appContext)
 

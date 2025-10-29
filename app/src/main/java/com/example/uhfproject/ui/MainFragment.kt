@@ -1,6 +1,7 @@
 package com.example.uhfproject.ui
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -56,36 +57,83 @@ class MainFragment: Fragment() {
             }
         }
 
-        mBinding.inboundLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_inBoundFragment)
+        if(mainViewModel.mode == 0){
+            mBinding.features4Layout.visibility = View.GONE
+            mBinding.features5Layout.visibility = View.GONE
+            mBinding.features6Layout.visibility = View.GONE
+            mBinding.features7Layout.visibility = View.GONE
+            mBinding.features8Layout.visibility = View.GONE
+            mBinding.features9Layout.visibility = View.GONE
+
+            mBinding.imgCard1.setImageResource(R.drawable.ic_binding)
+            mBinding.tvCard1.text = "Binding"
+            mBinding.imgCard2.setImageResource(R.drawable.ic_stockcount)
+            mBinding.tvCard2.text = "Stockcount"
+            mBinding.imgCard3.setImageResource(R.drawable.ic_inbound)
+            mBinding.tvCard3.text = "Inbound"
+
+            mBinding.imgFeatures1.setImageResource(R.drawable.ic_find_rfid)
+            mBinding.tvFeatures1.text = "Find RFID"
+            mBinding.tvFeatures1.setTextColor(Color.parseColor("#000a7b"))
+            mBinding.imgFeatures2.setImageResource(R.drawable.ic_rfid_query)
+            mBinding.tvFeatures2.text = "RFID Query"
+            mBinding.tvFeatures2.setTextColor(Color.parseColor("#000a7b"))
+            mBinding.imgFeatures3.setImageResource(R.drawable.ic_bound_list)
+            mBinding.tvFeatures3.text = "Bound List"
+            mBinding.tvFeatures3.setTextColor(Color.parseColor("#000a7b"))
+
+            mBinding.card1Layout.setOnClickListener {
+
+            }
+            mBinding.card2Layout.setOnClickListener {
+
+            }
+            mBinding.card3Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_fragmentPonInbound)
+            }
+
+            mBinding.features1Layout.setOnClickListener {
+
+            }
+            mBinding.features2Layout.setOnClickListener {
+
+            }
+            mBinding.features3Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_fragmentPonBoundList)
+            }
+        }else{
+            mBinding.card1Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_inBoundFragment)
+            }
+            mBinding.card3Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_outBoundFragment)
+            }
+            mBinding.card2Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_inventoryFragment)
+            }
+            mBinding.features8Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_findItemFragment)
+            }
+            mBinding.dashboardCardClickable.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_dashboardFragment)
+            }
+            mBinding.features7Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_itemQueryFragment)
+            }
+            mBinding.features4Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_OBVerifyFragment)
+            }
+            mBinding.features1Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_ibVerifyFragment)
+            }
+            mBinding.features2Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_rfidBindingFragment)
+            }
+            mBinding.features9Layout.setOnClickListener {
+                findNavController().navigate(R.id.action_mainFragment_to_debugScanFragment)
+            }
         }
-        mBinding.outboundLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_outBoundFragment)
-        }
-        mBinding.inventoryLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_inventoryFragment)
-        }
-        mBinding.findItemLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_findItemFragment)
-        }
-        mBinding.dashboardCardClickable.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_dashboardFragment)
-        }
-        mBinding.itemQueryLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_itemQueryFragment)
-        }
-        mBinding.obVerifyLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_OBVerifyFragment)
-        }
-        mBinding.ibVerifyLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_ibVerifyFragment)
-        }
-        mBinding.bindingLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_rfidBindingFragment)
-        }
-        mBinding.debugScanLayout.setOnClickListener { 
-            findNavController().navigate(R.id.action_mainFragment_to_debugScanFragment)
-        }
+
         mBinding.logoutBtn.setOnClickListener { 
             Const.simpleAlert(requireContext(), "Log out?"){
                 RetrofitClient.updateTokenAndRefreshToken("")

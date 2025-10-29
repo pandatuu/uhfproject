@@ -86,6 +86,17 @@ object Const {
         get() = SPUtils.getInt("RFID_BIND_POWER", RFID_BIND_POWER)
         set(value) = SPUtils.putInt("RFID_BIND_POWER", value)
 
+    private const val PON_INBOUND_POWER = 30
+    var ponInboundPower: Int
+        get() = SPUtils.getInt("PON_INBOUND_POWER", PON_INBOUND_POWER)
+        set(value) = SPUtils.putInt("PON_INBOUND_POWER", value)
+
+    private const val PON_EXCEPTIONS_POWER = 30
+    var ponExceptionsPower: Int
+        get() = SPUtils.getInt("PON_EXCEPTIONS_POWER", PON_EXCEPTIONS_POWER)
+        set(value) = SPUtils.putInt("PON_EXCEPTIONS_POWER", value)
+
+
     fun simpleAlert(context: Context, title: String, confirm: ()->Unit ){
         AlertDialog.Builder(context)
             .setTitle(title)

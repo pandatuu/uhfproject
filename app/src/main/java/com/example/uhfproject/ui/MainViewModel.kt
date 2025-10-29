@@ -140,6 +140,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     }
 
     var username = ""
+    var mode = 0
 
     private var loadingTimer: Job? = null
 

@@ -38,18 +38,24 @@
         <action
             android:id="@+id/action_mainFragment_to_debugScanFragment"
             app:destination="@id/debugScanFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_fragmentPonBoundList"
+            app:destination="@id/fragmentPonBoundList" />
+        <action
+            android:id="@+id/action_mainFragment_to_fragmentPonInbound"
+            app:destination="@id/fragmentPonInbound" />
     </fragment>
     <fragment
         android:id="@+id/inBoundFragment"
-        android:name="com.example.uhfproject.ui.fragment.InBoundFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.InBoundFragment"
         android:label="InBoundFragment" />
     <fragment
         android:id="@+id/outBoundFragment"
-        android:name="com.example.uhfproject.ui.fragment.OutBoundFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.OutBoundFragment"
         android:label="OutBoundFragment" />
     <fragment
         android:id="@+id/inventoryFragment"
-        android:name="com.example.uhfproject.ui.fragment.InventoryFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.InventoryFragment"
         android:label="InventoryFragment" >
         <action
             android:id="@+id/action_inventoryFragment_to_findItemFragment"
@@ -57,11 +63,11 @@
     </fragment>
     <fragment
         android:id="@+id/findItemFragment"
-        android:name="com.example.uhfproject.ui.fragment.FindItemFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.FindItemFragment"
         android:label="FindItemFragment" />
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.example.uhfproject.ui.fragment.DashboardFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.DashboardFragment"
         android:label="DashboardFragment" >
         <action
             android:id="@+id/action_dashboardFragment_to_checkBoundFragment"
@@ -69,30 +75,42 @@
     </fragment>
     <fragment
         android:id="@+id/checkBoundFragment"
-        android:name="com.example.uhfproject.ui.fragment.CheckBoundFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.CheckBoundFragment"
         android:label="CheckBoundFragment" />
     <fragment
         android:id="@+id/itemQueryFragment"
-        android:name="com.example.uhfproject.ui.fragment.ItemQueryFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.ItemQueryFragment"
         android:label="ItemQueryFragment" />
     <fragment
         android:id="@+id/OBVerifyFragment"
-        android:name="com.example.uhfproject.ui.fragment.OBVerifyFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.OBVerifyFragment"
         android:label="OBVerifyFragment" />
 
     <fragment
         android:id="@+id/ibVerifyFragment"
-        android:name="com.example.uhfproject.ui.fragment.IBVerifyFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.IBVerifyFragment"
         android:label="fragment_ib_verify" />
 
     <fragment
         android:id="@+id/rfidBindingFragment"
-        android:name="com.example.uhfproject.ui.fragment.RfidBindingFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.RfidBindingFragment"
         android:label="RfidBindingFragment" />
 
     <fragment
         android:id="@+id/debugScanFragment"
-        android:name="com.example.uhfproject.ui.fragment.DebugScanFragment"
+        android:name="com.example.uhfproject.ui.fragment.apple.DebugScanFragment"
         android:label="fragment_debug_scan" />
+    <fragment
+        android:id="@+id/fragmentPonInbound"
+        android:name="com.example.uhfproject.ui.fragment.pon.FragmentPonInbound"
+        android:label="FragmentPonInbound" />
+    <fragment
+        android:id="@+id/fragmentPonBoundList"
+        android:name="com.example.uhfproject.ui.fragment.pon.FragmentPonBoundList"
+        android:label="FragmentPonBoundList" />
+    <fragment
+        android:id="@+id/fragmentPonExceptions"
+        android:name="com.example.uhfproject.ui.fragment.pon.FragmentPonExceptions"
+        android:label="FragmentPonExceptions" />
 
 </navigation>
