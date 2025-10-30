@@ -8,7 +8,7 @@ data class BoundAndInboundVO(
     /**
      * 绑定数量
      */
-    val boundCountval : Int,
+    val boundCount : Int,
 
     /**
      * 入库数量

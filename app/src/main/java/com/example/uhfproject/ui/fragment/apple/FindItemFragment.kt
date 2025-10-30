@@ -57,8 +57,8 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
                     mBinding.tvBarcode.text = "Barcode: $it"
                     mainViewModel.getItemByTracking(it, success = { item ->
                         lifecycleScope.launch(Dispatchers.Main) {
-                            if (!item.epc.isNullOrEmpty()) {
-                                currentRfid = item.epc
+                            if (!item.isNullOrEmpty()) {
+                                currentRfid = item
                                 mBinding.tvRfid.text = "EPC: $currentRfid"
                                 mainViewModel.setScanMode(ScanMode.FIND_ITEM)
                                 Toasty.success(requireContext(), "Tracking number valid. Ready to scan.").show()
@@ -137,8 +137,8 @@ class FindItemFragment : BaseFragment<FragmentFindItemBinding>(), SensorEventLis
             }
             mainViewModel.getItemByTracking(tracking, success = {
                 lifecycleScope.launch(Dispatchers.Main) {
-                    if (!it.epc.isNullOrEmpty()) {
-                        currentRfid = it.epc
+                    if (!it.isNullOrEmpty()) {
+                        currentRfid = it
                         mBinding.tvRfid.text = "EPC:$currentRfid"
                         mainViewModel.setScanMode(ScanMode.FIND_ITEM)
                         Toasty.success(requireContext(), "Tracking number valid. Ready to scan.").show()

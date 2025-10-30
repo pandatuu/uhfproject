@@ -22,6 +22,11 @@ class ApiRepository {
             service.inboundNet(body)
         }
     }
+    suspend fun inboundPonRep(body: PONInboundDTO): APIResult<PonInboundPromptsVO> {
+        return safeNetworkInvoke {
+            service.inboundPonNet(body)
+        }
+    }
 
     suspend fun outboundRep(body: List<String>): APIResult<InfoPromptsVO> {
         return safeNetworkInvoke {
@@ -38,6 +43,11 @@ class ApiRepository {
     suspend fun getItemByTrackingIdRep(tracking: String, pageNum: Int, sortPageSize: Int): APIResult<List<ExcelDownloadVO>> {
         return safeNetWorkPagerInvoke {
             service.getItemByTrackingIdNet(tracking, pageNum, sortPageSize)
+        }
+    }
+    suspend fun getPonItemByTrackingIdRep(tracking: String, pageNum: Int, sortPageSize: Int): APIResult<List<PONExcelDownloadVO>> {
+        return safeNetWorkPagerInvoke {
+            service.getPonItemByTrackingIdNet(tracking, pageNum, sortPageSize)
         }
     }
 
@@ -76,10 +86,21 @@ class ApiRepository {
             service.getLifeCycleByEPCNet(epc)
         }
     }
+    suspend fun getPonLifeCycleByEPCRep(epc: String): APIResult<PONLifeCycleVO> {
+        return safeNetworkInvoke {
+            service.getPonLifeCycleByEPCNet(epc)
+        }
+    }
 
     suspend fun bindRep(body: List<BindBody>): APIResult<Any> {
         return safeNetworkInvoke {
             service.bindNet(body)
+        }
+    }
+
+    suspend fun bindPonRep(body: List<PONBindVO>): APIResult<Any> {
+        return safeNetworkInvoke {
+            service.bindPonNet(body)
         }
     }
 
@@ -95,9 +116,21 @@ class ApiRepository {
         }
     }
 
-    suspend fun getSiteByUserIdRep(): APIResult<List<UserSiteDTO>> {
+    suspend fun getBoundAndInboundCountRep(siteId: Int): APIResult<BoundAndInboundVO> {
         return safeNetworkInvoke {
-            service.getSiteByUserIdNet()
+            service.getBoundAndInboundCountNet(siteId)
+        }
+    }
+
+    suspend fun getBoundDataBySiteIdRep(siteId: Int): APIResult<List<TrackingVO>> {
+        return safeNetworkInvoke {
+            service.getBoundDataBySiteIdNet(siteId)
+        }
+    }
+
+    suspend fun getPermsByUserIdRep(): APIResult<Boolean> {
+        return safeNetworkInvoke {
+            service.getPermsByUserIdNet()
         }
     }
 

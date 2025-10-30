@@ -2,12 +2,11 @@ package com.example.uhfproject.ui.fragment.pon
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.Visibility
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.uhfproject.R
@@ -24,15 +23,19 @@ import kotlinx.coroutines.launch
 
 class FragmentPonInbound: BaseFragment<FragmentPonCommonBinding>(){
 
-    private val dataList = arrayOf("选项一", "选项二", "选项三")
-    private val mAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, dataList)
+    private lateinit var mAdapter: ArrayAdapter<String>
 
     private val rvAdapter: PonInboundAdapter by lazy { PonInboundAdapter() }
 
     override fun initView() {
         mainViewModel.setScanMode(ScanMode.PON_INBOUND)
-        mAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        mAdapter = ArrayAdapter(requireContext(), R.layout.spinner_item_draw, mainViewModel.siteList.map { it.siteName?:"" })
+        mAdapter.setDropDownViewResource(R.layout.spinner_item)
+
         mBinding.spinner.adapter = mAdapter
+        mBinding.spinner.setSelection(0)
+        mainViewModel.currentSiteId = mainViewModel.siteList[0].siteId.toIntOrNull()?:-1
+
         mBinding.inboundRv.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = rvAdapter
@@ -40,6 +43,28 @@ class FragmentPonInbound: BaseFragment<FragmentPonCommonBinding>(){
     }
 
     override fun initData() {
+        mainViewModel.getBoundAndInboundCount {
+            mBinding.tvProgress.text = "Progress:${it.inboundCount}/${it.boundCount}"
+        }
+        UHFService.getInstance(MyApplication.appContext).power = ponInboundPower
+
+        mBinding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                mainViewModel.currentSiteId = mainViewModel.siteList[position].siteId.toIntOrNull()?:-1
+                mainViewModel.getBoundAndInboundCount {
+                    mBinding.tvProgress.text = "Progress:${it.inboundCount}/${it.boundCount}"
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
         mBinding.tvBack.setOnClickListener {
             findNavController().popBackStack()
         }
@@ -50,9 +75,38 @@ class FragmentPonInbound: BaseFragment<FragmentPonCommonBinding>(){
             }
         }
         mBinding.btnExceptions.setOnClickListener {
+            val exceptionList = mainViewModel.ponException.value
             val bundle = Bundle()
-            bundle.putString("exceptionList", Gson().toJson(mainViewModel.ponException.value))
-            findNavController().navigate(R.id.action_fragmentPonInbound_to_fragmentPonExceptions)
+            bundle.putString("exceptionList", Gson().toJson(exceptionList))
+            findNavController().navigate(R.id.action_fragmentPonInbound_to_fragmentPonExceptions, bundle)
+        }
+        mBinding.btnClear.setOnClickListener {
+            rvAdapter.setList(emptyList())
+            mainViewModel.exitPonInbound()
+            mBinding.btnExceptions.visibility = View.GONE
+        }
+        mBinding.btnUpload.setOnClickListener {
+            mainViewModel.submitInBoundPon{
+                lifecycleScope.launch(Dispatchers.Main) {
+                    rvAdapter.setList(emptyList())
+                }
+                mainViewModel.matchList.clear()
+                mainViewModel.otherSiteList.clear()
+                mainViewModel.getBoundAndInboundCount {
+                    lifecycleScope.launch(Dispatchers.Main){
+                        mBinding.tvProgress.text = "Progress:${it.inboundCount}/${it.boundCount}"
+                    }
+                }
+            }
+        }
+        mBinding.tvBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
+        mBinding.imgPower.setOnClickListener {
+            showDialogPower(ponInboundPower){
+                UHFService.getInstance(MyApplication.appContext).power = it
+                ponInboundPower = it
+            }
         }
     }
 

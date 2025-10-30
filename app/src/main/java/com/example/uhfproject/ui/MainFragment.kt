@@ -17,6 +17,7 @@ import com.example.uhfproject.R
 import com.example.uhfproject.databinding.FragmentMainBinding
 import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.retrofit.RetrofitClient
+import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.NumberFormat
@@ -50,7 +51,6 @@ class MainFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mBinding.loginUser.text = "${mainViewModel.username}"
-        mainViewModel.getSiteByUserId()
         if(mainViewModel.mode == 0){
             mBinding.pendingIb.text = "Bound"
             mBinding.pendingOb.text = "Inbound"
@@ -60,22 +60,23 @@ class MainFragment: Fragment() {
                     mBinding.tvPendingOb.text = formatNumberWithCommas(it.inbound?:0)
                 }
             }
-        }else{
-            mainViewModel.getHeadInfo{
-                lifecycleScope.launch(Dispatchers.Main){
-                    mBinding.tvPendingIb.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
-                    mBinding.tvPendingOb.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
-                }
-            }
-        }
-
-        if(mainViewModel.mode == 0){
+            mBinding.features3Layout.visibility = View.VISIBLE
             mBinding.features4Layout.visibility = View.GONE
             mBinding.features5Layout.visibility = View.GONE
             mBinding.features6Layout.visibility = View.GONE
             mBinding.features7Layout.visibility = View.GONE
             mBinding.features8Layout.visibility = View.GONE
             mBinding.features9Layout.visibility = View.GONE
+
+            if(mainViewModel.userPermission){
+                mBinding.card2Relative.setBackgroundColor(Color.GRAY)
+                mBinding.card2Layout.isEnabled = false
+                mBinding.card3Relative.setBackgroundColor(Color.GRAY)
+                mBinding.card3Layout.isEnabled = false
+            }else{
+                mBinding.card1Relative.setBackgroundColor(Color.GRAY)
+                mBinding.card1Layout.isEnabled = false
+            }
 
             mBinding.imgCard1.setImageResource(R.drawable.ic_binding)
             mBinding.tvCard1.text = "Binding"
@@ -95,25 +96,30 @@ class MainFragment: Fragment() {
             mBinding.tvFeatures3.setTextColor(Color.parseColor("#000a7b"))
 
             mBinding.card1Layout.setOnClickListener {
-
+                findNavController().navigate(R.id.action_mainFragment_to_rfidBindingFragment)
             }
             mBinding.card2Layout.setOnClickListener {
-
             }
             mBinding.card3Layout.setOnClickListener {
                 findNavController().navigate(R.id.action_mainFragment_to_fragmentPonInbound)
             }
 
             mBinding.features1Layout.setOnClickListener {
-
+                findNavController().navigate(R.id.action_mainFragment_to_findItemFragment)
             }
             mBinding.features2Layout.setOnClickListener {
-
+                findNavController().navigate(R.id.action_mainFragment_to_itemQueryFragment)
             }
             mBinding.features3Layout.setOnClickListener {
                 findNavController().navigate(R.id.action_mainFragment_to_fragmentPonBoundList)
             }
         }else{
+            mainViewModel.getHeadInfo{
+                lifecycleScope.launch(Dispatchers.Main){
+                    mBinding.tvPendingIb.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
+                    mBinding.tvPendingOb.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
+                }
+            }
             mBinding.card1Layout.setOnClickListener {
                 findNavController().navigate(R.id.action_mainFragment_to_inBoundFragment)
             }

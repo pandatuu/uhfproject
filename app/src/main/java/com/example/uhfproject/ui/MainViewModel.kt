@@ -56,8 +56,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     val ponException: LiveData<List<TrackingVO>> = _ponException
 
     private var cacheInboundEpcList = mutableListOf<TrackingVO>()
-    private val matchList = mutableListOf<TrackingVO>()
-    private val otherSiteList = mutableListOf<TrackingVO>()
+    val matchList = mutableListOf<TrackingVO>()
+    val otherSiteList = mutableListOf<TrackingVO>()
 
     fun exitPonInbound(){
         //清除缓存
@@ -78,27 +78,38 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
                     if (newEpcStrings.isEmpty()) {
                         return@launch // Nothing new to process
                     }
+                    LogUtil.d("PON_INBOUND-----newEpc:${newEpcStrings}")
 
                     rep.getPonTrackingIdByEPCRep(newEpcStrings)
                         .onSuccess {
+                            LogUtil.d("PON_INBOUND-----接口:${this.map { it.epc }}")
                             newEpcStrings.forEach { epc->
-                                val apiResult = this.find { it.epc == epc }!!
-                                cacheInboundEpcList.add(apiResult)
-                                //比较邮局名称
-                                when{
-                                    apiResult.siteId == null -> {
-                                        //无邮局记录
-                                    }
-                                    currentSiteId == apiResult.siteId -> {
-                                        //匹配数据
-                                        matchList.add(apiResult)
-                                    }
-                                    currentSiteId != apiResult.siteId -> {
-                                        //其他邮局
-                                        otherSiteList.add(apiResult)
+                                this.find { it.epc == epc }?.let { apiResult->
+                                    LogUtil.d("PON_INBOUND-----找到item:$apiResult")
+                                    cacheInboundEpcList.add(apiResult)
+                                    //比较邮局名称
+                                    when{
+                                        apiResult.siteId == null -> {
+                                            //无邮局记录
+                                        }
+                                        apiResult.trackingNumber == null ->{
+                                            apiResult.resultStatus = 0
+                                            otherSiteList.add(apiResult)
+                                        }
+                                        currentSiteId == apiResult.siteId && apiResult.trackingNumber!=null  -> {
+                                            //匹配数据
+                                            apiResult.resultStatus = 2
+                                            matchList.add(apiResult)
+                                        }
+                                        currentSiteId != apiResult.siteId -> {
+                                            //其他邮局
+                                            apiResult.resultStatus = 1
+                                            otherSiteList.add(apiResult)
+                                        }
                                     }
                                 }
                             }
+                            LogUtil.d("PON_INBOUND-----接口完成")
                             _ponInboundExcel.postValue(matchList)
                             _ponException.postValue(otherSiteList)
                         }
@@ -202,6 +213,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     }
 
     var username = ""
+    var userPermission = true
     var mode = 0
 
     private var loadingTimer: Job? = null
@@ -257,6 +269,26 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     fun submitInBound(list: List<String>, success: () -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
             rep.inboundRep(list)
+                .onSuccess {
+                    showSuccess(this.msg?:"Submission Success")
+                    success.invoke()
+                }.onServerError { _, msg ->
+                    showWarn("Submission failed")
+                    stopLoading()
+                }.onOtherError {
+                    showWarn(it.message ?: "")
+                    stopLoading()
+                }
+        }
+    }
+
+    fun submitInBoundPon(success: () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val dto = PONInboundDTO(
+                matchList.map { it.epc },
+                currentSiteId
+            )
+            rep.inboundPonRep(dto)
                 .onSuccess {
                     showSuccess(this.msg?:"Submission Success")
                     success.invoke()
@@ -411,26 +443,47 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
         _sortList.postValue(currentList.sortedWith(comparator!!))
     }
 
-    fun getItemByTracking(tracking: String, success: (ExcelDownloadVO) -> Unit, empty: () -> Unit){
+    fun getItemByTracking(tracking: String, success: (String?) -> Unit, empty: () -> Unit){
         viewModelScope.launch(Dispatchers.IO){
-            rep.getItemByTrackingIdRep(tracking,0,1)
-                .onSuccessOrNull {
-                    it?.let {
-                        if(it.isEmpty()){
+            if(mode == 0){
+                rep.getPonItemByTrackingIdRep(tracking,0,1)
+                    .onSuccessOrNull {
+                        it?.let {
+                            if(it.isEmpty()){
+                                empty.invoke()
+                            }else{
+                                success.invoke(it[0].epc)
+                            }
+                        }?: kotlin.run {
                             empty.invoke()
-                        }else{
-                            success.invoke(it[0])
                         }
-                    }?: kotlin.run {
-                        empty.invoke()
+                    }.onServerError { _, msg ->
+                        showWarn("Submission failed")
+                        stopLoading()
+                    }.onOtherError {
+                        showWarn(it.message ?: "")
+                        stopLoading()
                     }
-                }.onServerError { _, msg ->
-                    showWarn("Submission failed")
-                    stopLoading()
-                }.onOtherError {
-                    showWarn(it.message ?: "")
-                    stopLoading()
-                }
+            }else{
+                rep.getItemByTrackingIdRep(tracking,0,1)
+                    .onSuccessOrNull {
+                        it?.let {
+                            if(it.isEmpty()){
+                                empty.invoke()
+                            }else{
+                                success.invoke(it[0].epc)
+                            }
+                        }?: kotlin.run {
+                            empty.invoke()
+                        }
+                    }.onServerError { _, msg ->
+                        showWarn("Submission failed")
+                        stopLoading()
+                    }.onOtherError {
+                        showWarn(it.message ?: "")
+                        stopLoading()
+                    }
+            }
         }
     }
 
@@ -504,6 +557,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
                 }
         }
     }
+    fun getPonLifeCycleByEPCRep(epc: String, success: (PONLifeCycleVO) -> Unit) {
+        viewModelScope.launch(Dispatchers.IO){
+            rep.getPonLifeCycleByEPCRep(epc)
+                .onSuccess {
+                    LogUtil.d("getTrackingIdByEPCRep-result:${this}")
+                    success.invoke(this)
+                }.onServerError { code, msg ->
+                    showWarn(msg)
+                    LogUtil.d("code:$code, msg:$msg")
+                }.onOtherError {
+                    showWarn(it.message ?: "")
+                    LogUtil.d(it.message ?: "")
+                }
+        }
+    }
 
     fun validateBarcode(barcode: String): Boolean {
         // Placeholder validation
@@ -530,14 +598,57 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
                 }
         }
     }
+    fun bindPon(body: PONBindVO){
+        viewModelScope.launch(Dispatchers.IO){
+            rep.bindPonRep(listOf(body))
+                .onSuccess {
+                    bindResult.postValue(CommonModel(true, "Bind Success"))
+                }.onServerError { code, msg ->
+                    if(code == 200){
+                        bindResult.postValue(CommonModel(true, "Bind Success"))
+                    }else{
+                        bindResult.postValue(CommonModel(false, msg))
+                    }
+                    LogUtil.d("code:$code, msg:$msg")
+                }.onOtherError {
+                    bindResult.postValue(CommonModel(false, it.message ?: ""))
+                    LogUtil.d(it.message ?: "")
+                }
+        }
+    }
 
     var siteList: List<UserSiteDTO> = emptyList()
     var currentSiteId: Int = -1
-    fun getSiteByUserId(){
+    var siteIdByUser: Int = -1
+    fun getBoundAndInboundCount(success: (BoundAndInboundVO) -> Unit){
         viewModelScope.launch {
-            rep.getSiteByUserIdRep()
+            rep.getBoundAndInboundCountRep(currentSiteId)
                 .onSuccess {
-                    siteList = this
+                    success.invoke(this)
+                }.onServerError { code, msg ->
+                    LogUtil.d("code:$code, msg:$msg")
+                }.onOtherError {
+                    LogUtil.d(it.message ?: "")
+                }
+        }
+    }
+    fun getBoundDataBySiteId(success: (List<TrackingVO>) -> Unit){
+        viewModelScope.launch {
+            rep.getBoundDataBySiteIdRep(currentSiteId)
+                .onSuccess {
+                    success.invoke(this)
+                }.onServerError { code, msg ->
+                    LogUtil.d("code:$code, msg:$msg")
+                }.onOtherError {
+                    LogUtil.d(it.message ?: "")
+                }
+        }
+    }
+    fun getPermsByUserId(success: (Boolean) -> Unit){
+        viewModelScope.launch {
+            rep.getPermsByUserIdRep()
+                .onSuccess {
+                    success.invoke(this)
                 }.onServerError { code, msg ->
                     LogUtil.d("code:$code, msg:$msg")
                 }.onOtherError {

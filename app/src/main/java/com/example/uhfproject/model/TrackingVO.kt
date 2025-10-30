@@ -7,7 +7,7 @@ data class TrackingVO(
     /**
      * 快递单号
      */
-    val trackingNumber: String,
+    val trackingNumber: String? = "",
 
     /**
      * epc
@@ -37,5 +37,6 @@ data class TrackingVO(
     /**
      * 邮局名称
      */
-    val siteName: String? = null
+    val siteName: String? = null,
+    var resultStatus: Int = 0,
 )

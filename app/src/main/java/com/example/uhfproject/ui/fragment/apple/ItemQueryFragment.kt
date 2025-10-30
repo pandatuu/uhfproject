@@ -1,5 +1,6 @@
 package com.example.uhfproject.ui.fragment.apple
 
+import android.view.View
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.uhfproject.app.MyApplication
@@ -19,6 +20,11 @@ class ItemQueryFragment : BaseFragment<FragmentItemQueryBinding>() {
     override fun initView() {
         mActivity = requireActivity() as MainActivity
         mainViewModel.setScanMode(ScanMode.ITEM_QUERY)
+        if(mainViewModel.mode == 0){
+            mBinding.tvPostalCode.text = "Post Office:"
+            mBinding.tvRb.visibility = View.GONE
+            mBinding.tvBeat.visibility = View.GONE
+        }
     }
 
     override fun initData() {
@@ -44,21 +50,37 @@ class ItemQueryFragment : BaseFragment<FragmentItemQueryBinding>() {
         mainViewModel.findList.observe(viewLifecycleOwner) {
             if (it.isNotEmpty()) {
                 mBinding.epc.text = it[0].getId()
-                mainViewModel.getLifeCycleByEPCRep(it[0].getId()) { item ->
-                    lifecycleScope.launch(Dispatchers.Main) {
-                        mBinding.trackingId.text = item.trackingNumber
-                        mBinding.postalCode.text = item.postCode
-                        mBinding.beat.text = item.bitCode
-                        mBinding.rb.text = item.db
+                if(mainViewModel.mode == 0){
+                    mainViewModel.getPonLifeCycleByEPCRep(it[0].getId()) { item ->
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            mBinding.trackingId.text = item.trackingNumber
+                            mBinding.postalCode.text = item.siteName
 
-                        mBinding.uploadTime.text =
-                            "Upload date & time: ${item.uploadTime?:"nothing"}\nBy: ${item.uploadBy?:"nothing"}"
-                        mBinding.printTime.text =
-                            "Print date & time: ${item.rfidPrintTime?:"nothing"}\nBy: ${item.printBy?:"nothing"}"
-                        mBinding.inboundTime.text =
-                            "Inbound date & time: ${item.inboundDate?:"nothing"}\nBy: ${item.inboundBy?:"nothing"}"
-                        mBinding.outboundTime.text =
-                            "Outbound date & time: ${item.outboundDate?:"nothing"}\nBy: ${item.outboundBy?:"nothing"}"
+                            mBinding.uploadTime.text =
+                                "Upload date & time: ${item.uploadTime?:"nothing"}\nBy: ${item.uploadBy?:"nothing"}"
+                            mBinding.printTime.text =
+                                "Inbound date & time: ${item.inboundDate?:"nothing"}\nBy: ${item.inboundBy?:"nothing"}"
+                            mBinding.inboundTime.text = ""
+                            mBinding.outboundTime.text = ""
+                        }
+                    }
+                }else{
+                    mainViewModel.getLifeCycleByEPCRep(it[0].getId()) { item ->
+                        lifecycleScope.launch(Dispatchers.Main) {
+                            mBinding.trackingId.text = item.trackingNumber
+                            mBinding.postalCode.text = item.postCode
+                            mBinding.beat.text = item.bitCode
+                            mBinding.rb.text = item.db
+
+                            mBinding.uploadTime.text =
+                                "Upload date & time: ${item.uploadTime?:"nothing"}\nBy: ${item.uploadBy?:"nothing"}"
+                            mBinding.printTime.text =
+                                "Print date & time: ${item.rfidPrintTime?:"nothing"}\nBy: ${item.printBy?:"nothing"}"
+                            mBinding.inboundTime.text =
+                                "Inbound date & time: ${item.inboundDate?:"nothing"}\nBy: ${item.inboundBy?:"nothing"}"
+                            mBinding.outboundTime.text =
+                                "Outbound date & time: ${item.outboundDate?:"nothing"}\nBy: ${item.outboundBy?:"nothing"}"
+                        }
                     }
                 }
             }

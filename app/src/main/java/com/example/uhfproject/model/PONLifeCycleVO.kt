@@ -15,7 +15,7 @@ data class PONLifeCycleVO(
     val epc: String,
 
     /**
-     * 状态
+     * 状态 1 binding  2 inbound
      */
     val status: Int,
 

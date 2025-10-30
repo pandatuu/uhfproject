@@ -10,9 +10,12 @@ import androidx.navigation.fragment.NavHostFragment
 import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.ActivityMainBinding
+import com.example.uhfproject.model.UserSiteDTO
 import com.example.uhfproject.ui.fragment.apple.DebugScanFragment
 import com.example.uhfproject.utils.BeepSound
+import com.example.uhfproject.utils.Const.fromJsonToList
 import com.example.uhfproject.utils.LogUtil
+import com.google.gson.Gson
 import com.seuic.uhf.UHFService
 
 class MainActivity : AppCompatActivity() {
@@ -28,9 +31,15 @@ class MainActivity : AppCompatActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
-
         mainViewModel.username = intent.getStringExtra("username") ?: ""
-        mainViewModel.mode = intent.getIntExtra("mode", 0)
+//        mainViewModel.mode = intent.getIntExtra("mode", 0)
+        mainViewModel.userPermission = intent.getBooleanExtra("permission", false)
+        mainViewModel.siteIdByUser = intent.getIntExtra("userSiteId", -1)
+        intent.getStringExtra("siteList")?.let {
+            mainViewModel.siteList = it.fromJsonToList()
+        }
+        mainViewModel.mode = 0
+
 
         uhfService = UHFService.getInstance(appContext)
 

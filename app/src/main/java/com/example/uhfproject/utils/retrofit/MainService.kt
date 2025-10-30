@@ -49,6 +49,8 @@ interface MainService {
      */
     @POST("post/inbound")
     suspend fun inboundNet(@Body body: List<String>) : HttpResult<InfoPromptsVO>
+    @POST("pon/inbound")
+    suspend fun inboundPonNet(@Body body: PONInboundDTO) : HttpResult<PonInboundPromptsVO>
 
     /**
      * 查询快递单号列表
@@ -76,6 +78,14 @@ interface MainService {
     suspend fun getItemByTrackingIdNet(@Query("trackingId") trackingId: String,
                                      @Query("pageNum") pageNum: Int,
                                      @Query("pageSize") pageSize: Int) : HttpResultPager<List<ExcelDownloadVO>>
+
+    /**
+     * 查询快递单号列表
+     */
+    @GET("pon/getTrackingIdList")
+    suspend fun getPonItemByTrackingIdNet(@Query("trackingId") trackingId: String,
+                                       @Query("pageNum") pageNum: Int,
+                                       @Query("pageSize") pageSize: Int) : HttpResultPager<List<PONExcelDownloadVO>>
 
     /**
      * 获取相关统计数量
@@ -123,9 +133,27 @@ interface MainService {
     @GET("post/getLifeCycleByEPC")
     suspend fun getLifeCycleByEPCNet(@Query("epc") epc: String): HttpResult<LifeCycleVO>
 
+    @GET("pon/getLifeCycleByEPC")
+    suspend fun getPonLifeCycleByEPCNet(@Query("epc") epc: String): HttpResult<PONLifeCycleVO>
+
     @POST("post/bind")
     suspend fun bindNet(@Body body: List<BindBody>): HttpResult<Any>
+    @POST("pon/bind")
+    suspend fun bindPonNet(@Body body: List<PONBindVO>): HttpResult<Any>
+
+    @GET("site/getSiteList")
+    suspend fun getSiteListNet(): HttpResult<List<UserSiteDTO>>
 
     @GET("site/getSiteByUserId")
-    suspend fun getSiteByUserIdNet(): HttpResult<List<UserSiteDTO>>
+    suspend fun getSiteByUserIdNet(): HttpResult<UserSiteDTO>
+
+    @GET("pon/getBoundAndInboundCount")
+    suspend fun getBoundAndInboundCountNet(@Query("siteId") siteId: Int): HttpResult<BoundAndInboundVO>
+
+    @GET("pon/getBoundDataBySiteId")
+    suspend fun getBoundDataBySiteIdNet(@Query("siteId") siteId: Int): HttpResult<List<TrackingVO>>
+
+    @GET("site/getPermsByUserId")
+    suspend fun getPermsByUserIdNet(): HttpResult<Boolean>
+
 }

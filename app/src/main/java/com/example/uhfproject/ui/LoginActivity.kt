@@ -10,8 +10,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.uhfproject.R
+import com.example.uhfproject.app.MyApplication.Companion.appContext
 import com.example.uhfproject.databinding.ActivityLoginBinding
 import com.example.uhfproject.model.LoginBody
+import com.example.uhfproject.model.UserSiteDTO
 import com.example.uhfproject.ui.update.showCheckVersionDialog
 import com.example.uhfproject.ui.update.showDownloadDialog
 import com.example.uhfproject.utils.Const.ip
@@ -22,6 +24,7 @@ import com.example.uhfproject.utils.LogUtil
 import com.example.uhfproject.utils.retrofit.LiveDataCallAdapterFactory
 import com.example.uhfproject.utils.retrofit.MainService
 import com.example.uhfproject.utils.retrofit.RetrofitClient
+import com.google.gson.Gson
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -92,11 +95,14 @@ class LoginActivity: AppCompatActivity() {
                 readMeName = username
                 readMePassword = password
             }
-            login(username,password, success = {
+            login(username,password, success = { permission, userSiteId, siteList ->
                 mBinding.loginLoading.visibility = View.GONE
                 val intent = Intent(this, MainActivity::class.java)
                 intent.putExtra("username", username)
                 intent.putExtra("mode", mode)
+                intent.putExtra("permission", permission)
+                intent.putExtra("userSiteId", userSiteId)
+                intent.putExtra("siteList", Gson().toJson(siteList))
                 startActivity(intent)
             }, failed = {
                 lifecycleScope.launch(Dispatchers.Main){
@@ -132,17 +138,48 @@ class LoginActivity: AppCompatActivity() {
         }
     }
 
-    private fun login(userName: String, password: String, success: () -> Unit, failed: () -> Unit){
+    private fun login(userName: String, password: String, success: (Boolean, Int?, List<UserSiteDTO>) -> Unit, failed: () -> Unit){
         lifecycleScope.launch(Dispatchers.IO){
             try{
+                //登录
                 val retrofit = RetrofitClient.createService<MainService>()
                 val result = retrofit.loginNet(LoginBody(userName, password))
                 if (result.code == 200 && result.token != null) {
                     LogUtil.d("login:${result}")
                     RetrofitClient.updateTokenAndRefreshToken(result.token!!)
-                    withContext(Dispatchers.Main){
-                        Toasty.success(this@LoginActivity, "Login Success", Toasty.LENGTH_SHORT).show()
-                        success.invoke()
+                    //获取用户权限
+                    val permsByUserIdNet = retrofit.getPermsByUserIdNet()
+                    if(permsByUserIdNet.code == 200 && permsByUserIdNet.data != null){
+                        var getSiteByUserIdResult: UserSiteDTO? = null
+                        if(permsByUserIdNet.data!!){
+                            val getSiteByUserId = retrofit.getSiteByUserIdNet()
+                            if(getSiteByUserId.code == 200 && getSiteByUserId.data != null){
+                                getSiteByUserIdResult = getSiteByUserId.data!!
+                            }else{
+                                lifecycleScope.launch(Dispatchers.Main){
+                                    Toasty.error(appContext, getSiteByUserId.msg.toString(), Toasty.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                        val getSiteList = retrofit.getSiteListNet()
+                        if(getSiteList.code == 200 && getSiteList.data != null){
+                            withContext(Dispatchers.Main){
+                                Toasty.success(this@LoginActivity, "Login Success", Toasty.LENGTH_SHORT).show()
+                                success.invoke(permsByUserIdNet.data!!, getSiteByUserIdResult?.siteId?.toIntOrNull(), getSiteList.data!!)
+                            }
+                        }else{
+                            lifecycleScope.launch(Dispatchers.Main){
+                                Toasty.error(appContext, getSiteList.msg.toString(), Toasty.LENGTH_SHORT).show()
+                            }
+                        }
+                    }else{
+                        lifecycleScope.launch(Dispatchers.Main){
+                            Toasty.error(appContext, permsByUserIdNet.msg.toString(), Toasty.LENGTH_SHORT).show()
+                        }
+                    }
+                }else{
+                    lifecycleScope.launch(Dispatchers.Main) {
+                        Toasty.error(appContext, result.msg.toString(), Toasty.LENGTH_SHORT).show()
                     }
                 }
                 failed.invoke()

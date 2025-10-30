@@ -16,6 +16,7 @@ import com.example.uhfproject.R
 import com.example.uhfproject.app.MyApplication
 import com.example.uhfproject.databinding.FragmentRfidBindingBinding
 import com.example.uhfproject.model.BindBody
+import com.example.uhfproject.model.PONBindVO
 import com.example.uhfproject.utils.BaseFragment
 import com.example.uhfproject.utils.Const
 import com.example.uhfproject.utils.Const.clean
@@ -131,7 +132,11 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
         updateStatus(ScanStatus.PAIRING)
         // Bind the EPC with the highest RSSI, not just the first one detected
         val bestEpc = scannedEpc.maxByOrNull { it.second }?.first ?: rfidValue
-        mainViewModel.bind(BindBody(scanCode, bestEpc))
+        if (mainViewModel.mode == 0) {
+            mainViewModel.bindPon(PONBindVO(scanCode, bestEpc, mainViewModel.siteIdByUser))
+        } else {
+            mainViewModel.bind(BindBody(scanCode, bestEpc))
+        }
     }
 
     private fun setupRecyclerView() {
@@ -176,10 +181,16 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
         val errorMessage = message ?: "Unknown error"
         when {
             errorMessage.contains("already bound to EPC") -> {
-                updateStatus(ScanStatus.ERROR, "Error 4: Barcode already paired. Details: $errorMessage")
+                updateStatus(
+                    ScanStatus.ERROR,
+                    "Error 4: Barcode already paired. Details: $errorMessage"
+                )
             }
             errorMessage.contains("EPC already bound to tracking") -> {
-                updateStatus(ScanStatus.ERROR, "Error 5: EPC already paired. Details: $errorMessage")
+                updateStatus(
+                    ScanStatus.ERROR,
+                    "Error 5: EPC already paired. Details: $errorMessage"
+                )
             }
             else -> {
                 updateStatus(ScanStatus.ERROR, "Error 3: Binding failed. Details: $errorMessage")
@@ -206,9 +217,11 @@ class RfidBindingFragment : BaseFragment<FragmentRfidBindingBinding>() {
         mainViewModel.setScanMode(ScanMode.NONE)
     }
 
-    inner class EpcAdapter(private val items: List<Pair<String, Int>>) : RecyclerView.Adapter<EpcAdapter.EpcViewHolder>() {
+    inner class EpcAdapter(private val items: List<Pair<String, Int>>) :
+        RecyclerView.Adapter<EpcAdapter.EpcViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EpcViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.item_epc_rssi, parent, false)
+            val view =
+                LayoutInflater.from(parent.context).inflate(R.layout.item_epc_rssi, parent, false)
             return EpcViewHolder(view)
         }
 

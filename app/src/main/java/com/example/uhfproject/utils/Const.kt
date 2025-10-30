@@ -8,6 +8,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.uhfproject.R
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import java.math.BigDecimal
 import java.math.RoundingMode
 
@@ -160,5 +162,10 @@ object Const {
         return BigDecimal(rssi)
             .divide(BigDecimal(100), 2, RoundingMode.HALF_UP)
         // 除以 100，保留 2 位小数，四舍五入
+    }
+
+    inline fun <reified T> String.fromJsonToList(): List<T> {
+        val type = object : TypeToken<List<T>>() {}.type
+        return Gson().fromJson(this, type)
     }
 }

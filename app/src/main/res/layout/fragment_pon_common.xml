@@ -70,32 +70,45 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Post Office"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/black"
-        app:layout_constraintTop_toTopOf="@+id/spinner"
-        app:layout_constraintBottom_toBottomOf="@+id/spinner"
+        app:layout_constraintTop_toTopOf="@+id/spinner_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/spinner_layout"
         app:layout_constraintStart_toStartOf="@+id/title_layout" />
 
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="120dp"
-        android:layout_height="40dp"
-        android:background="@drawable/bg_border_gray_5"
+    <RelativeLayout
+        android:id="@+id/spinner_layout"
+        android:layout_width="140dp"
+        android:layout_height="50dp"
         android:layout_marginStart="10dp"
+        android:background="@drawable/bg_border_gray_5"
         app:layout_constraintStart_toEndOf="@+id/tv_post1"
-        app:layout_constraintTop_toBottomOf="@+id/title_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/title_layout" >
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <TextView
+            android:id="@+id/tv_site"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@id/tv_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Progress:0/0"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textColor="@color/black"
         app:layout_constraintTop_toTopOf="@+id/tv_post1"
         app:layout_constraintBottom_toBottomOf="@+id/tv_post1"
         app:layout_constraintEnd_toEndOf="@+id/title_layout"
-        app:layout_constraintStart_toEndOf="@+id/spinner" />
+        app:layout_constraintStart_toEndOf="@+id/spinner_layout" />
 
     <TextView
         android:id="@+id/tv_sn"
@@ -109,7 +122,7 @@
         android:layout_marginTop="10dp"
         app:layout_constraintWidth_percent="0.2"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_layout"
         app:layout_constraintEnd_toStartOf="@+id/tv_tracking_id" />
     <TextView
         android:id="@+id/tv_tracking_id"

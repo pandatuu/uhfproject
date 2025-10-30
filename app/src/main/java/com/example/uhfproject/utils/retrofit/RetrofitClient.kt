@@ -19,8 +19,8 @@ object RetrofitClient {
     private lateinit var retrofit: Retrofit
 
     fun init(context: Context) {
-//        val baseUrl = "http://${Const.ip}:${Const.port}/prod-api/"
-        val baseUrl = "http://${Const.ip}:${Const.port}/"
+        val baseUrl = "http://${Const.ip}:${Const.port}/prod-api/"
+//        val baseUrl = "http://${Const.ip}:${Const.port}/"
         urlInterceptor = BaseUrlInterceptor(baseUrl)
         tokenInterceptor = UpdateTokenInterceptor(ACCESS_TOKEN)
 
