@@ -1,6 +1,7 @@
 package com.example.uhfproject.utils
 
 enum class ScanMode {
+    PON_INBOUND,
     INBOUND,
     OUTBOUND,
     IB_VERIFY,

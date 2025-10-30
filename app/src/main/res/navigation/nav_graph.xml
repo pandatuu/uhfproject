@@ -103,7 +103,11 @@
     <fragment
         android:id="@+id/fragmentPonInbound"
         android:name="com.example.uhfproject.ui.fragment.pon.FragmentPonInbound"
-        android:label="FragmentPonInbound" />
+        android:label="FragmentPonInbound" >
+        <action
+            android:id="@+id/action_fragmentPonInbound_to_fragmentPonExceptions"
+            app:destination="@id/fragmentPonExceptions" />
+    </fragment>
     <fragment
         android:id="@+id/fragmentPonBoundList"
         android:name="com.example.uhfproject.ui.fragment.pon.FragmentPonBoundList"

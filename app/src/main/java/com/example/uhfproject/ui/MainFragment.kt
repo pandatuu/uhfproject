@@ -49,11 +49,23 @@ class MainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mBinding.loginUser.text = "Welcome, ${mainViewModel.username}"
-        mainViewModel.getHeadInfo{
-            lifecycleScope.launch(Dispatchers.Main){
-                mBinding.tvPendingIb.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
-                mBinding.tvPendingOb.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
+        mBinding.loginUser.text = "${mainViewModel.username}"
+        mainViewModel.getSiteByUserId()
+        if(mainViewModel.mode == 0){
+            mBinding.pendingIb.text = "Bound"
+            mBinding.pendingOb.text = "Inbound"
+            mainViewModel.getPonHeadInfo{
+                lifecycleScope.launch(Dispatchers.Main){
+                    mBinding.tvPendingIb.text = formatNumberWithCommas(it.bound?:0)
+                    mBinding.tvPendingOb.text = formatNumberWithCommas(it.inbound?:0)
+                }
+            }
+        }else{
+            mainViewModel.getHeadInfo{
+                lifecycleScope.launch(Dispatchers.Main){
+                    mBinding.tvPendingIb.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
+                    mBinding.tvPendingOb.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
+                }
             }
         }
 
@@ -141,12 +153,21 @@ class MainFragment: Fragment() {
                 requireActivity().finish()
             }
         }
-        mBinding.mainClusterCard.findViewById<View>(R.id.img_refresh).setOnClickListener { 
+        mBinding.imgRefresh.setOnClickListener {
             it.startAnimation(rotateAnimation)
-            mainViewModel.getHeadInfo{
-                lifecycleScope.launch(Dispatchers.Main){
-                    mBinding.tvPendingIb.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
-                    mBinding.tvPendingOb.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
+            if(mainViewModel.mode == 0){
+                mainViewModel.getPonHeadInfo{
+                    lifecycleScope.launch(Dispatchers.Main){
+                        mBinding.tvPendingIb.text = formatNumberWithCommas(it.bound?:0)
+                        mBinding.tvPendingOb.text = formatNumberWithCommas(it.inbound?:0)
+                    }
+                }
+            }else{
+                mainViewModel.getHeadInfo{
+                    lifecycleScope.launch(Dispatchers.Main){
+                        mBinding.tvPendingIb.text = formatNumberWithCommas(it.pendingInboundNumber?:0)
+                        mBinding.tvPendingOb.text = formatNumberWithCommas(it.outboundRemainingNumber?:0)
+                    }
                 }
             }
         }

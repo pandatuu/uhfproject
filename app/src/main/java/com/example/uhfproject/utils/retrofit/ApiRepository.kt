@@ -11,6 +11,11 @@ class ApiRepository {
             service.getTrackingIdByEPCNet(epcList)
         }
     }
+    suspend fun getPonTrackingIdByEPCRep(epcList: List<String>): APIResult<List<TrackingVO>> {
+        return safeNetworkInvoke {
+            service.getPonTrackingIdByEPCNet(epcList)
+        }
+    }
 
     suspend fun inboundRep(body: List<String>): APIResult<InfoPromptsVO> {
         return safeNetworkInvoke {
@@ -41,6 +46,12 @@ class ApiRepository {
             service.getStatisticsNet()
         }
     }
+    suspend fun getPonStatisticsRep(): APIResult<StatisticsVO> {
+        return safeNetworkInvoke {
+            service.getPonStatisticsNet()
+        }
+    }
+
 
     suspend fun getTopRep(): APIResult<List<DashboardTopVO>> {
         return safeNetworkInvoke {
@@ -81,6 +92,12 @@ class ApiRepository {
     suspend fun getPendingOutboundRep(pageNum: Int, sortPageSize: Int): APIResult<List<ExcelDownloadVO>> {
         return safeNetWorkPagerInvoke {
             service.getPendingOutboundNet(pageNum, sortPageSize)
+        }
+    }
+
+    suspend fun getSiteByUserIdRep(): APIResult<List<UserSiteDTO>> {
+        return safeNetworkInvoke {
+            service.getSiteByUserIdNet()
         }
     }
 

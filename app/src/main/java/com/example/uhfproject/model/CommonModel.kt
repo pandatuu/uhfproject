@@ -30,3 +30,10 @@ data class UserInfo(
 )
 
 data class CommonModel(val isSuccess: Boolean, val message: String)
+
+data class LocalInboundRecord(
+    val epc: String,
+    val scanIndex: Int,
+    val site: String, //site is generalized for specific application case "postOffice" for future code reuse
+    val category: Int // 1=match, 2=other office, 3=no record
+)

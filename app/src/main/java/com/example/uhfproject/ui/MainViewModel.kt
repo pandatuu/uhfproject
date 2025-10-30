@@ -48,9 +48,71 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
     private val _scanMode = MutableStateFlow(ScanMode.NONE)
     val scanMode: StateFlow<ScanMode> = _scanMode
 
+
+    private val _ponInboundExcel: MutableLiveData<List<TrackingVO>> = MutableLiveData()
+    val ponInboundExcel: LiveData<List<TrackingVO>> = _ponInboundExcel
+
+    private val _ponException: MutableLiveData<List<TrackingVO>> = MutableLiveData()
+    val ponException: LiveData<List<TrackingVO>> = _ponException
+
+    private var cacheInboundEpcList = mutableListOf<TrackingVO>()
+    private val matchList = mutableListOf<TrackingVO>()
+    private val otherSiteList = mutableListOf<TrackingVO>()
+
+    fun exitPonInbound(){
+        //清除缓存
+        cacheInboundEpcList.clear()
+        matchList.clear()
+        otherSiteList.clear()
+    }
+
     override fun onScanResults(tags: Set<EPC>) {
         when (_scanMode.value) {
-            ScanMode.INBOUND, ScanMode.OUTBOUND, ScanMode.IB_VERIFY, ScanMode.OB_VERIFY -> {
+            ScanMode.PON_INBOUND -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    // 1. Get current state and filter for truly new EPCs
+                    val epcStrings = tags.map { it.getId() }.toSet()
+                    val newEpcStrings = epcStrings.filter { epc ->
+                        !cacheInboundEpcList.any { it.epc == epc }
+                    }
+                    if (newEpcStrings.isEmpty()) {
+                        return@launch // Nothing new to process
+                    }
+
+                    rep.getPonTrackingIdByEPCRep(newEpcStrings)
+                        .onSuccess {
+                            newEpcStrings.forEach { epc->
+                                val apiResult = this.find { it.epc == epc }!!
+                                cacheInboundEpcList.add(apiResult)
+                                //比较邮局名称
+                                when{
+                                    apiResult.siteId == null -> {
+                                        //无邮局记录
+                                    }
+                                    currentSiteId == apiResult.siteId -> {
+                                        //匹配数据
+                                        matchList.add(apiResult)
+                                    }
+                                    currentSiteId != apiResult.siteId -> {
+                                        //其他邮局
+                                        otherSiteList.add(apiResult)
+                                    }
+                                }
+                            }
+                            _ponInboundExcel.postValue(matchList)
+                            _ponException.postValue(otherSiteList)
+                        }
+                        .onServerError { _, msg ->
+                            // On a server error, do nothing but show a warning.
+                            // No records are created, no UI lists are updated.
+                            showWarn(msg)
+                        }
+                        .onOtherError {
+                            showWarn(it.message ?: "Unknown error")
+                        }
+                }
+            }
+            ScanMode.OUTBOUND,ScanMode.INBOUND, ScanMode.IB_VERIFY, ScanMode.OB_VERIFY -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     val epcStrings = tags.map { it.getId() }
                     rep.getTrackingIdByEPCRep(epcStrings)
@@ -386,6 +448,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
                 }
         }
     }
+    fun getPonHeadInfo(success: (StatisticsVO) -> Unit){
+        viewModelScope.launch(Dispatchers.IO){
+            rep.getPonStatisticsRep()
+                .onSuccess {
+                    success.invoke(this)
+                }.onServerError { code, msg ->
+                    showError(msg)
+                }.onOtherError {
+                    showError(it.message?: "")
+                }
+        }
+    }
 
     fun getRvList(success: (List<DashboardTopVO>) -> Unit){
         viewModelScope.launch(Dispatchers.IO){
@@ -452,6 +526,21 @@ class MainViewModel(application: Application) : AndroidViewModel(application), S
                     LogUtil.d("code:$code, msg:$msg")
                 }.onOtherError {
                     bindResult.postValue(CommonModel(false, it.message ?: ""))
+                    LogUtil.d(it.message ?: "")
+                }
+        }
+    }
+
+    var siteList: List<UserSiteDTO> = emptyList()
+    var currentSiteId: Int = -1
+    fun getSiteByUserId(){
+        viewModelScope.launch {
+            rep.getSiteByUserIdRep()
+                .onSuccess {
+                    siteList = this
+                }.onServerError { code, msg ->
+                    LogUtil.d("code:$code, msg:$msg")
+                }.onOtherError {
                     LogUtil.d(it.message ?: "")
                 }
         }

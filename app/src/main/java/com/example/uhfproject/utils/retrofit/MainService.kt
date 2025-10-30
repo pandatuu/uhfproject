@@ -57,6 +57,12 @@ interface MainService {
     suspend fun getTrackingIdByEPCNet(@Body epcList: List<String>) : HttpResult<List<ExcelDownloadVO>>
 
     /**
+     * 查询快递单号列表
+     */
+    @POST("pon/getTrackingIdByEPC")
+    suspend fun getPonTrackingIdByEPCNet(@Body epcList: List<String>) : HttpResult<List<TrackingVO>>
+
+    /**
      * 出库
      */
     @POST("post/outbound")
@@ -76,6 +82,11 @@ interface MainService {
      */
     @GET("dashboard/getStatistics")
     suspend fun getStatisticsNet() : HttpResult<DashboardNumberVO>
+    /**
+     * 获取相关统计数量
+     */
+    @GET("pon/getStatistics")
+    suspend fun getPonStatisticsNet() : HttpResult<StatisticsVO>
 
     /**
      * 根据DB获取排行榜数据
@@ -114,4 +125,7 @@ interface MainService {
 
     @POST("post/bind")
     suspend fun bindNet(@Body body: List<BindBody>): HttpResult<Any>
+
+    @GET("site/getSiteByUserId")
+    suspend fun getSiteByUserIdNet(): HttpResult<List<UserSiteDTO>>
 }
